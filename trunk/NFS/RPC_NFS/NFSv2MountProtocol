@@ -34,7 +34,7 @@ typedef struct exportnode *exports;
 
 struct exportnode {
          dirpath filesys;
-         groups groups;
+         groups exgroups;
          exports next;
  };           
            

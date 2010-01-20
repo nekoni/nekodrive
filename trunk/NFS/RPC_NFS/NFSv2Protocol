@@ -1,4 +1,4 @@
-/*
+   /*
     * The maximum number of bytes of data in a READ or WRITE
     * request.
     */
@@ -16,7 +16,7 @@
    /* The size in bytes of the opaque file handle. */
    const FHSIZE = 32;
 
-enum stat {
+   enum stat {
            NFS_OK = 0,
            NFSERR_PERM=1,
            NFSERR_NOENT=2,
@@ -37,7 +37,7 @@ enum stat {
            NFSERR_WFLUSH=99
        };
 
-enum ftype {
+    enum ftype {
               NFNON = 0,
               NFREG = 1,
               NFDIR = 2,
@@ -46,41 +46,41 @@ enum ftype {
               NFLNK = 5
           };
 
-typedef opaque fhandle[FHSIZE];
-typedef string filename<MAXNAMLEN>;
-typedef string path<MAXPATHLEN>;
-typedef unsigned int nfscookie;
+    typedef opaque fhandle[FHSIZE];
+    typedef string filename<MAXNAMLEN>;
+	typedef string path<MAXPATHLEN>;
+	typedef unsigned int nfscookie;
 
-union attrstat switch (stat status) {
+	union attrstat switch (stat status) {
           case NFS_OK:
-						fattr attributes;
+				fattr attributes;
           default:
-              void;
-          };
+				void;
+			};
 
- struct diropargs {
-              fhandle  dir;
-              filename name;
-          };
+	struct diropargs {
+				fhandle  dir;
+				filename name;
+			};
 
-struct diropok {
+	struct diropok {
                   fhandle file;
                   fattr   attributes;
-              };
+			};
 
-union diropres switch (stat status) {
+	union diropres switch (stat status) {
           case NFS_OK:
               diropok ok;
           default:
               void;
-          };
+			};
 
-struct timeval {
+	struct timeval {
               unsigned int seconds;
               unsigned int useconds;
-          };
+			};
           
-          struct fattr {
+    struct fattr {
               ftype        type;
               unsigned int mode;
               unsigned int nlink;
@@ -95,81 +95,80 @@ struct timeval {
               timeval      atime;
               timeval      mtime;
               timeval      ctime;
-          };
+			};
           
-          struct sattr {
+     struct sattr {
               unsigned int mode;
               unsigned int uid;
               unsigned int gid;
               unsigned int size;
               timeval      atime;
               timeval      mtime;
-          };
+			};
 
-struct sattrargs {
+	struct sattrargs {
                    fhandle file;
                    sattr attributes;
-           };
+			};
 
-union readlinkres switch (stat status) {
+	union readlinkres switch (stat status) {
            case NFS_OK:
                path data;
            default:
                void;
-           };
+			};
 
-struct readargs {
+	struct readargs {
                    fhandle file;
                    unsigned offset;
                    unsigned count;
                    unsigned totalcount;
-           };
+			};
 
-struct readresok
-{
-	fattr attributes;
-	opaque      data<>;
-};
+	struct readresok {
+					fattr attributes;
+					opaque      data<>;
+			};
 
-union readres switch (stat status) {
-case NFS_OK:
-       readresok ok;
-default:
-       void;
-};
-           
-struct writeargs {
-                   fhandle file;
-                   unsigned beginoffset;
-                   unsigned offset;
-                   unsigned totalcount;
-                   opaque  data<>;
-           };
-           
+	union readres switch (stat status) {
+	case NFS_OK:
+		   readresok ok;
+	default:
+		   void;
+	};
+	           
+	struct writeargs {
+					   fhandle file;
+					   unsigned beginoffset;
+					   unsigned offset;
+					   unsigned totalcount;
+					   opaque  data<>;
+			   };
+	           
 
-struct createargs {
-                   diropargs where;
-                   sattr attributes;
-           };
-  
-  
-struct renameargs {
-                   diropargs from;
-                   diropargs to;
-           };
+	struct createargs {
+					   diropargs where;
+					   sattr attributes;
+			   };
+	  
+	  
+	struct renameargs {
+					   diropargs from;
+					   diropargs to;
+			   };
+	           
+	struct linkargs {
+					   fhandle from;
+					   diropargs to;
+			   };                                 
            
-struct linkargs {
-                   fhandle from;
-                   diropargs to;
-           };                                 
+   struct symlinkargs {
+           diropargs from;
+           path to;
+           sattr attributes;
+   };
            
-           struct symlinkargs {
-                   diropargs from;
-                   path to;
-                   sattr attributes;
-           };
-           
-struct readdirargs {
+	struct readdirargs {
                    fhandle dir;
                    nfscookie cookie;
                    unsigned count;
@@ -211,15 +210,7 @@ struct readdirok
                    void;
            };
 
-           
-           
-           
-           
-           
-           
-           
-           
-           
+             
            
 /*
 * Remote file service routines
@@ -250,7 +241,7 @@ program NFS_PROGRAM {
                void
                NFSPROC_WRITECACHE(void)        = 7;
 							 
-							 attrstat
+	       attrstat
                NFSPROC_WRITE(writeargs)        = 8;
 
                diropres
