@@ -1,0 +1,3691 @@
+# Microsoft Developer Studio Generated NMAKE File, Format Version 4.20
+# ** DO NOT EDIT **
+
+# TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
+
+!IF "$(CFG)" == ""
+CFG=oncrpc - Win32 Debug
+!MESSAGE No configuration specified.  Defaulting to oncrpc - Win32 Debug.
+!ENDIF 
+
+!IF "$(CFG)" != "oncrpc - Win32 Release" && "$(CFG)" != "oncrpc - Win32 Debug"
+!MESSAGE Invalid configuration "$(CFG)" specified.
+!MESSAGE You can specify a configuration when running NMAKE on this makefile
+!MESSAGE by defining the macro CFG on the command line.  For example:
+!MESSAGE 
+!MESSAGE NMAKE /f "oncrpc.mak" CFG="oncrpc - Win32 Debug"
+!MESSAGE 
+!MESSAGE Possible choices for configuration are:
+!MESSAGE 
+!MESSAGE "oncrpc - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "oncrpc - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE 
+!ERROR An invalid configuration is specified.
+!ENDIF 
+
+!IF "$(OS)" == "Windows_NT"
+NULL=
+!ELSE 
+NULL=nul
+!ENDIF 
+################################################################################
+# Begin Project
+# PROP Target_Last_Scanned "oncrpc - Win32 Release"
+CPP=cl.exe
+RSC=rc.exe
+MTL=mktyplib.exe
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "Release"
+# PROP BASE Intermediate_Dir "Release"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "Release"
+# PROP Intermediate_Dir "Release"
+# PROP Target_Dir ""
+OUTDIR=.\Release
+INTDIR=.\Release
+
+ALL : "$(OUTDIR)\oncrpc.dll" "$(OUTDIR)\oncrpc.bsc"
+
+CLEAN : 
+	-@erase "$(INTDIR)\Auth_non.obj"
+	-@erase "$(INTDIR)\Auth_non.sbr"
+	-@erase "$(INTDIR)\Auth_uni.obj"
+	-@erase "$(INTDIR)\Auth_uni.sbr"
+	-@erase "$(INTDIR)\AUTHUNIX.OBJ"
+	-@erase "$(INTDIR)\AUTHUNIX.SBR"
+	-@erase "$(INTDIR)\BCOPY.OBJ"
+	-@erase "$(INTDIR)\BCOPY.SBR"
+	-@erase "$(INTDIR)\Bindresv.obj"
+	-@erase "$(INTDIR)\Bindresv.sbr"
+	-@erase "$(INTDIR)\CLNT_GEN.OBJ"
+	-@erase "$(INTDIR)\CLNT_GEN.SBR"
+	-@erase "$(INTDIR)\Clnt_per.obj"
+	-@erase "$(INTDIR)\Clnt_per.sbr"
+	-@erase "$(INTDIR)\CLNT_RAW.OBJ"
+	-@erase "$(INTDIR)\CLNT_RAW.SBR"
+	-@erase "$(INTDIR)\CLNT_SIM.OBJ"
+	-@erase "$(INTDIR)\CLNT_SIM.SBR"
+	-@erase "$(INTDIR)\Clnt_tcp.obj"
+	-@erase "$(INTDIR)\Clnt_tcp.sbr"
+	-@erase "$(INTDIR)\Clnt_udp.obj"
+	-@erase "$(INTDIR)\Clnt_udp.sbr"
+	-@erase "$(INTDIR)\Get_myad.obj"
+	-@erase "$(INTDIR)\Get_myad.sbr"
+	-@erase "$(INTDIR)\Getrpcen.obj"
+	-@erase "$(INTDIR)\Getrpcen.sbr"
+	-@erase "$(INTDIR)\Getrpcpo.obj"
+	-@erase "$(INTDIR)\Getrpcpo.sbr"
+	-@erase "$(INTDIR)\NT.OBJ"
+	-@erase "$(INTDIR)\NT.SBR"
+	-@erase "$(INTDIR)\oncrpc.pch"
+	-@erase "$(INTDIR)\Pmap_cln.obj"
+	-@erase "$(INTDIR)\Pmap_cln.sbr"
+	-@erase "$(INTDIR)\PMAP_GET.OBJ"
+	-@erase "$(INTDIR)\PMAP_GET.SBR"
+	-@erase "$(INTDIR)\PMAP_GMA.OBJ"
+	-@erase "$(INTDIR)\PMAP_GMA.SBR"
+	-@erase "$(INTDIR)\PMAP_PR.OBJ"
+	-@erase "$(INTDIR)\PMAP_PR.SBR"
+	-@erase "$(INTDIR)\PMAP_PRO.OBJ"
+	-@erase "$(INTDIR)\PMAP_PRO.SBR"
+	-@erase "$(INTDIR)\Pmap_rmt.obj"
+	-@erase "$(INTDIR)\Pmap_rmt.sbr"
+	-@erase "$(INTDIR)\RPC_CALL.OBJ"
+	-@erase "$(INTDIR)\RPC_CALL.SBR"
+	-@erase "$(INTDIR)\RPC_COMM.OBJ"
+	-@erase "$(INTDIR)\RPC_COMM.SBR"
+	-@erase "$(INTDIR)\RPC_PROT.OBJ"
+	-@erase "$(INTDIR)\RPC_PROT.SBR"
+	-@erase "$(INTDIR)\Svc.obj"
+	-@erase "$(INTDIR)\Svc.sbr"
+	-@erase "$(INTDIR)\SVC_AUTH.OBJ"
+	-@erase "$(INTDIR)\SVC_AUTH.SBR"
+	-@erase "$(INTDIR)\Svc_autu.obj"
+	-@erase "$(INTDIR)\Svc_autu.sbr"
+	-@erase "$(INTDIR)\SVC_RAW.OBJ"
+	-@erase "$(INTDIR)\SVC_RAW.SBR"
+	-@erase "$(INTDIR)\Svc_run.obj"
+	-@erase "$(INTDIR)\Svc_run.sbr"
+	-@erase "$(INTDIR)\Svc_simp.obj"
+	-@erase "$(INTDIR)\Svc_simp.sbr"
+	-@erase "$(INTDIR)\Svc_tcp.obj"
+	-@erase "$(INTDIR)\Svc_tcp.sbr"
+	-@erase "$(INTDIR)\Svc_udp.obj"
+	-@erase "$(INTDIR)\Svc_udp.sbr"
+	-@erase "$(INTDIR)\Xdr.obj"
+	-@erase "$(INTDIR)\Xdr.sbr"
+	-@erase "$(INTDIR)\Xdr_arra.obj"
+	-@erase "$(INTDIR)\Xdr_arra.sbr"
+	-@erase "$(INTDIR)\XDR_FLOA.OBJ"
+	-@erase "$(INTDIR)\XDR_FLOA.SBR"
+	-@erase "$(INTDIR)\XDR_MEM.OBJ"
+	-@erase "$(INTDIR)\XDR_MEM.SBR"
+	-@erase "$(INTDIR)\Xdr_rec.obj"
+	-@erase "$(INTDIR)\Xdr_rec.sbr"
+	-@erase "$(INTDIR)\Xdr_refe.obj"
+	-@erase "$(INTDIR)\Xdr_refe.sbr"
+	-@erase "$(INTDIR)\XDR_STDI.OBJ"
+	-@erase "$(INTDIR)\XDR_STDI.SBR"
+	-@erase "$(OUTDIR)\oncrpc.bsc"
+	-@erase "$(OUTDIR)\oncrpc.dll"
+	-@erase "$(OUTDIR)\oncrpc.exp"
+	-@erase "$(OUTDIR)\oncrpc.lib"
+
+"$(OUTDIR)" :
+    if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
+
+# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
+# ADD CPP /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_X86_" /D "_NT" /FR /YX"all_oncrpc.h" /c
+# SUBTRACT CPP /nologo
+CPP_PROJ=/G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /YX"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c 
+CPP_OBJS=.\Release/
+CPP_SBRS=.\Release/
+# ADD BASE MTL /nologo /D "NDEBUG" /win32
+# ADD MTL /D "NDEBUG" /win32
+# SUBTRACT MTL /nologo
+MTL_PROJ=/D "NDEBUG" /win32 
+# ADD BASE RSC /l 0x809 /d "NDEBUG"
+# ADD RSC /l 0x809 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# SUBTRACT BSC32 /nologo
+BSC32_FLAGS=/o"$(OUTDIR)/oncrpc.bsc" 
+BSC32_SBRS= \
+	"$(INTDIR)\Auth_non.sbr" \
+	"$(INTDIR)\Auth_uni.sbr" \
+	"$(INTDIR)\AUTHUNIX.SBR" \
+	"$(INTDIR)\BCOPY.SBR" \
+	"$(INTDIR)\Bindresv.sbr" \
+	"$(INTDIR)\CLNT_GEN.SBR" \
+	"$(INTDIR)\Clnt_per.sbr" \
+	"$(INTDIR)\CLNT_RAW.SBR" \
+	"$(INTDIR)\CLNT_SIM.SBR" \
+	"$(INTDIR)\Clnt_tcp.sbr" \
+	"$(INTDIR)\Clnt_udp.sbr" \
+	"$(INTDIR)\Get_myad.sbr" \
+	"$(INTDIR)\Getrpcen.sbr" \
+	"$(INTDIR)\Getrpcpo.sbr" \
+	"$(INTDIR)\NT.SBR" \
+	"$(INTDIR)\Pmap_cln.sbr" \
+	"$(INTDIR)\PMAP_GET.SBR" \
+	"$(INTDIR)\PMAP_GMA.SBR" \
+	"$(INTDIR)\PMAP_PR.SBR" \
+	"$(INTDIR)\PMAP_PRO.SBR" \
+	"$(INTDIR)\Pmap_rmt.sbr" \
+	"$(INTDIR)\RPC_CALL.SBR" \
+	"$(INTDIR)\RPC_COMM.SBR" \
+	"$(INTDIR)\RPC_PROT.SBR" \
+	"$(INTDIR)\Svc.sbr" \
+	"$(INTDIR)\SVC_AUTH.SBR" \
+	"$(INTDIR)\Svc_autu.sbr" \
+	"$(INTDIR)\SVC_RAW.SBR" \
+	"$(INTDIR)\Svc_run.sbr" \
+	"$(INTDIR)\Svc_simp.sbr" \
+	"$(INTDIR)\Svc_tcp.sbr" \
+	"$(INTDIR)\Svc_udp.sbr" \
+	"$(INTDIR)\Xdr.sbr" \
+	"$(INTDIR)\Xdr_arra.sbr" \
+	"$(INTDIR)\XDR_FLOA.SBR" \
+	"$(INTDIR)\XDR_MEM.SBR" \
+	"$(INTDIR)\Xdr_rec.sbr" \
+	"$(INTDIR)\Xdr_refe.sbr" \
+	"$(INTDIR)\XDR_STDI.SBR"
+
+"$(OUTDIR)\oncrpc.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
+    $(BSC32) @<<
+  $(BSC32_FLAGS) $(BSC32_SBRS)
+<<
+
+LINK32=link.exe
+# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
+# ADD LINK32 wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:windows /dll /machine:I386
+# SUBTRACT LINK32 /nologo
+LINK32_FLAGS=wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib\
+ comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib\
+ odbc32.lib odbccp32.lib /subsystem:windows /dll /incremental:no\
+ /pdb:"$(OUTDIR)/oncrpc.pdb" /machine:I386 /out:"$(OUTDIR)/oncrpc.dll"\
+ /implib:"$(OUTDIR)/oncrpc.lib" 
+LINK32_OBJS= \
+	"$(INTDIR)\Auth_non.obj" \
+	"$(INTDIR)\Auth_uni.obj" \
+	"$(INTDIR)\AUTHUNIX.OBJ" \
+	"$(INTDIR)\BCOPY.OBJ" \
+	"$(INTDIR)\Bindresv.obj" \
+	"$(INTDIR)\CLNT_GEN.OBJ" \
+	"$(INTDIR)\Clnt_per.obj" \
+	"$(INTDIR)\CLNT_RAW.OBJ" \
+	"$(INTDIR)\CLNT_SIM.OBJ" \
+	"$(INTDIR)\Clnt_tcp.obj" \
+	"$(INTDIR)\Clnt_udp.obj" \
+	"$(INTDIR)\Get_myad.obj" \
+	"$(INTDIR)\Getrpcen.obj" \
+	"$(INTDIR)\Getrpcpo.obj" \
+	"$(INTDIR)\NT.OBJ" \
+	"$(INTDIR)\Pmap_cln.obj" \
+	"$(INTDIR)\PMAP_GET.OBJ" \
+	"$(INTDIR)\PMAP_GMA.OBJ" \
+	"$(INTDIR)\PMAP_PR.OBJ" \
+	"$(INTDIR)\PMAP_PRO.OBJ" \
+	"$(INTDIR)\Pmap_rmt.obj" \
+	"$(INTDIR)\RPC_CALL.OBJ" \
+	"$(INTDIR)\RPC_COMM.OBJ" \
+	"$(INTDIR)\RPC_PROT.OBJ" \
+	"$(INTDIR)\Svc.obj" \
+	"$(INTDIR)\SVC_AUTH.OBJ" \
+	"$(INTDIR)\Svc_autu.obj" \
+	"$(INTDIR)\SVC_RAW.OBJ" \
+	"$(INTDIR)\Svc_run.obj" \
+	"$(INTDIR)\Svc_simp.obj" \
+	"$(INTDIR)\Svc_tcp.obj" \
+	"$(INTDIR)\Svc_udp.obj" \
+	"$(INTDIR)\Xdr.obj" \
+	"$(INTDIR)\Xdr_arra.obj" \
+	"$(INTDIR)\XDR_FLOA.OBJ" \
+	"$(INTDIR)\XDR_MEM.OBJ" \
+	"$(INTDIR)\Xdr_rec.obj" \
+	"$(INTDIR)\Xdr_refe.obj" \
+	"$(INTDIR)\XDR_STDI.OBJ"
+
+"$(OUTDIR)\oncrpc.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+    $(LINK32) @<<
+  $(LINK32_FLAGS) $(LINK32_OBJS)
+<<
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "Debug"
+# PROP BASE Intermediate_Dir "Debug"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "Debug"
+# PROP Intermediate_Dir "Debug"
+# PROP Target_Dir ""
+OUTDIR=.\Debug
+INTDIR=.\Debug
+
+ALL : "$(OUTDIR)\oncrpc.dll" "$(OUTDIR)\oncrpc.bsc"
+
+CLEAN : 
+	-@erase "$(INTDIR)\Auth_non.obj"
+	-@erase "$(INTDIR)\Auth_non.sbr"
+	-@erase "$(INTDIR)\Auth_uni.obj"
+	-@erase "$(INTDIR)\Auth_uni.sbr"
+	-@erase "$(INTDIR)\AUTHUNIX.OBJ"
+	-@erase "$(INTDIR)\AUTHUNIX.SBR"
+	-@erase "$(INTDIR)\BCOPY.OBJ"
+	-@erase "$(INTDIR)\BCOPY.SBR"
+	-@erase "$(INTDIR)\Bindresv.obj"
+	-@erase "$(INTDIR)\Bindresv.sbr"
+	-@erase "$(INTDIR)\CLNT_GEN.OBJ"
+	-@erase "$(INTDIR)\CLNT_GEN.SBR"
+	-@erase "$(INTDIR)\Clnt_per.obj"
+	-@erase "$(INTDIR)\Clnt_per.sbr"
+	-@erase "$(INTDIR)\CLNT_RAW.OBJ"
+	-@erase "$(INTDIR)\CLNT_RAW.SBR"
+	-@erase "$(INTDIR)\CLNT_SIM.OBJ"
+	-@erase "$(INTDIR)\CLNT_SIM.SBR"
+	-@erase "$(INTDIR)\Clnt_tcp.obj"
+	-@erase "$(INTDIR)\Clnt_tcp.sbr"
+	-@erase "$(INTDIR)\Clnt_udp.obj"
+	-@erase "$(INTDIR)\Clnt_udp.sbr"
+	-@erase "$(INTDIR)\Get_myad.obj"
+	-@erase "$(INTDIR)\Get_myad.sbr"
+	-@erase "$(INTDIR)\Getrpcen.obj"
+	-@erase "$(INTDIR)\Getrpcen.sbr"
+	-@erase "$(INTDIR)\Getrpcpo.obj"
+	-@erase "$(INTDIR)\Getrpcpo.sbr"
+	-@erase "$(INTDIR)\NT.OBJ"
+	-@erase "$(INTDIR)\NT.SBR"
+	-@erase "$(INTDIR)\Pmap_cln.obj"
+	-@erase "$(INTDIR)\Pmap_cln.sbr"
+	-@erase "$(INTDIR)\PMAP_GET.OBJ"
+	-@erase "$(INTDIR)\PMAP_GET.SBR"
+	-@erase "$(INTDIR)\PMAP_GMA.OBJ"
+	-@erase "$(INTDIR)\PMAP_GMA.SBR"
+	-@erase "$(INTDIR)\PMAP_PR.OBJ"
+	-@erase "$(INTDIR)\PMAP_PR.SBR"
+	-@erase "$(INTDIR)\PMAP_PRO.OBJ"
+	-@erase "$(INTDIR)\PMAP_PRO.SBR"
+	-@erase "$(INTDIR)\Pmap_rmt.obj"
+	-@erase "$(INTDIR)\Pmap_rmt.sbr"
+	-@erase "$(INTDIR)\PORTMAP.OBJ"
+	-@erase "$(INTDIR)\PORTMAP.SBR"
+	-@erase "$(INTDIR)\RPC_CALL.OBJ"
+	-@erase "$(INTDIR)\RPC_CALL.SBR"
+	-@erase "$(INTDIR)\RPC_COMM.OBJ"
+	-@erase "$(INTDIR)\RPC_COMM.SBR"
+	-@erase "$(INTDIR)\RPC_PROT.OBJ"
+	-@erase "$(INTDIR)\RPC_PROT.SBR"
+	-@erase "$(INTDIR)\Svc.obj"
+	-@erase "$(INTDIR)\Svc.sbr"
+	-@erase "$(INTDIR)\SVC_AUTH.OBJ"
+	-@erase "$(INTDIR)\SVC_AUTH.SBR"
+	-@erase "$(INTDIR)\Svc_autu.obj"
+	-@erase "$(INTDIR)\Svc_autu.sbr"
+	-@erase "$(INTDIR)\SVC_RAW.OBJ"
+	-@erase "$(INTDIR)\SVC_RAW.SBR"
+	-@erase "$(INTDIR)\Svc_run.obj"
+	-@erase "$(INTDIR)\Svc_run.sbr"
+	-@erase "$(INTDIR)\Svc_simp.obj"
+	-@erase "$(INTDIR)\Svc_simp.sbr"
+	-@erase "$(INTDIR)\Svc_tcp.obj"
+	-@erase "$(INTDIR)\Svc_tcp.sbr"
+	-@erase "$(INTDIR)\Svc_udp.obj"
+	-@erase "$(INTDIR)\Svc_udp.sbr"
+	-@erase "$(INTDIR)\vc40.idb"
+	-@erase "$(INTDIR)\vc40.pdb"
+	-@erase "$(INTDIR)\Xdr.obj"
+	-@erase "$(INTDIR)\Xdr.sbr"
+	-@erase "$(INTDIR)\Xdr_arra.obj"
+	-@erase "$(INTDIR)\Xdr_arra.sbr"
+	-@erase "$(INTDIR)\XDR_FLOA.OBJ"
+	-@erase "$(INTDIR)\XDR_FLOA.SBR"
+	-@erase "$(INTDIR)\XDR_MEM.OBJ"
+	-@erase "$(INTDIR)\XDR_MEM.SBR"
+	-@erase "$(INTDIR)\Xdr_rec.obj"
+	-@erase "$(INTDIR)\Xdr_rec.sbr"
+	-@erase "$(INTDIR)\Xdr_refe.obj"
+	-@erase "$(INTDIR)\Xdr_refe.sbr"
+	-@erase "$(INTDIR)\XDR_STDI.OBJ"
+	-@erase "$(INTDIR)\XDR_STDI.SBR"
+	-@erase "$(OUTDIR)\oncrpc.bsc"
+	-@erase "$(OUTDIR)\oncrpc.dll"
+	-@erase "$(OUTDIR)\oncrpc.exp"
+	-@erase "$(OUTDIR)\oncrpc.ilk"
+	-@erase "$(OUTDIR)\oncrpc.lib"
+	-@erase "$(OUTDIR)\oncrpc.pdb"
+
+"$(OUTDIR)" :
+    if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
+
+# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
+# ADD CPP /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_X86_" /D "_NT" /FR /YX"all_oncrpc.h" /c
+# SUBTRACT CPP /nologo
+CPP_PROJ=/G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c 
+CPP_OBJS=.\Debug/
+CPP_SBRS=.\Debug/
+# ADD BASE MTL /nologo /D "_DEBUG" /win32
+# ADD MTL /D "_DEBUG" /win32
+# SUBTRACT MTL /nologo
+MTL_PROJ=/D "_DEBUG" /win32 
+# ADD BASE RSC /l 0x809 /d "_DEBUG"
+# ADD RSC /l 0x809 /d "_DEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# SUBTRACT BSC32 /nologo
+BSC32_FLAGS=/o"$(OUTDIR)/oncrpc.bsc" 
+BSC32_SBRS= \
+	"$(INTDIR)\Auth_non.sbr" \
+	"$(INTDIR)\Auth_uni.sbr" \
+	"$(INTDIR)\AUTHUNIX.SBR" \
+	"$(INTDIR)\BCOPY.SBR" \
+	"$(INTDIR)\Bindresv.sbr" \
+	"$(INTDIR)\CLNT_GEN.SBR" \
+	"$(INTDIR)\Clnt_per.sbr" \
+	"$(INTDIR)\CLNT_RAW.SBR" \
+	"$(INTDIR)\CLNT_SIM.SBR" \
+	"$(INTDIR)\Clnt_tcp.sbr" \
+	"$(INTDIR)\Clnt_udp.sbr" \
+	"$(INTDIR)\Get_myad.sbr" \
+	"$(INTDIR)\Getrpcen.sbr" \
+	"$(INTDIR)\Getrpcpo.sbr" \
+	"$(INTDIR)\NT.SBR" \
+	"$(INTDIR)\Pmap_cln.sbr" \
+	"$(INTDIR)\PMAP_GET.SBR" \
+	"$(INTDIR)\PMAP_GMA.SBR" \
+	"$(INTDIR)\PMAP_PR.SBR" \
+	"$(INTDIR)\PMAP_PRO.SBR" \
+	"$(INTDIR)\Pmap_rmt.sbr" \
+	"$(INTDIR)\PORTMAP.SBR" \
+	"$(INTDIR)\RPC_CALL.SBR" \
+	"$(INTDIR)\RPC_COMM.SBR" \
+	"$(INTDIR)\RPC_PROT.SBR" \
+	"$(INTDIR)\Svc.sbr" \
+	"$(INTDIR)\SVC_AUTH.SBR" \
+	"$(INTDIR)\Svc_autu.sbr" \
+	"$(INTDIR)\SVC_RAW.SBR" \
+	"$(INTDIR)\Svc_run.sbr" \
+	"$(INTDIR)\Svc_simp.sbr" \
+	"$(INTDIR)\Svc_tcp.sbr" \
+	"$(INTDIR)\Svc_udp.sbr" \
+	"$(INTDIR)\Xdr.sbr" \
+	"$(INTDIR)\Xdr_arra.sbr" \
+	"$(INTDIR)\XDR_FLOA.SBR" \
+	"$(INTDIR)\XDR_MEM.SBR" \
+	"$(INTDIR)\Xdr_rec.sbr" \
+	"$(INTDIR)\Xdr_refe.sbr" \
+	"$(INTDIR)\XDR_STDI.SBR"
+
+"$(OUTDIR)\oncrpc.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
+    $(BSC32) @<<
+  $(BSC32_FLAGS) $(BSC32_SBRS)
+<<
+
+LINK32=link.exe
+# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386
+# ADD LINK32 wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:windows /dll /debug /machine:I386
+# SUBTRACT LINK32 /nologo
+LINK32_FLAGS=wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib\
+ comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib\
+ odbc32.lib odbccp32.lib /subsystem:windows /dll /incremental:yes\
+ /pdb:"$(OUTDIR)/oncrpc.pdb" /debug /machine:I386 /out:"$(OUTDIR)/oncrpc.dll"\
+ /implib:"$(OUTDIR)/oncrpc.lib" 
+LINK32_OBJS= \
+	"$(INTDIR)\Auth_non.obj" \
+	"$(INTDIR)\Auth_uni.obj" \
+	"$(INTDIR)\AUTHUNIX.OBJ" \
+	"$(INTDIR)\BCOPY.OBJ" \
+	"$(INTDIR)\Bindresv.obj" \
+	"$(INTDIR)\CLNT_GEN.OBJ" \
+	"$(INTDIR)\Clnt_per.obj" \
+	"$(INTDIR)\CLNT_RAW.OBJ" \
+	"$(INTDIR)\CLNT_SIM.OBJ" \
+	"$(INTDIR)\Clnt_tcp.obj" \
+	"$(INTDIR)\Clnt_udp.obj" \
+	"$(INTDIR)\Get_myad.obj" \
+	"$(INTDIR)\Getrpcen.obj" \
+	"$(INTDIR)\Getrpcpo.obj" \
+	"$(INTDIR)\NT.OBJ" \
+	"$(INTDIR)\Pmap_cln.obj" \
+	"$(INTDIR)\PMAP_GET.OBJ" \
+	"$(INTDIR)\PMAP_GMA.OBJ" \
+	"$(INTDIR)\PMAP_PR.OBJ" \
+	"$(INTDIR)\PMAP_PRO.OBJ" \
+	"$(INTDIR)\Pmap_rmt.obj" \
+	"$(INTDIR)\PORTMAP.OBJ" \
+	"$(INTDIR)\RPC_CALL.OBJ" \
+	"$(INTDIR)\RPC_COMM.OBJ" \
+	"$(INTDIR)\RPC_PROT.OBJ" \
+	"$(INTDIR)\Svc.obj" \
+	"$(INTDIR)\SVC_AUTH.OBJ" \
+	"$(INTDIR)\Svc_autu.obj" \
+	"$(INTDIR)\SVC_RAW.OBJ" \
+	"$(INTDIR)\Svc_run.obj" \
+	"$(INTDIR)\Svc_simp.obj" \
+	"$(INTDIR)\Svc_tcp.obj" \
+	"$(INTDIR)\Svc_udp.obj" \
+	"$(INTDIR)\Xdr.obj" \
+	"$(INTDIR)\Xdr_arra.obj" \
+	"$(INTDIR)\XDR_FLOA.OBJ" \
+	"$(INTDIR)\XDR_MEM.OBJ" \
+	"$(INTDIR)\Xdr_rec.obj" \
+	"$(INTDIR)\Xdr_refe.obj" \
+	"$(INTDIR)\XDR_STDI.OBJ"
+
+"$(OUTDIR)\oncrpc.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+    $(LINK32) @<<
+  $(LINK32_FLAGS) $(LINK32_OBJS)
+<<
+
+!ENDIF 
+
+.c{$(CPP_OBJS)}.obj:
+   $(CPP) $(CPP_PROJ) $<  
+
+.cpp{$(CPP_OBJS)}.obj:
+   $(CPP) $(CPP_PROJ) $<  
+
+.cxx{$(CPP_OBJS)}.obj:
+   $(CPP) $(CPP_PROJ) $<  
+
+.c{$(CPP_SBRS)}.sbr:
+   $(CPP) $(CPP_PROJ) $<  
+
+.cpp{$(CPP_SBRS)}.sbr:
+   $(CPP) $(CPP_PROJ) $<  
+
+.cxx{$(CPP_SBRS)}.sbr:
+   $(CPP) $(CPP_PROJ) $<  
+
+################################################################################
+# Begin Target
+
+# Name "oncrpc - Win32 Release"
+# Name "oncrpc - Win32 Debug"
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+!ENDIF 
+
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\XDR_STDI.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_XDR_S=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\XDR_STDI.OBJ" : $(SOURCE) $(DEP_CPP_XDR_S) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\XDR_STDI.SBR" : $(SOURCE) $(DEP_CPP_XDR_S) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_XDR_S=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\XDR_STDI.OBJ" : $(SOURCE) $(DEP_CPP_XDR_S) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\XDR_STDI.SBR" : $(SOURCE) $(DEP_CPP_XDR_S) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Auth_uni.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_AUTH_=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yc"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yc"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Auth_uni.obj" : $(SOURCE) $(DEP_CPP_AUTH_) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Auth_uni.sbr" : $(SOURCE) $(DEP_CPP_AUTH_) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\oncrpc.pch" : $(SOURCE) $(DEP_CPP_AUTH_) "$(INTDIR)"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_AUTH_=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Auth_uni.obj" : $(SOURCE) $(DEP_CPP_AUTH_) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Auth_uni.sbr" : $(SOURCE) $(DEP_CPP_AUTH_) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\AUTHUNIX.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_AUTHU=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\AUTHUNIX.OBJ" : $(SOURCE) $(DEP_CPP_AUTHU) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\AUTHUNIX.SBR" : $(SOURCE) $(DEP_CPP_AUTHU) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_AUTHU=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\AUTHUNIX.OBJ" : $(SOURCE) $(DEP_CPP_AUTHU) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\AUTHUNIX.SBR" : $(SOURCE) $(DEP_CPP_AUTHU) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\BCOPY.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_BCOPY=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\BCOPY.OBJ" : $(SOURCE) $(DEP_CPP_BCOPY) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\BCOPY.SBR" : $(SOURCE) $(DEP_CPP_BCOPY) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_BCOPY=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\BCOPY.OBJ" : $(SOURCE) $(DEP_CPP_BCOPY) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\BCOPY.SBR" : $(SOURCE) $(DEP_CPP_BCOPY) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Bindresv.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_BINDR=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Bindresv.obj" : $(SOURCE) $(DEP_CPP_BINDR) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Bindresv.sbr" : $(SOURCE) $(DEP_CPP_BINDR) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_BINDR=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Bindresv.obj" : $(SOURCE) $(DEP_CPP_BINDR) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Bindresv.sbr" : $(SOURCE) $(DEP_CPP_BINDR) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\CLNT_GEN.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_CLNT_=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\CLNT_GEN.OBJ" : $(SOURCE) $(DEP_CPP_CLNT_) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\CLNT_GEN.SBR" : $(SOURCE) $(DEP_CPP_CLNT_) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_CLNT_=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\CLNT_GEN.OBJ" : $(SOURCE) $(DEP_CPP_CLNT_) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\CLNT_GEN.SBR" : $(SOURCE) $(DEP_CPP_CLNT_) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Clnt_per.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_CLNT_P=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Clnt_per.obj" : $(SOURCE) $(DEP_CPP_CLNT_P) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Clnt_per.sbr" : $(SOURCE) $(DEP_CPP_CLNT_P) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_CLNT_P=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Clnt_per.obj" : $(SOURCE) $(DEP_CPP_CLNT_P) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Clnt_per.sbr" : $(SOURCE) $(DEP_CPP_CLNT_P) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\CLNT_RAW.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_CLNT_R=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\CLNT_RAW.OBJ" : $(SOURCE) $(DEP_CPP_CLNT_R) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\CLNT_RAW.SBR" : $(SOURCE) $(DEP_CPP_CLNT_R) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_CLNT_R=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\CLNT_RAW.OBJ" : $(SOURCE) $(DEP_CPP_CLNT_R) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\CLNT_RAW.SBR" : $(SOURCE) $(DEP_CPP_CLNT_R) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\CLNT_SIM.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_CLNT_S=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\CLNT_SIM.OBJ" : $(SOURCE) $(DEP_CPP_CLNT_S) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\CLNT_SIM.SBR" : $(SOURCE) $(DEP_CPP_CLNT_S) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_CLNT_S=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\CLNT_SIM.OBJ" : $(SOURCE) $(DEP_CPP_CLNT_S) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\CLNT_SIM.SBR" : $(SOURCE) $(DEP_CPP_CLNT_S) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Clnt_tcp.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_CLNT_T=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Clnt_tcp.obj" : $(SOURCE) $(DEP_CPP_CLNT_T) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Clnt_tcp.sbr" : $(SOURCE) $(DEP_CPP_CLNT_T) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_CLNT_T=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Clnt_tcp.obj" : $(SOURCE) $(DEP_CPP_CLNT_T) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Clnt_tcp.sbr" : $(SOURCE) $(DEP_CPP_CLNT_T) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Clnt_udp.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_CLNT_U=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Clnt_udp.obj" : $(SOURCE) $(DEP_CPP_CLNT_U) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Clnt_udp.sbr" : $(SOURCE) $(DEP_CPP_CLNT_U) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_CLNT_U=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Clnt_udp.obj" : $(SOURCE) $(DEP_CPP_CLNT_U) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Clnt_udp.sbr" : $(SOURCE) $(DEP_CPP_CLNT_U) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Get_myad.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_GET_M=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Get_myad.obj" : $(SOURCE) $(DEP_CPP_GET_M) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Get_myad.sbr" : $(SOURCE) $(DEP_CPP_GET_M) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_GET_M=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Get_myad.obj" : $(SOURCE) $(DEP_CPP_GET_M) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Get_myad.sbr" : $(SOURCE) $(DEP_CPP_GET_M) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Getrpcen.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_GETRP=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Getrpcen.obj" : $(SOURCE) $(DEP_CPP_GETRP) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Getrpcen.sbr" : $(SOURCE) $(DEP_CPP_GETRP) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_GETRP=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Getrpcen.obj" : $(SOURCE) $(DEP_CPP_GETRP) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Getrpcen.sbr" : $(SOURCE) $(DEP_CPP_GETRP) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Getrpcpo.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_GETRPC=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Getrpcpo.obj" : $(SOURCE) $(DEP_CPP_GETRPC) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Getrpcpo.sbr" : $(SOURCE) $(DEP_CPP_GETRPC) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_GETRPC=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Getrpcpo.obj" : $(SOURCE) $(DEP_CPP_GETRPC) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Getrpcpo.sbr" : $(SOURCE) $(DEP_CPP_GETRPC) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\NT.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_NT_C16=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\NT.OBJ" : $(SOURCE) $(DEP_CPP_NT_C16) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\NT.SBR" : $(SOURCE) $(DEP_CPP_NT_C16) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_NT_C16=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\NT.OBJ" : $(SOURCE) $(DEP_CPP_NT_C16) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\NT.SBR" : $(SOURCE) $(DEP_CPP_NT_C16) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Pmap_cln.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_PMAP_=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Pmap_cln.obj" : $(SOURCE) $(DEP_CPP_PMAP_) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Pmap_cln.sbr" : $(SOURCE) $(DEP_CPP_PMAP_) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_PMAP_=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Pmap_cln.obj" : $(SOURCE) $(DEP_CPP_PMAP_) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Pmap_cln.sbr" : $(SOURCE) $(DEP_CPP_PMAP_) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\PMAP_GET.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_PMAP_G=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\PMAP_GET.OBJ" : $(SOURCE) $(DEP_CPP_PMAP_G) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\PMAP_GET.SBR" : $(SOURCE) $(DEP_CPP_PMAP_G) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_PMAP_G=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\PMAP_GET.OBJ" : $(SOURCE) $(DEP_CPP_PMAP_G) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\PMAP_GET.SBR" : $(SOURCE) $(DEP_CPP_PMAP_G) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\PMAP_GMA.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_PMAP_GM=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\PMAP_GMA.OBJ" : $(SOURCE) $(DEP_CPP_PMAP_GM) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\PMAP_GMA.SBR" : $(SOURCE) $(DEP_CPP_PMAP_GM) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_PMAP_GM=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\PMAP_GMA.OBJ" : $(SOURCE) $(DEP_CPP_PMAP_GM) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\PMAP_GMA.SBR" : $(SOURCE) $(DEP_CPP_PMAP_GM) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\PMAP_PR.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_PMAP_P=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\PMAP_PR.OBJ" : $(SOURCE) $(DEP_CPP_PMAP_P) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\PMAP_PR.SBR" : $(SOURCE) $(DEP_CPP_PMAP_P) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_PMAP_P=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\PMAP_PR.OBJ" : $(SOURCE) $(DEP_CPP_PMAP_P) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\PMAP_PR.SBR" : $(SOURCE) $(DEP_CPP_PMAP_P) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\PMAP_PRO.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_PMAP_PR=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\PMAP_PRO.OBJ" : $(SOURCE) $(DEP_CPP_PMAP_PR) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\PMAP_PRO.SBR" : $(SOURCE) $(DEP_CPP_PMAP_PR) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_PMAP_PR=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\PMAP_PRO.OBJ" : $(SOURCE) $(DEP_CPP_PMAP_PR) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\PMAP_PRO.SBR" : $(SOURCE) $(DEP_CPP_PMAP_PR) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Pmap_rmt.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_PMAP_R=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Pmap_rmt.obj" : $(SOURCE) $(DEP_CPP_PMAP_R) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Pmap_rmt.sbr" : $(SOURCE) $(DEP_CPP_PMAP_R) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_PMAP_R=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Pmap_rmt.obj" : $(SOURCE) $(DEP_CPP_PMAP_R) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Pmap_rmt.sbr" : $(SOURCE) $(DEP_CPP_PMAP_R) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\PORTMAP.C
+DEP_CPP_PORTM=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+# PROP Exclude_From_Build 1
+# ADD CPP /Yu"all_oncrpc.h"
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\PORTMAP.OBJ" : $(SOURCE) $(DEP_CPP_PORTM) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\PORTMAP.SBR" : $(SOURCE) $(DEP_CPP_PORTM) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\RPC_CALL.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_RPC_C=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\RPC_CALL.OBJ" : $(SOURCE) $(DEP_CPP_RPC_C) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\RPC_CALL.SBR" : $(SOURCE) $(DEP_CPP_RPC_C) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_RPC_C=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\RPC_CALL.OBJ" : $(SOURCE) $(DEP_CPP_RPC_C) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\RPC_CALL.SBR" : $(SOURCE) $(DEP_CPP_RPC_C) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\RPC_COMM.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_RPC_CO=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\RPC_COMM.OBJ" : $(SOURCE) $(DEP_CPP_RPC_CO) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\RPC_COMM.SBR" : $(SOURCE) $(DEP_CPP_RPC_CO) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_RPC_CO=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\RPC_COMM.OBJ" : $(SOURCE) $(DEP_CPP_RPC_CO) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\RPC_COMM.SBR" : $(SOURCE) $(DEP_CPP_RPC_CO) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\RPC_PROT.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_RPC_P=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\RPC_PROT.OBJ" : $(SOURCE) $(DEP_CPP_RPC_P) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\RPC_PROT.SBR" : $(SOURCE) $(DEP_CPP_RPC_P) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_RPC_P=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\RPC_PROT.OBJ" : $(SOURCE) $(DEP_CPP_RPC_P) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\RPC_PROT.SBR" : $(SOURCE) $(DEP_CPP_RPC_P) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Svc.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_SVC_C=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Svc.obj" : $(SOURCE) $(DEP_CPP_SVC_C) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Svc.sbr" : $(SOURCE) $(DEP_CPP_SVC_C) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_SVC_C=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Svc.obj" : $(SOURCE) $(DEP_CPP_SVC_C) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Svc.sbr" : $(SOURCE) $(DEP_CPP_SVC_C) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\SVC_AUTH.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_SVC_A=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\SVC_AUTH.OBJ" : $(SOURCE) $(DEP_CPP_SVC_A) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\SVC_AUTH.SBR" : $(SOURCE) $(DEP_CPP_SVC_A) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_SVC_A=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\SVC_AUTH.OBJ" : $(SOURCE) $(DEP_CPP_SVC_A) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\SVC_AUTH.SBR" : $(SOURCE) $(DEP_CPP_SVC_A) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Svc_autu.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_SVC_AU=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Svc_autu.obj" : $(SOURCE) $(DEP_CPP_SVC_AU) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Svc_autu.sbr" : $(SOURCE) $(DEP_CPP_SVC_AU) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_SVC_AU=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Svc_autu.obj" : $(SOURCE) $(DEP_CPP_SVC_AU) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Svc_autu.sbr" : $(SOURCE) $(DEP_CPP_SVC_AU) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\SVC_RAW.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_SVC_R=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\SVC_RAW.OBJ" : $(SOURCE) $(DEP_CPP_SVC_R) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\SVC_RAW.SBR" : $(SOURCE) $(DEP_CPP_SVC_R) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_SVC_R=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\SVC_RAW.OBJ" : $(SOURCE) $(DEP_CPP_SVC_R) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\SVC_RAW.SBR" : $(SOURCE) $(DEP_CPP_SVC_R) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Svc_run.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_SVC_RU=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Svc_run.obj" : $(SOURCE) $(DEP_CPP_SVC_RU) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Svc_run.sbr" : $(SOURCE) $(DEP_CPP_SVC_RU) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_SVC_RU=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Svc_run.obj" : $(SOURCE) $(DEP_CPP_SVC_RU) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Svc_run.sbr" : $(SOURCE) $(DEP_CPP_SVC_RU) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Svc_simp.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_SVC_S=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Svc_simp.obj" : $(SOURCE) $(DEP_CPP_SVC_S) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Svc_simp.sbr" : $(SOURCE) $(DEP_CPP_SVC_S) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_SVC_S=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Svc_simp.obj" : $(SOURCE) $(DEP_CPP_SVC_S) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Svc_simp.sbr" : $(SOURCE) $(DEP_CPP_SVC_S) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Svc_tcp.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_SVC_T=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Svc_tcp.obj" : $(SOURCE) $(DEP_CPP_SVC_T) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Svc_tcp.sbr" : $(SOURCE) $(DEP_CPP_SVC_T) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_SVC_T=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Svc_tcp.obj" : $(SOURCE) $(DEP_CPP_SVC_T) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Svc_tcp.sbr" : $(SOURCE) $(DEP_CPP_SVC_T) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Svc_udp.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_SVC_U=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Svc_udp.obj" : $(SOURCE) $(DEP_CPP_SVC_U) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Svc_udp.sbr" : $(SOURCE) $(DEP_CPP_SVC_U) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_SVC_U=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Svc_udp.obj" : $(SOURCE) $(DEP_CPP_SVC_U) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Svc_udp.sbr" : $(SOURCE) $(DEP_CPP_SVC_U) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Xdr.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_XDR_C=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Xdr.obj" : $(SOURCE) $(DEP_CPP_XDR_C) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Xdr.sbr" : $(SOURCE) $(DEP_CPP_XDR_C) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_XDR_C=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Xdr.obj" : $(SOURCE) $(DEP_CPP_XDR_C) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Xdr.sbr" : $(SOURCE) $(DEP_CPP_XDR_C) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Xdr_arra.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_XDR_A=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Xdr_arra.obj" : $(SOURCE) $(DEP_CPP_XDR_A) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Xdr_arra.sbr" : $(SOURCE) $(DEP_CPP_XDR_A) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_XDR_A=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Xdr_arra.obj" : $(SOURCE) $(DEP_CPP_XDR_A) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Xdr_arra.sbr" : $(SOURCE) $(DEP_CPP_XDR_A) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\XDR_FLOA.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_XDR_F=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\XDR_FLOA.OBJ" : $(SOURCE) $(DEP_CPP_XDR_F) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\XDR_FLOA.SBR" : $(SOURCE) $(DEP_CPP_XDR_F) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_XDR_F=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\XDR_FLOA.OBJ" : $(SOURCE) $(DEP_CPP_XDR_F) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\XDR_FLOA.SBR" : $(SOURCE) $(DEP_CPP_XDR_F) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\XDR_MEM.C
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_XDR_M=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\XDR_MEM.OBJ" : $(SOURCE) $(DEP_CPP_XDR_M) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\XDR_MEM.SBR" : $(SOURCE) $(DEP_CPP_XDR_M) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_XDR_M=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\XDR_MEM.OBJ" : $(SOURCE) $(DEP_CPP_XDR_M) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\XDR_MEM.SBR" : $(SOURCE) $(DEP_CPP_XDR_M) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Xdr_rec.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_XDR_R=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Xdr_rec.obj" : $(SOURCE) $(DEP_CPP_XDR_R) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Xdr_rec.sbr" : $(SOURCE) $(DEP_CPP_XDR_R) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_XDR_R=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Xdr_rec.obj" : $(SOURCE) $(DEP_CPP_XDR_R) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Xdr_rec.sbr" : $(SOURCE) $(DEP_CPP_XDR_R) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Xdr_refe.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_XDR_RE=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Xdr_refe.obj" : $(SOURCE) $(DEP_CPP_XDR_RE) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Xdr_refe.sbr" : $(SOURCE) $(DEP_CPP_XDR_RE) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_XDR_RE=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Xdr_refe.obj" : $(SOURCE) $(DEP_CPP_XDR_RE) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Xdr_refe.sbr" : $(SOURCE) $(DEP_CPP_XDR_RE) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+################################################################################
+# Begin Source File
+
+SOURCE=\users\klotz\oncrpc\W32\librpc\Auth_non.c
+
+!IF  "$(CFG)" == "oncrpc - Win32 Release"
+
+DEP_CPP_AUTH_N=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+# ADD CPP /Yu"all_oncrpc.h"
+
+BuildCmds= \
+	$(CPP) /G5 /MT /W3 /GX /O2 /I "..\.." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch" /Yu"all_oncrpc.h"\
+ /Fo"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Auth_non.obj" : $(SOURCE) $(DEP_CPP_AUTH_N) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+"$(INTDIR)\Auth_non.sbr" : $(SOURCE) $(DEP_CPP_AUTH_N) "$(INTDIR)"\
+ "$(INTDIR)\oncrpc.pch"
+   $(BuildCmds)
+
+!ELSEIF  "$(CFG)" == "oncrpc - Win32 Debug"
+
+DEP_CPP_AUTH_N=\
+	"..\..\rpc/auth.h"\
+	"..\..\rpc/auth_uni.h"\
+	"..\..\rpc/bcopy.h"\
+	"..\..\rpc/clnt.h"\
+	"..\..\rpc/netdb.h"\
+	"..\..\rpc/pmap_cln.h"\
+	"..\..\rpc/pmap_pro.h"\
+	"..\..\rpc/pmap_rmt.h"\
+	"..\..\rpc/rpc.h"\
+	"..\..\rpc/rpc_msg.h"\
+	"..\..\rpc/svc.h"\
+	"..\..\rpc/svc_auth.h"\
+	"..\..\rpc/types.h"\
+	"..\..\rpc/xdr.h"\
+	"..\all_oncrpc.h"\
+	".\netdb.h"\
+	".\nmpoppk.h"\
+	".\nmpshpk.h"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
+	
+
+BuildCmds= \
+	$(CPP) /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\.." /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "_X86_" /D "_NT" /FR"$(INTDIR)/" /Fp"$(INTDIR)/oncrpc.pch"\
+ /YX"all_oncrpc.h" /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c $(SOURCE) \
+	
+
+"$(INTDIR)\Auth_non.obj" : $(SOURCE) $(DEP_CPP_AUTH_N) "$(INTDIR)"
+   $(BuildCmds)
+
+"$(INTDIR)\Auth_non.sbr" : $(SOURCE) $(DEP_CPP_AUTH_N) "$(INTDIR)"
+   $(BuildCmds)
+
+!ENDIF 
+
+# End Source File
+# End Target
+# End Project
+################################################################################
