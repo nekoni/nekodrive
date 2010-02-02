@@ -16,7 +16,7 @@
    /* The size in bytes of the opaque file handle. */
    const FHSIZE = 32;
 
-   enum stat {
+   enum nfsstat {
            NFS_OK = 0,
            NFSERR_PERM=1,
            NFSERR_NOENT=2,
@@ -68,7 +68,7 @@
                   fattr   attributes;
 			};
 
-	union diropres switch (stat status) {
+	union diropres switch (nfsstat status) {
           case NFS_OK:
               diropok ok;
           default:
@@ -111,7 +111,7 @@
                    sattr attributes;
 			};
 
-	union readlinkres switch (stat status) {
+	union readlinkres switch (nfsstat status) {
            case NFS_OK:
                path data;
            default:
@@ -130,7 +130,7 @@
 					opaque      data<>;
 			};
 
-	union readres switch (stat status) {
+	union readres switch (nfsstat status) {
 	case NFS_OK:
 		   readresok ok;
 	default:
@@ -188,7 +188,7 @@ struct readdirok
 	bool eof;
 };
 
-           union readdirres switch (stat status) {
+           union readdirres switch (nfsstat status) {
            case NFS_OK:
                    readdirok ok;
            default:
@@ -203,7 +203,7 @@ struct readdirok
                    unsigned bavail;
                };
                
-           union statfsres switch (stat status) {
+           union statfsres switch (nfsstat status) {
            case NFS_OK:
                info ok;
            default:
@@ -247,22 +247,22 @@ program NFS_PROGRAM {
                diropres
                NFSPROC_CREATE(createargs)      = 9;
 
-               stat
+               nfsstat
                NFSPROC_REMOVE(diropargs)       = 10;
 
-               stat
+               nfsstat
                NFSPROC_RENAME(renameargs)      = 11;
 
-               stat
+               nfsstat
                NFSPROC_LINK(linkargs)          = 12;
 
-               stat
+               nfsstat
                NFSPROC_SYMLINK(symlinkargs)    = 13;
 
                diropres
                NFSPROC_MKDIR(createargs)       = 14;
 
-               stat
+               nfsstat
                NFSPROC_RMDIR(diropargs)        = 15;
 
                readdirres
