@@ -46,41 +46,17 @@
               NFLNK = 5
           };
 
-    typedef opaque fhandle[FHSIZE];
+    typedef opaque nfshandle[FHSIZE];
     typedef string filename<MAXNAMLEN>;
 	typedef string path<MAXPATHLEN>;
 	typedef unsigned int nfscookie;
 
-	union attrstat switch (stat status) {
-          case NFS_OK:
-				fattr attributes;
-          default:
-				void;
-			};
-
-	struct diropargs {
-				fhandle  dir;
-				filename name;
-			};
-
-	struct diropok {
-                  fhandle file;
-                  fattr   attributes;
-			};
-
-	union diropres switch (nfsstat status) {
-          case NFS_OK:
-              diropok ok;
-          default:
-              void;
-			};
-
-	struct timeval {
+	struct nfstimeval {
               unsigned int seconds;
               unsigned int useconds;
 			};
-          
-    struct fattr {
+			
+	struct fattr {
               ftype        type;
               unsigned int mode;
               unsigned int nlink;
@@ -92,22 +68,46 @@
               unsigned int blocks;
           		unsigned int fsid;
               unsigned int fileid;
-              timeval      atime;
-              timeval      mtime;
-              timeval      ctime;
+              nfstimeval      atime;
+              nfstimeval      mtime;
+              nfstimeval      ctime;
 			};
-          
      struct sattr {
               unsigned int mode;
               unsigned int uid;
               unsigned int gid;
               unsigned int size;
-              timeval      atime;
-              timeval      mtime;
+              nfstimeval      atime;
+              nfstimeval      mtime;
+			};
+			
+	union attrstat switch (nfsstat status) {
+          case NFS_OK:
+				fattr attributes;
+          default:
+				void;
 			};
 
+	struct diropargs {
+				nfshandle  dir;
+				filename name;
+			};
+
+	struct diropok {
+                  nfshandle file;
+                  fattr   attributes;
+			};
+
+	union diropres switch (nfsstat status) {
+          case NFS_OK:
+              diropok ok;
+          default:
+              void;
+			};
+          
+   
 	struct sattrargs {
-                   fhandle file;
+                   nfshandle file;
                    sattr attributes;
 			};
 
@@ -119,7 +119,7 @@
 			};
 
 	struct readargs {
-                   fhandle file;
+                   nfshandle file;
                    unsigned offset;
                    unsigned count;
                    unsigned totalcount;
@@ -138,7 +138,7 @@
 	};
 	           
 	struct writeargs {
-					   fhandle file;
+					   nfshandle file;
 					   unsigned beginoffset;
 					   unsigned offset;
 					   unsigned totalcount;
@@ -158,23 +158,23 @@
 			   };
 	           
 	struct linkargs {
-					   fhandle from;
+					   nfshandle from;
 					   diropargs to;
 			   };                                 
            
-   struct symlinkargs {
+	struct symlinkargs {
            diropargs from;
            path to;
            sattr attributes;
-   };
+	};
            
 	struct readdirargs {
-                   fhandle dir;
+                   nfshandle dir;
                    nfscookie cookie;
                    unsigned count;
            };
 
-           struct entry {
+    struct entry {
                    unsigned fileid;
                    filename name;
                    nfscookie cookie;
@@ -182,33 +182,32 @@
            };
 
 
-struct readdirok
-{
-	entry *entries;
-	bool eof;
-};
+	struct readdirok {
+					entry *entries;
+					bool eof;
+			};
 
-           union readdirres switch (nfsstat status) {
-           case NFS_OK:
-                   readdirok ok;
-           default:
-                   void;
-           };           
+   union readdirres switch (nfsstat status) {
+   case NFS_OK:
+           readdirok ok;
+   default:
+           void;
+   };           
            
-           struct info {
-                   unsigned tsize;
-                   unsigned bsize;
-                   unsigned blocks;
-                   unsigned bfree;
-                   unsigned bavail;
-               };
+   struct info {
+           unsigned tsize;
+           unsigned bsize;
+           unsigned blocks;
+           unsigned bfree;
+           unsigned bavail;
+       };
                
-           union statfsres switch (nfsstat status) {
-           case NFS_OK:
-               info ok;
-           default:
-                   void;
-           };
+   union statfsres switch (nfsstat status) {
+   case NFS_OK:
+       info ok;
+   default:
+           void;
+   };
 
              
            
@@ -221,7 +220,7 @@ program NFS_PROGRAM {
                NFSPROC_NULL(void)              = 0;
 
                attrstat
-               NFSPROC_GETATTR(fhandle)        = 1;
+               NFSPROC_GETATTR(nfshandle)        = 1;
 
                attrstat
                NFSPROC_SETATTR(sattrargs)      = 2;
@@ -233,7 +232,7 @@ program NFS_PROGRAM {
                NFSPROC_LOOKUP(diropargs)       = 4;
 
                readlinkres
-               NFSPROC_READLINK(fhandle)       = 5;
+               NFSPROC_READLINK(nfshandle)       = 5;
 
                readres
                NFSPROC_READ(readargs)          = 6;
@@ -241,7 +240,7 @@ program NFS_PROGRAM {
                void
                NFSPROC_WRITECACHE(void)        = 7;
 							 
-	       attrstat
+			   attrstat
                NFSPROC_WRITE(writeargs)        = 8;
 
                diropres
@@ -269,6 +268,6 @@ program NFS_PROGRAM {
                NFSPROC_READDIR(readdirargs)    = 16;
 
                statfsres
-               NFSPROC_STATFS(fhandle)         = 17;
+               NFSPROC_STATFS(nfshandle)         = 17;
        } = 2;
 } = 100003;
