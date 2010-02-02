@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "oncrpc", "..\ONCRPC\oncrpc_win32_release_2\oncrpc\win32\librpc\lib\oncrpc.vcproj", "{68393948-88CA-4A68-9DC9-E437401D63AD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NFSv2", "NFSv2\NFSv2.vcproj", "{D4C71D94-BA6C-4BB0-BE7A-CFB29AC91A50}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestV2", "TestV2\TestV2.vcproj", "{14C80CE5-B224-401E-939E-C317BA4EBFD6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68393948-88CA-4A68-9DC9-E437401D63AD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{68393948-88CA-4A68-9DC9-E437401D63AD}.Debug|Win32.Build.0 = Debug|Win32
+		{68393948-88CA-4A68-9DC9-E437401D63AD}.Release|Win32.ActiveCfg = Release|Win32
+		{68393948-88CA-4A68-9DC9-E437401D63AD}.Release|Win32.Build.0 = Release|Win32
+		{D4C71D94-BA6C-4BB0-BE7A-CFB29AC91A50}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D4C71D94-BA6C-4BB0-BE7A-CFB29AC91A50}.Debug|Win32.Build.0 = Debug|Win32
+		{D4C71D94-BA6C-4BB0-BE7A-CFB29AC91A50}.Release|Win32.ActiveCfg = Release|Win32
+		{D4C71D94-BA6C-4BB0-BE7A-CFB29AC91A50}.Release|Win32.Build.0 = Release|Win32
+		{14C80CE5-B224-401E-939E-C317BA4EBFD6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{14C80CE5-B224-401E-939E-C317BA4EBFD6}.Debug|Win32.Build.0 = Debug|Win32
+		{14C80CE5-B224-401E-939E-C317BA4EBFD6}.Release|Win32.ActiveCfg = Release|Win32
+		{14C80CE5-B224-401E-939E-C317BA4EBFD6}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
