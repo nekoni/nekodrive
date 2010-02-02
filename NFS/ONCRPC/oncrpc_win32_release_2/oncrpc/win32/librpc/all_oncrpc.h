@@ -79,8 +79,8 @@
 
 DllExport void get_myaddress(struct sockaddr_in *addr);
 int bindresvport(int sd,struct sockaddr_in *sin);
-//void bcopy(char *s1,char *s2, int len);
-//void bzero(char *s, int len);
+void bcopy(char *s1,char *s2, int len);
+void bzero(char *s, int len);
 int bcmp(char *s1, char *s2, int len);
 
 #endif  /*__all_oncrpc_includes__*/

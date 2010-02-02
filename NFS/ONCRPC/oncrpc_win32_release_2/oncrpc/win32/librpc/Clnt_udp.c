@@ -250,7 +250,7 @@ clntudp_create(raddr, program, version, wait, sockp)
 	    UDPMSGSIZE, UDPMSGSIZE));
 }
 
-static enum clnt_stat 
+static enum clnt_stat
 clntudp_call(cl, proc, xargs, argsp, xresults, resultsp, utimeout)
 	register CLIENT	*cl;		/* client handle */
 	u_long		proc;		/* procedure number */
@@ -296,17 +296,23 @@ call_again:
 	 * the transaction is the first thing in the out buffer
 	 */
 	(*(u_short *)(cu->cu_outbuf))++;
+
 	if ((! XDR_PUTLONG(xdrs, (long *)&proc)) ||
 	    (! AUTH_MARSHALL(cl->cl_auth, xdrs)) ||
 	    (! (*xargs)(xdrs, argsp)))
 		return (cu->cu_error.re_status = RPC_CANTENCODEARGS);
+
 	outlen = (int)XDR_GETPOS(xdrs);
 
 send_again:
 	if (sendto(cu->cu_sock, cu->cu_outbuf, outlen, 0,
 	    (struct sockaddr *)&(cu->cu_raddr), cu->cu_rlen)
 	    != outlen) {
+#ifdef WIN32
+		cu->cu_error.re_errno = WSAerrno;
+#else
 		cu->cu_error.re_errno = errno;
+#endif
 		return (cu->cu_error.re_status = RPC_CANTSEND);
 	}
 
@@ -332,8 +338,13 @@ send_again:
 #endif /* def FD_SETSIZE */
 	for (;;) {
 		readfds = mask;
+#ifdef WIN32
+		switch (select(0 /* unused in winsock */, &readfds, NULL,
+			       NULL, &(cu->cu_wait))) {
+#else
 		switch (select(_rpc_dtablesize(), &readfds, (int *)NULL, 
 			       (int *)NULL, &(cu->cu_wait))) {
+#endif
 
 		case 0:
 			time_waited.tv_sec += cu->cu_wait.tv_sec;
@@ -345,7 +356,7 @@ send_again:
 			if ((time_waited.tv_sec < timeout.tv_sec) ||
 				((time_waited.tv_sec == timeout.tv_sec) &&
 				(time_waited.tv_usec < timeout.tv_usec)))
-				goto send_again;	
+				goto send_again;
 			return (cu->cu_error.re_status = RPC_TIMEDOUT);
 
 		/*
@@ -353,28 +364,42 @@ send_again:
 		 * updated.
 		 */
 		case -1:
+#ifdef WIN32
+			if (WSAerrno == WSAEINTR)
+				continue;
+			cu->cu_error.re_errno = WSAerrno;
+#else
 			if (errno == EINTR)
 				continue;	
 			cu->cu_error.re_errno = errno;
+#endif
 			return (cu->cu_error.re_status = RPC_CANTRECV);
 		}
 		do {
 			fromlen = sizeof(struct sockaddr);
-			inlen = recvfrom(cu->cu_sock, cu->cu_inbuf, 
+			inlen = recvfrom(cu->cu_sock, cu->cu_inbuf,
 				(int) cu->cu_recvsz, 0,
 				(struct sockaddr *)&from, &fromlen);
+#ifdef WIN32
+		} while (inlen < 0 && WSAerrno == EINTR);
+		if (inlen < 0) {
+			if (WSAerrno == WSAEWOULDBLOCK)
+				continue;
+			cu->cu_error.re_errno = WSAerrno;
+#else
 		} while (inlen < 0 && errno == EINTR);
 		if (inlen < 0) {
-			if (errno == WSAEWOULDBLOCK)
+			if (errno == EWOULDBLOCK)
 				continue;	
 			cu->cu_error.re_errno = errno;
+#endif
 			return (cu->cu_error.re_status = RPC_CANTRECV);
 		}
 		if (inlen < sizeof(u_long))
-			continue;	
+			continue;
 		/* see if reply transaction id matches sent id */
 		if (*((u_long *)(cu->cu_inbuf)) != *((u_long *)(cu->cu_outbuf)))
-			continue;	
+			continue;
 		/* we now assume we have the proper reply */
 		break;
 	}
@@ -397,7 +422,7 @@ send_again:
 				xdrs->x_op = XDR_FREE;
 				(void)xdr_opaque_auth(xdrs,
 				    &(reply_msg.acpted_rply.ar_verf));
-			} 
+			}
 		}  /* end successful completion */
 		else {
 			/* maybe our credentials need to be refreshed ... */
