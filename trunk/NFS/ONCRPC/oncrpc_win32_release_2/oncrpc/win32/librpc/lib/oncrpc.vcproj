@@ -285,6 +285,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\bcopy.c"
+				>
+			</File>
+			<File
 				RelativePath="..\Bindresv.c"
 				>
 				<FileConfiguration

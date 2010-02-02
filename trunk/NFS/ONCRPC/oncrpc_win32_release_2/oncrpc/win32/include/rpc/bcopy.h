@@ -24,13 +24,9 @@
  * USE OF. USE ENTIRELY AT YOUR OWN RISK!!!
  *********************************************************************/
 
-
-//DllExport void bcopy(char *,char*,int);
+DllExport void bcopy(char *,char*,int);
 //void bcopy_nf(char *,char *,int);
 //void bcopy_fn(char *,char *,int);
 //void bcopy_ff(char *,char *,int);
-//DllExport void bzero(char*,int);
+DllExport void bzero(char*,int);
 DllExport int bcmp(char *s1, char *s2, int len);
-
-#define bcopy(p1,p2,p3) memcpy((p2),(p1),(p3))
-#define bzero(p1,p2) memset((p1), 0, (p2))
