@@ -172,7 +172,7 @@
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary=".\Debug/oncrpc.lib"
+				ImportLibrary="..\..\..\..\..\..\Build\x86\Debug\oncrpc.lib"
 				TargetMachine="1"
 			/>
 			<Tool
