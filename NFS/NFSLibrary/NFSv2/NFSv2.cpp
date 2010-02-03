@@ -88,7 +88,6 @@ CNFSv2::~CNFSv2()
 	}
 }
 
-
 int CNFSv2::Disconnect()
 {
 	if(clntMountV2 != NULL)
@@ -218,17 +217,9 @@ char** CNFSv2::GetExportedDevices(int* pnSize)
 	return  strings;
 }
 
-
-void CNFSv2::ReleaseExportedDevices(char** pDevices)
+char** CNFSv2::GetItemsList(int* pnSize)
 {
-	if(pDevices != NULL)
-		delete[] pDevices;
-}
-
-int CNFSv2::GetFilesLit()
-{
-	std::vector<NFSFileData> vdevFiles;
-	vdevFiles.clear();
+	std::vector<std::string> vstrItems;
 	entry* pEntry = NULL;
 
 	if(clntV2 != NULL)
@@ -246,7 +237,7 @@ int CNFSv2::GetFilesLit()
 			if( (pReadDirRes = nfsproc_readdir_2(&dpRdArgs, clntV2)) == NULL ) 
 			{
 				printf(clnt_sperror(clntV2, "nfsproc_readdir_2"));
-				return(NFS_ERROR);
+				return NULL;
 			}
 			
 			if(pReadDirRes->status == NFS_OK)
@@ -254,56 +245,116 @@ int CNFSv2::GetFilesLit()
 				pEntry = pReadDirRes->readdirres_u.ok.entries;
 				while(pEntry != NULL)
 				{
-					NFSFileData nfsData = InitStructure();
-					nfsData.FileName = pEntry->name;
-					
-					//get file statistics
-					diropargs dpDrArgs;
-					diropres *pDirOpRes;
-					memcpy(dpDrArgs.dir, nfsCurrentDirectory, FHSIZE);
-					dpDrArgs.name = pEntry->name;
-					if( (pDirOpRes = nfsproc_lookup_2(&dpDrArgs, clntV2)) == NULL ) 
-					{
-						printf(clnt_sperror(clntV2,"nfsproc_lookup_2"));
-						return(NFS_ERROR);
-					}
-					//check the result
-					if (pDirOpRes->status == NFS_OK) 
-					{
-						memcpy(nfsData.Handle, pDirOpRes->diropres_u.ok.file, FHSIZE);
-						nfsData.DateTime = pDirOpRes->diropres_u.ok.attributes.ctime.seconds;
-						nfsData.Type = pDirOpRes->diropres_u.ok.attributes.type;
-						nfsData.Size = pDirOpRes->diropres_u.ok.attributes.size;
-						nfsData.Blocks = pDirOpRes->diropres_u.ok.attributes.blocks;
-						nfsData.BlockSize = pDirOpRes->diropres_u.ok.attributes.blocksize;
-						vdevFiles.push_back(nfsData);
-						dpRdArgs.cookie = pEntry->cookie;
-						pEntry = pEntry->nextentry;
-					}
+					vstrItems.push_back(pEntry->name);
+					dpRdArgs.cookie = pEntry->cookie;
+					pEntry = pEntry->nextentry;
 				}
 			}
 			else
-				return (NFS_ERROR);
+				return NULL;
 
 			if(pReadDirRes->readdirres_u.ok.eof)
 				break;
 		}
-		return(NFS_SUCCESS);
+
+		//fill the output 
+		int nSize = (int) vstrItems.size();
+		char** strings = new char*[nSize];
+
+		for( int i = 0; i < nSize; i++)
+		{
+			strings[i] = (char*) vstrItems[i].c_str();
+		}
+
+		*pnSize = nSize;
+		return  strings;
 	}
-	return(NFS_ERROR);
+
+	return NULL;
 }
 
-NFSFileData CNFSv2::InitStructure()
+void CNFSv2::ReleaseBuffer(char** pBuffer)
 {
-	NFSFileData nfsData;
-	memset(nfsData.Handle, 0, FHSIZE);
-	nfsData.DateTime = 0;
-	nfsData.FileName = "";
-	nfsData.Next = NULL;
-	nfsData.Type = 0;
-	nfsData.Blocks = 0;
-	nfsData.DateTime = 0;
-	nfsData.BlockSize = 0;
+	if(pBuffer != NULL)
+		delete[] pBuffer;
+}
 
-	return nfsData;
+void* CNFSv2::GetItemAttributes(char* pItem)
+{
+	//get item statistics
+	diropargs dpDrArgs;
+	diropres *pDirOpRes;
+	memcpy(dpDrArgs.dir, nfsCurrentDirectory, FHSIZE);
+	dpDrArgs.name = pItem;
+	if( (pDirOpRes = nfsproc_lookup_2(&dpDrArgs, clntV2)) == NULL ) 
+	{
+		printf(clnt_sperror(clntV2,"nfsproc_lookup_2"));
+		return NULL;
+	}
+	//check the result
+	if (pDirOpRes->status == NFS_OK) 
+	{
+		NFSData* pNfsData = new NFSData;
+		InitStructure(pNfsData);
+		memcpy(pNfsData->Handle, pDirOpRes->diropres_u.ok.file, FHSIZE);
+		pNfsData->DateTime = pDirOpRes->diropres_u.ok.attributes.ctime.seconds;
+		pNfsData->Type = pDirOpRes->diropres_u.ok.attributes.type;
+		pNfsData->Size = pDirOpRes->diropres_u.ok.attributes.size;
+		pNfsData->Blocks = pDirOpRes->diropres_u.ok.attributes.blocks;
+		pNfsData->BlockSize = pDirOpRes->diropres_u.ok.attributes.blocksize;
+		return (void*) pNfsData;	
+	}
+	return NULL;
+}
+
+void CNFSv2::ReleaseBuffer(char* pBuffer)
+{
+	if(pBuffer != NULL)
+		delete pBuffer;
+}
+
+void CNFSv2::InitStructure(NFSData* pNfsData)
+{
+	memset(pNfsData->Handle, 0, FHSIZE);
+	pNfsData->DateTime = 0;
+	pNfsData->Type = 0;
+	pNfsData->Blocks = 0;
+	pNfsData->DateTime = 0;
+	pNfsData->BlockSize = 0;
+}
+
+void CNFSv2::ChangeCurrentDirectory(char *pHandle)
+{
+	if(pHandle != NULL)
+		memcpy(nfsCurrentDirectory, pHandle, FHSIZE);
+}
+
+int CNFSv2::CreateDirectory(char* pName)
+{
+	return NFS_SUCCESS;
+}
+
+int CNFSv2::DeleteDirectory(char* pName)
+{
+	return NFS_SUCCESS;
+}
+
+int CNFSv2::DeleteFile(char* pName)
+{
+	return NFS_SUCCESS;
+}
+
+int CNFSv2::CreateFile(char* pName)
+{
+	return NFS_SUCCESS;
+}
+
+int CNFSv2::Read(char* pHandle, u_int Offset, u_int Count)
+{
+	return NFS_SUCCESS;
+}
+
+int CNFSv2::Write(char* pHandle, u_int Offset, u_int Count)
+{
+	return NFS_SUCCESS;
 }
