@@ -28,34 +28,42 @@
 #define NFS_SUCCESS 0
 #define NFS_ERROR -1
 
-struct NFSFileData
+struct NFSData
 {
-	std::string FileName;
 	unsigned long DateTime;
 	unsigned int Type;
 	unsigned int Size;
 	unsigned int Blocks;
 	unsigned int BlockSize;
 	char Handle[FHSIZE];
-	NFSFileData* Next;
 };
 
 
 class NFSV2_API CNFSv2
 {
 private:
+	//server address
 	unsigned int uiServer;
+	//server name
 	std::string strServer;
+	//nfs mount client v2
 	CLIENT* clntMountV2;
+	//nfs client v2
 	CLIENT* clntV2;
+	//main socket
 	SOCKET sSocket;
+	//server address structure
 	struct sockaddr_in sSrvAddr;
+	//clients timeout
 	struct timeval timeOut;
+	//current connected device
 	std::string strCurrentDevice;
+	//last error string
 	std::string strLastError;
-	nfshandle      nfsCurrentDirectory;
+	//handle of the current directory
+	nfshandle nfsCurrentDirectory;
 	//functions
-	NFSFileData InitStructure();
+	void InitStructure(NFSData* pNfsData);
 public:
 	CNFSv2();
 	~CNFSv2();
@@ -65,14 +73,32 @@ public:
 	int Disconnect();
 	//Get the exported devices
 	char** GetExportedDevices(int* pnSize);
-	//Release the string buffers
-	void ReleaseExportedDevices(char** pDevices);
+	//Get the items of the current directory
+	char** GetItemsList(int* pnSize);
+	//Release the strings buffer
+	void ReleaseBuffer(char** pBuffer);
+	//Release the structure
+	void ReleaseBuffer(char* pBuffer);
 	//Mount the remote device
 	int MountDevice(char* pDevice);
 	//Unmount the remote device
 	int UnMountDevice();
-	//Get the files list
-	int GetFilesLit();
+	//Get the item attributes
+	void* GetItemAttributes(char* pItem);
+	//Change the current directory
+	void ChangeCurrentDirectory(char* pHandle);
+	//Create a directory
+	int CreateDirectory(char* pName);
+	//Delete a directory
+	int DeleteDirectory(char* pName);
+	//Delete a file
+	int DeleteFile(char* pName);
+	//Create a new file
+	int CreateFile(char* pName);
+	//Read a file
+	int Read(char* pHandle, u_int Offset, u_int Count);
+	//Write a file
+	int Write(char* pHandle, u_int Offset, u_int Count);
 };
 
 #endif
