@@ -1,10 +1,13 @@
 /*
-NekoDrive
-2009 by Mirko Gatto
-mirko.gatto@gmail.com
-
-2010-27-01: C++ compatible
-*/
+ * NekoDrive
+ * copyright 2009 by Mirko Gatto
+ * mirko.gatto@gmail.com
+ *
+ * 2010-27-01: C++ compatible
+ *
+ * Users may use, copy or modify Sun RPC for the Windows NT Operating 
+ * System according to the Sun copyright below.
+ */
 /**********************************************************************
  * ONC RPC for WIN32.
  * 1997 by WD Klotz
