@@ -175,8 +175,7 @@ int CNFSv2::MountDevice(char* pDevice)
 
 char** CNFSv2::GetExportedDevices(int* pnSize)
 {
-	std::vector<std::string> vstrDevices;
-	vstrDevices.clear();
+	vStr.clear();
 
 	if(clntMountV2 == NULL)
 	{
@@ -198,18 +197,18 @@ char** CNFSv2::GetExportedDevices(int* pnSize)
 	
 	while(tmp != NULL)
 	{
-		vstrDevices.push_back(tmp->filesys);
+		vStr.push_back(tmp->filesys);
 		tmp = tmp->next;
 	}
 	
 	xdr_free((xdrproc_t)xdr_exports,(char*) device);
 
-	int nSize = (int) vstrDevices.size();
+	int nSize = (int) vStr.size();
 	char** strings = new char*[nSize];
 
 	for( int i = 0; i < nSize; i++)
 	{
-		strings[i] = (char*) vstrDevices[i].c_str();
+		strings[i] = (char*) vStr[i].c_str();
 	}
 
 	*pnSize = nSize;
@@ -218,7 +217,7 @@ char** CNFSv2::GetExportedDevices(int* pnSize)
 
 char** CNFSv2::GetItemsList(int* pnSize)
 {
-	std::vector<std::string> vstrItems;
+	vStr.clear();
 	entry* pEntry = NULL;
 
 	if(clntV2 != NULL)
@@ -244,7 +243,7 @@ char** CNFSv2::GetItemsList(int* pnSize)
 				pEntry = pReadDirRes->readdirres_u.ok.entries;
 				while(pEntry != NULL)
 				{
-					vstrItems.push_back(pEntry->name);
+					vStr.push_back(pEntry->name);
 					dpRdArgs.cookie = pEntry->cookie;
 					pEntry = pEntry->nextentry;
 				}
@@ -265,12 +264,12 @@ char** CNFSv2::GetItemsList(int* pnSize)
 				break;
 		}
 
-		int nSize = (int) vstrItems.size();
+		int nSize = (int) vStr.size();
 		char** strings = new char*[nSize];
 
 		for( int i = 0; i < nSize; i++)
 		{
-			strings[i] = (char*) vstrItems[i].c_str();
+			strings[i] = (char*) vStr[i].c_str();
 		}
 
 		*pnSize = nSize;
@@ -285,10 +284,10 @@ char** CNFSv2::GetItemsList(int* pnSize)
 	return NULL;
 }
 
-void CNFSv2::ReleaseBuffer(char** pBuffer)
+void CNFSv2::ReleaseBuffers(char** pBuffers)
 {
-	if(pBuffer != NULL)
-		delete[] pBuffer;
+	if(pBuffers != NULL)
+		delete[] pBuffers;
 }
 
 void* CNFSv2::GetItemAttributes(char* pItem)

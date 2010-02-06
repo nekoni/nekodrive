@@ -65,6 +65,8 @@ private:
 	std::string strLastError;
 	//handle of the current directory
 	nfshandle nfsCurrentDirectory;
+	//vectors
+	std::vector<std::string> vStr;
 	//functions
 	void InitStructure(NFSData* pNfsData);
 public:
@@ -79,7 +81,7 @@ public:
 	//Get the items of the current directory
 	char** GetItemsList(int* pnSize);
 	//Release the strings buffer
-	void ReleaseBuffer(char** pBuffer);
+	void ReleaseBuffers(char** pBuffers);
 	//Release the structure
 	void ReleaseBuffer(char* pBuffer);
 	//Mount the remote device

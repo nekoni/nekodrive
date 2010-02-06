@@ -11,9 +11,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	nfs->Connect(ServerAddress);
 	int iDevices = 0;
 	char** pDevices  = nfs->GetExportedDevices(&iDevices);
-	nfs->ReleaseExportedDevices(pDevices);
+	nfs->ReleaseBuffers(pDevices);
 	nfs->MountDevice("/rd0");
-	nfs->GetFilesLit();
+	int iItems = 0;
+	nfs->GetItemsList(&iItems);
 	nfs->UnMountDevice();
 	delete nfs;
 	
