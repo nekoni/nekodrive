@@ -19,7 +19,15 @@
 #define MAXNAMLEN 255
 #define COOKIESIZE 4
 #define FHSIZE 32
-
+#define FIFO_DEV -1
+#define MODE_FMT 0170000
+#define MODE_DIR 0040000
+#define MODE_CHR 0020000
+#define MODE_BLK 0060000
+#define MODE_REG 0100000
+#define MODE_LNK 0120000
+#define MODE_SOCK 0140000
+#define MODE_FIFO 0010000
 
 enum nfsstat {
 	NFS_OK = 0,
