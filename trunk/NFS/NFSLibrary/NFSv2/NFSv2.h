@@ -12,6 +12,8 @@
 #ifndef __IncNFSV2h
 #define __IncNFSV2h
 
+#pragma pack(8) //alignemnt 8 bytes
+
 #ifdef NFSV2_EXPORTS
 #define NFSV2_API __declspec(dllexport)
 #else
@@ -27,6 +29,7 @@
 #define MAX_FILE_NAME 255
 #define NFS_SUCCESS 0
 #define NFS_ERROR -1
+
 
 struct NFSData
 {
@@ -96,9 +99,11 @@ public:
 	//Create a new file
 	int CreateFile(char* pName);
 	//Read a file
-	int Read(char* pHandle, u_int Offset, u_int Count);
+	int Read(char* pHandle, u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
 	//Write a file
-	int Write(char* pHandle, u_int Offset, u_int Count);
+	int Write(char* pHandle, u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
+	//Rename a file or directory
+	int Rename(char* pOldName, char* pNewName);
 };
 
 #endif
