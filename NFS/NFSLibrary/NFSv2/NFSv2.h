@@ -12,7 +12,7 @@
 #ifndef __IncNFSV2h
 #define __IncNFSV2h
 
-#pragma pack(8) //alignemnt 8 bytes
+#pragma pack(4) 
 
 #ifdef NFSV2_EXPORTS
 #define NFSV2_API __declspec(dllexport)

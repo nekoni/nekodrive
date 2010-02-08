@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using NekoDrive.NFS.Utility;
+using System.Net;
+using System.IO;
 
 namespace NekoDrive.NFS.Wrappers
 {
@@ -12,15 +14,74 @@ namespace NekoDrive.NFS.Wrappers
         NFS_ERROR
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    public enum NFSType
+    {
+        NFNON = 0,
+        NFREG = 1,
+        NFDIR = 2,
+        NFBLK = 3,
+        NFCHR = 4,
+        NFLNK = 5
+    }
+
+    public class NFSAttributes
+    {
+        public NFSAttributes(UInt32 dateTime, UInt32 type, UInt32 size, UInt32 blocks, UInt32 blockSize, byte[] handle)
+        {
+            this.dateTime = new System.DateTime(1970,1,1).AddSeconds(dateTime);
+            this.type = (NFSType) type;
+            this.size = size;
+            this.blocks = blocks;
+            this.blockSize = blockSize;
+            this.handle = (byte[]) handle.Clone();
+        }
+
+        public DateTime dateTime;
+        public NFSType type;
+        public UInt32 size;
+        public UInt32 blocks;
+        public UInt32 blockSize;
+        public byte[] handle;
+
+        public override string ToString()
+        {
+            string Handle = string.Empty;
+            foreach(byte b in handle)
+                Handle += b.ToString("X");
+
+            return "DateTime: " + dateTime.ToString() + " " +
+                "Type: " + type.ToString() + " " +
+                "Size: " + size + " " +
+                "Blocks: " + blocks + " " +
+                "BlockSize: " + blockSize + " " +
+                "Handle: " + Handle;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public unsafe struct __NFSv2
     {
         public IntPtr* _vtable;
     }
 
+    [StructLayout(LayoutKind.Sequential, Pack = 4, CharSet = CharSet.Ansi)]
+    public struct NFSv2Data
+    {
+        public UInt32 DateTime;
+        public UInt32 Type;
+        public UInt32 Size;
+        public UInt32 Blocks;
+        public UInt32 BlockSize;
+        public UInt64 Dummy;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        public byte[] Handle;
+    }
+
     public unsafe class NFSv2: IDisposable
     {
         private __NFSv2* _nfsv2;
+
+        private IPAddress _Address;
 
         [DllImport("NFSv2.dll", EntryPoint = "??0CNFSv2@@QAE@XZ", CallingConvention = CallingConvention.ThisCall)]
         private static extern void __NFSv2_Constructor(__NFSv2* pThis);
@@ -79,8 +140,9 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv2.dll", EntryPoint = "?Rename@CNFSv2@@QAEHPAD0@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv2_Rename(__NFSv2* pThis, String pOldName, String pNewName);
 
-        public NFSv2()
+        public NFSv2(String ServerAddrss)
         {
+            _Address = IPAddress.Parse(ServerAddrss);
             _nfsv2 = (__NFSv2*)Memory.Alloc(sizeof(__NFSv2));
             __NFSv2_Constructor(_nfsv2);
         }
@@ -92,9 +154,9 @@ namespace NekoDrive.NFS.Wrappers
             _nfsv2 = null;
         }
 
-        public NFSResult Connect(UInt32 ServerAddrss)
+        public NFSResult Connect()
         {
-            return (NFSResult)__NFSv2_Connect(_nfsv2, ServerAddrss);
+            return (NFSResult)__NFSv2_Connect(_nfsv2, (UInt32)_Address.Address);
         }
 
         public NFSResult Disconnect()
@@ -144,6 +206,64 @@ namespace NekoDrive.NFS.Wrappers
             }
             __NFSv2_ReleaseBuffers(_nfsv2, pItems);
             return ItemsList;
+        }
+
+        public NFSAttributes GetItemAttributes(String ItemName)
+        {
+            IntPtr pAttributes;
+
+            pAttributes = __NFSv2_GetItemAttributes(_nfsv2, ItemName);
+            NFSv2Data nfsData =(NFSv2Data) Marshal.PtrToStructure(pAttributes, typeof(NFSv2Data));
+
+            NFSAttributes nfsAttributes = new NFSAttributes(nfsData.DateTime, nfsData.Type, nfsData.Size, nfsData.Blocks,
+                nfsData.BlockSize, nfsData.Handle);
+
+            __NFSv2_ReleaseBuffer(_nfsv2, pAttributes);
+
+            return nfsAttributes;
+        }
+
+        public void ChangeCurrentDirectory(NFSAttributes DirectoryAttribures)
+        {
+            IntPtr pHandle = Marshal.AllocCoTaskMem(Marshal.SizeOf(DirectoryAttribures.handle));
+            __NFSv2_ChangeCurrentDirectory(_nfsv2, pHandle);
+            Marshal.FreeCoTaskMem(pHandle);
+        }
+
+        public NFSResult CreateDirectory(String DirectoryName)
+        {
+            return (NFSResult)__NFSv2_CreateDirectory(_nfsv2, DirectoryName);
+        }
+
+        public NFSResult DeleteDirectory(String DirectoryName)
+        {
+            return (NFSResult)__NFSv2_DeleteDirectory(_nfsv2, DirectoryName);
+        }
+
+        public NFSResult DeleteFile(String FileName)
+        {
+            return (NFSResult)__NFSv2_DeleteFile(_nfsv2, FileName);
+        }
+
+        public NFSResult CreateFile(String FileName)
+        {
+            return (NFSResult)__NFSv2_CreateFile(_nfsv2, FileName);
+        }
+
+        public NFSResult Read(NFSAttributes FileAttributes, out Stream OutputStream)
+        {
+            OutputStream = null;
+            return NFSResult.NFS_SUCCESS;
+        }
+        
+        public NFSResult Write(NFSAttributes FileAttributes, Stream InputStream)
+        {
+            return NFSResult.NFS_SUCCESS;
+        }
+
+        public NFSResult Rename(String OldName, String NewName)
+        {
+            return (NFSResult)__NFSv2_Rename(_nfsv2, OldName, NewName);
         }
     }
 }
