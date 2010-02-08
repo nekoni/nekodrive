@@ -116,8 +116,8 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv2.dll", EntryPoint = "?GetItemAttributes@CNFSv2@@QAEPAXPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern IntPtr __NFSv2_GetItemAttributes(__NFSv2* pThis, String pItem);
 
-        [DllImport("NFSv2.dll", EntryPoint = "?ChangeCurrentDirectory@CNFSv2@@QAEXPAD@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern void __NFSv2_ChangeCurrentDirectory(__NFSv2* pThis, IntPtr pHandle);
+        [DllImport("NFSv2.dll", EntryPoint = "?ChangeCurrentDirectory@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
+        public static extern int __NFSv2_ChangeCurrentDirectory(__NFSv2* pThis, String pName);
 
         [DllImport("NFSv2.dll", EntryPoint = "?CreateDirectoryW@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv2_CreateDirectory(__NFSv2* pThis, String pName);
@@ -128,14 +128,20 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv2.dll", EntryPoint = "?DeleteFileW@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv2_DeleteFile(__NFSv2* pThis, String pName);
 
+        [DllImport("NFSv2.dll", EntryPoint = "?CloseFile@CNFSv2@@QAEXXZ", CallingConvention = CallingConvention.ThisCall)]
+        public static extern int __NFSv2_CloseFile(__NFSv2* pThis);
+
         [DllImport("NFSv2.dll", EntryPoint = "?CreateFileW@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv2_CreateFile(__NFSv2* pThis, String pName);
 
-        [DllImport("NFSv2.dll", EntryPoint = "?Read@CNFSv2@@QAEHPADII0PAK@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_Read(__NFSv2* pThis, IntPtr pHandle, UInt32 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
+        [DllImport("NFSv2.dll", EntryPoint = "?Open@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
+        public static extern int __NFSv2_Open(__NFSv2* pThis, String pName);
 
-        [DllImport("NFSv2.dll", EntryPoint = "?Write@CNFSv2@@QAEHPADII0PAK@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_Write(__NFSv2* pThis, IntPtr pHandle, UInt32 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
+        [DllImport("NFSv2.dll", EntryPoint = "?Read@CNFSv2@@QAEHIIPADPAK@Z", CallingConvention = CallingConvention.ThisCall)]
+        public static extern int __NFSv2_Read(__NFSv2* pThis, UInt32 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
+
+        [DllImport("NFSv2.dll", EntryPoint = "?Write@CNFSv2@@QAEHIIPADPAK@Z", CallingConvention = CallingConvention.ThisCall)]
+        public static extern int __NFSv2_Write(__NFSv2* pThis, UInt32 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
 
         [DllImport("NFSv2.dll", EntryPoint = "?Rename@CNFSv2@@QAEHPAD0@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv2_Rename(__NFSv2* pThis, String pOldName, String pNewName);
@@ -223,11 +229,9 @@ namespace NekoDrive.NFS.Wrappers
             return nfsAttributes;
         }
 
-        public void ChangeCurrentDirectory(NFSAttributes DirectoryAttribures)
+        public NFSResult ChangeCurrentDirectory(String DirectoryName)
         {
-            IntPtr pHandle = Marshal.AllocCoTaskMem(Marshal.SizeOf(DirectoryAttribures.handle));
-            __NFSv2_ChangeCurrentDirectory(_nfsv2, pHandle);
-            Marshal.FreeCoTaskMem(pHandle);
+            return (NFSResult)__NFSv2_ChangeCurrentDirectory(_nfsv2, DirectoryName);
         }
 
         public NFSResult CreateDirectory(String DirectoryName)
@@ -250,15 +254,90 @@ namespace NekoDrive.NFS.Wrappers
             return (NFSResult)__NFSv2_CreateFile(_nfsv2, FileName);
         }
 
-        public NFSResult Read(NFSAttributes FileAttributes, out Stream OutputStream)
+        public NFSResult Read(String FileName, ref FileStream OutputStream)
         {
-            OutputStream = null;
-            return NFSResult.NFS_SUCCESS;
+            if (OutputStream == null)
+                return NFSResult.NFS_ERROR;
+
+            NFSAttributes nfsAttributes = GetItemAttributes(FileName);
+
+            if (NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_Open(_nfsv2, FileName))
+            {
+                UInt32 TotalLenght = nfsAttributes.size;
+                UInt32 BlockSize = nfsAttributes.blockSize;
+                UInt32 CuttentPosition =0;
+                do
+                {
+                    UInt32 Count = BlockSize;
+                    if ((TotalLenght - CuttentPosition) < BlockSize)
+                        Count = (UInt32) TotalLenght - CuttentPosition;
+                    IntPtr pBuffer = Marshal.AllocHGlobal((Int32)Count);
+                    Int32 pSize;
+
+                    if (NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_Read(_nfsv2, CuttentPosition, Count, pBuffer, out pSize))
+                    {
+                        Byte[] Data = new Byte[pSize];
+                        Marshal.Copy(pBuffer, Data, 0, pSize);
+                        OutputStream.Write(Data, 0, pSize);
+                        CuttentPosition += (UInt32)pSize;
+                    }
+                    else
+                    {
+                        Marshal.FreeHGlobal(pBuffer);
+                        __NFSv2_CloseFile(_nfsv2);
+                        return NFSResult.NFS_ERROR;
+                    }
+                    Marshal.FreeHGlobal(pBuffer);
+                }while(CuttentPosition != TotalLenght);
+
+                __NFSv2_CloseFile(_nfsv2);
+                return NFSResult.NFS_SUCCESS;
+            }
+
+            return NFSResult.NFS_ERROR;
         }
         
-        public NFSResult Write(NFSAttributes FileAttributes, Stream InputStream)
+        public NFSResult Write(String FileName, FileStream InputStream)
         {
-            return NFSResult.NFS_SUCCESS;
+            if (InputStream == null)
+                return NFSResult.NFS_ERROR;
+
+            if(NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_CreateFile(_nfsv2, FileName))
+            {
+                if (NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_Open(_nfsv2, FileName))
+                {
+                    NFSAttributes nfsAttributes = GetItemAttributes(FileName);
+                    long TotalLenght = InputStream.Length;
+                    UInt32 BlockSize = nfsAttributes.blockSize;
+                    UInt32 CuttentPosition =0;
+
+                    do
+                    {
+                        Int32 iSize = 0;
+                        UInt32 Count = BlockSize;
+                        if ((TotalLenght - CuttentPosition) < BlockSize)
+                            Count = (UInt32) TotalLenght - CuttentPosition;
+                        IntPtr pBuffer = Marshal.AllocHGlobal((Int32)Count);
+                        if (NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_Write(_nfsv2, CuttentPosition, Count, pBuffer, out iSize))
+                        {
+                            CuttentPosition = (UInt32)iSize;
+                            Marshal.FreeHGlobal(pBuffer);
+                        }
+                        else
+                        {
+                            Marshal.FreeHGlobal(pBuffer);
+                            __NFSv2_CloseFile(_nfsv2);
+                            return NFSResult.NFS_ERROR;
+                        }
+                    } while (CuttentPosition != TotalLenght);
+                    
+                    __NFSv2_CloseFile(_nfsv2);
+
+                    return NFSResult.NFS_SUCCESS;
+                }
+            }
+
+            return NFSResult.NFS_ERROR;
         }
 
         public NFSResult Rename(String OldName, String NewName)

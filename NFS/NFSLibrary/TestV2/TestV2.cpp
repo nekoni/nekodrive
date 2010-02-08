@@ -16,6 +16,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	int iItems = 0;
 	nfs->GetItemsList(&iItems);
 	nfs->GetItemAttributes("libatm.so.1.0.0");
+	nfs->Open("new file");
+	char pBuffer[4096];
+	u_long pSize;
+	int ret = nfs->Read(0, 4096, pBuffer, &pSize);
+	nfs->CreateFile("test.t");
 	nfs->UnMountDevice();
 	delete nfs;
 	
