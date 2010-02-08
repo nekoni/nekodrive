@@ -15,6 +15,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	nfs->MountDevice("/rd0");
 	int iItems = 0;
 	nfs->GetItemsList(&iItems);
+	nfs->GetItemAttributes("libatm.so.1.0.0");
 	nfs->UnMountDevice();
 	delete nfs;
 	

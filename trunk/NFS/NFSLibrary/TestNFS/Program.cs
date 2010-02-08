@@ -10,10 +10,9 @@ namespace TestNFS
     {
         static void Main(string[] args)
         {
-            IPAddress Address = IPAddress.Parse("192.168.56.102");
-            using (NFSv2 nfsv2 = new NFSv2())
+            using (NFSv2 nfsv2 = new NFSv2("192.168.56.102"))
             {
-                if (nfsv2.Connect((UInt32) Address.Address) == NFSResult.NFS_SUCCESS)
+                if (nfsv2.Connect() == NFSResult.NFS_SUCCESS)
                 {
                     List<String> DevicesList = nfsv2.GetExportedDevices();
                     if (DevicesList.Count > 0)
@@ -22,7 +21,8 @@ namespace TestNFS
                         List<String> ItemsList = nfsv2.GetItemList();
                         foreach (String Item in ItemsList)
                         {
-                            Console.WriteLine(Item);
+                            NFSAttributes nfsAttribues = nfsv2.GetItemAttributes(Item);
+                            Console.WriteLine(Item + " " + nfsAttribues.ToString());
                         }
                         nfsv2.UnMountDevice();
                     }
