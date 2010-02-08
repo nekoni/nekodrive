@@ -29,6 +29,8 @@ CNFSv2::CNFSv2()
 	timeOut.tv_sec = 60;
 	timeOut.tv_usec = 0;
 	sSrvAddr.sin_family = AF_INET;
+	memset(nfsCurrentFile, 0, sizeof(FHSIZE));
+	memset(nfsCurrentDirectory, 0, sizeof(FHSIZE));
 }
 
 int CNFSv2::Connect(unsigned int ServerAddress)
@@ -290,14 +292,14 @@ void CNFSv2::ReleaseBuffers(char** pBuffers)
 		delete[] pBuffers;
 }
 
-void* CNFSv2::GetItemAttributes(char* pItem)
+void* CNFSv2::GetItemAttributes(char* pName)
 {
 	if(clntV2 != NULL)
 	{
 		diropargs dpDrArgs;
 		diropres *pDirOpRes;
 		memcpy(dpDrArgs.dir, nfsCurrentDirectory, FHSIZE);
-		dpDrArgs.name = pItem;
+		dpDrArgs.name = pName;
 		if( (pDirOpRes = nfsproc_lookup_2(&dpDrArgs, clntV2)) == NULL ) 
 		{
 			strLastError = clnt_sperror(clntV2,"nfsproc_lookup_2");
@@ -352,15 +354,23 @@ void CNFSv2::InitStructure(NFSData* pNfsData)
 	pNfsData->BlockSize = 0;
 }
 
-void CNFSv2::ChangeCurrentDirectory(char *pHandle)
+int CNFSv2::ChangeCurrentDirectory(char *pName)
 {
-	if(pHandle != NULL)
-		memcpy(nfsCurrentDirectory, pHandle, FHSIZE);
+	if(pName != NULL)
+	{
+		NFSData* pNfsData = (NFSData*) GetItemAttributes(pName);
+		if(pNfsData == NULL)
+			return NFS_ERROR;
+		memcpy(nfsCurrentDirectory, pNfsData->Handle, FHSIZE);
+		ReleaseBuffer((char*) pNfsData);
+		return NFS_SUCCESS;
+	}
+	return NFS_ERROR;
 }
 
 int CNFSv2::CreateDirectory(char* pName)
 {
-	if(clntV2 == NULL)
+	if(clntV2 != NULL)
 	{
 		createargs dpArgCreate;
         diropres *pDirOpRes;
@@ -401,7 +411,7 @@ int CNFSv2::CreateDirectory(char* pName)
 
 int CNFSv2::DeleteDirectory(char* pName)
 {
-	if(clntV2 == NULL)
+	if(clntV2 != NULL)
 	{
 		diropargs dpArgDelete;
         nfsstat *pNfsStat;
@@ -435,7 +445,7 @@ int CNFSv2::DeleteDirectory(char* pName)
 
 int CNFSv2::DeleteFile(char* pName)
 {
-	if(clntV2 == NULL)
+	if(clntV2 != NULL)
 	{
 		diropargs dpArgDelete;
         nfsstat *pNfsStat;
@@ -469,7 +479,7 @@ int CNFSv2::DeleteFile(char* pName)
 
 int CNFSv2::CreateFile(char* pName)
 {
-	if(clntV2 == NULL)
+	if(clntV2 != NULL)
 	{
 		createargs dpArgCreate;
         diropres *pDirOpRes;
@@ -480,6 +490,10 @@ int CNFSv2::CreateFile(char* pName)
 		dpArgCreate.attributes.atime = createTime;
         dpArgCreate.attributes.mtime = createTime;
 		dpArgCreate.attributes.mode = MODE_REG | 0777;
+		dpArgCreate.attributes.gid = 0;
+		dpArgCreate.attributes.size = 0;
+		dpArgCreate.attributes.uid = 0;
+
 		memcpy(dpArgCreate.where.dir, nfsCurrentDirectory, FHSIZE);
         dpArgCreate.where.name = pName;
         
@@ -508,13 +522,38 @@ int CNFSv2::CreateFile(char* pName)
 	return NFS_ERROR;
 }
 
-int CNFSv2::Read(char* pHandle, u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
+int CNFSv2::Open(char* pName)
 {
-	if(clntV2 == NULL)
+	if(pName != NULL)
 	{
+		NFSData* pNfsData = (NFSData*) GetItemAttributes(pName);
+		if(pNfsData == NULL)
+			return NFS_ERROR;
+		memcpy(nfsCurrentFile, pNfsData->Handle, FHSIZE);
+		ReleaseBuffer((char*) pNfsData);
+		return NFS_SUCCESS;
+	}
+	return NFS_ERROR;
+}
+
+void CNFSv2::CloseFile()
+{
+	memset(nfsCurrentFile, 0, sizeof(FHSIZE));
+}
+
+int CNFSv2::Read(u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
+{
+	if(clntV2 != NULL)
+	{
+		if(nfsCurrentFile == 0)
+		{
+			strLastError = "handle closed";
+			return NFS_ERROR;
+		}
+
 		readargs dpArgRead;
 		readres *pReadRes;
-		memcpy(dpArgRead.file, pHandle, FHSIZE);
+		memcpy(dpArgRead.file, nfsCurrentFile, FHSIZE);
         dpArgRead.offset = Offset;
         dpArgRead.count = Count;
 
@@ -544,13 +583,19 @@ int CNFSv2::Read(char* pHandle, u_int Offset, u_int Count, char* pBuffer, u_long
 	return NFS_ERROR;
 }
 
-int CNFSv2::Write(char* pHandle, u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
+int CNFSv2::Write(u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
 {
-	if(clntV2 == NULL)
+	if(clntV2 != NULL)
 	{
+		if(nfsCurrentFile == 0)
+		{
+			strLastError = "handle closed";
+			return NFS_ERROR;
+		}
+
 		writeargs dpArgWrite;
         attrstat *pAttrStat;
-		memcpy(dpArgWrite.file, pHandle, FHSIZE);
+		memcpy(dpArgWrite.file, nfsCurrentFile, FHSIZE);
         dpArgWrite.offset = Offset;
         dpArgWrite.data.data_len = Count;
 		dpArgWrite.data.data_val = pBuffer;
@@ -583,7 +628,7 @@ int CNFSv2::Write(char* pHandle, u_int Offset, u_int Count, char* pBuffer, u_lon
 
 int CNFSv2::Rename(char* pOldName, char* pNewName)
 {
-	if(clntV2 == NULL)
+	if(clntV2 != NULL)
 	{
 		renameargs dpArgRename;
         nfsstat *pNfsStat;

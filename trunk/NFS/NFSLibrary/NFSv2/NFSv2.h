@@ -65,6 +65,8 @@ private:
 	std::string strLastError;
 	//handle of the current directory
 	nfshandle nfsCurrentDirectory;
+	//handle of the opened file
+	nfshandle nfsCurrentFile;
 	//vectors
 	std::vector<std::string> vStr;
 	//functions
@@ -89,9 +91,9 @@ public:
 	//Unmount the remote device
 	int UnMountDevice();
 	//Get the item attributes
-	void* GetItemAttributes(char* pItem);
+	void* GetItemAttributes(char* pName);
 	//Change the current directory
-	void ChangeCurrentDirectory(char* pHandle);
+	int ChangeCurrentDirectory(char* pName);
 	//Create a directory
 	int CreateDirectory(char* pName);
 	//Delete a directory
@@ -100,10 +102,14 @@ public:
 	int DeleteFile(char* pName);
 	//Create a new file
 	int CreateFile(char* pName);
+	//Open a file for i/o
+	int Open(char* pName);
+	//Close the current file
+	void CloseFile();
 	//Read a file
-	int Read(char* pHandle, u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
+	int Read(u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
 	//Write a file
-	int Write(char* pHandle, u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
+	int Write(u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
 	//Rename a file or directory
 	int Rename(char* pOldName, char* pNewName);
 };
