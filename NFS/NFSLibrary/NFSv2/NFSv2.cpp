@@ -19,10 +19,6 @@
 #include <string>
 #include <time.h>
 
-//vectors
-std::vector<std::string> vStr;
-
-
 CNFSv2::CNFSv2()
 {
 	clntMountV2 = NULL;
@@ -161,7 +157,7 @@ int CNFSv2::MountDevice(char* pDevice)
 			{
 				memcpy(nfsCurrentDirectory, pFhStatus->fhstatus_u.directory, FHSIZE);
 				strCurrentDevice = pDevice;
-				xdr_free((xdrproc_t)xdr_fhstatus,(char*) pFhStatus);
+				//xdr_free((xdrproc_t)xdr_fhstatus,(char*) pFhStatus);
 				return NFS_SUCCESS;
 			} 
 			else 
@@ -170,7 +166,7 @@ int CNFSv2::MountDevice(char* pDevice)
 				sprintf_s(buffer, 200, "mountproc_mnt_1 %d", pFhStatus->status);
 				strLastError = buffer;
 				printf(strLastError.c_str());
-				xdr_free((xdrproc_t)xdr_fhstatus,(char*) pFhStatus);
+				//xdr_free((xdrproc_t)xdr_fhstatus,(char*) pFhStatus);
 				return NFS_ERROR;
 			}
 		}
@@ -181,7 +177,7 @@ int CNFSv2::MountDevice(char* pDevice)
 
 char** CNFSv2::GetExportedDevices(int* pnSize)
 {
-	vStr.clear();
+	v.Str.clear();
 
 	if(clntMountV2 == NULL)
 	{
@@ -203,18 +199,18 @@ char** CNFSv2::GetExportedDevices(int* pnSize)
 	
 	while(tmp != NULL)
 	{
-		vStr.push_back(tmp->filesys);
+		v.Str.push_back(tmp->filesys);
 		tmp = tmp->next;
 	}
 	
-	xdr_free((xdrproc_t)xdr_exports,(char*) device);
+	//xdr_free((xdrproc_t)xdr_exports,(char*) device);
 
-	int nSize = (int) vStr.size();
+	int nSize = (int) v.Str.size();
 	char** strings = new char*[nSize];
 
 	for( int i = 0; i < nSize; i++)
 	{
-		strings[i] = (char*) vStr[i].c_str();
+		strings[i] = (char*) v.Str[i].c_str();
 	}
 
 	*pnSize = nSize;
@@ -223,7 +219,7 @@ char** CNFSv2::GetExportedDevices(int* pnSize)
 
 char** CNFSv2::GetItemsList(int* pnSize)
 {
-	vStr.clear();
+	v.Str.clear();
 	entry* pEntry = NULL;
 
 	if(clntV2 != NULL)
@@ -249,7 +245,7 @@ char** CNFSv2::GetItemsList(int* pnSize)
 				pEntry = pReadDirRes->readdirres_u.ok.entries;
 				while(pEntry != NULL)
 				{
-					vStr.push_back(pEntry->name);
+					v.Str.push_back(pEntry->name);
 					dpRdArgs.cookie = pEntry->cookie;
 					pEntry = pEntry->nextentry;
 				}
@@ -264,18 +260,18 @@ char** CNFSv2::GetItemsList(int* pnSize)
 			}
 			
 			int iBreak = pReadDirRes->readdirres_u.ok.eof;
-			xdr_free((xdrproc_t)xdr_readdirres,(char*) pReadDirRes);
+			//xdr_free((xdrproc_t)xdr_readdirres,(char*) pReadDirRes);
 
 			if(iBreak)
 				break;
 		}
 
-		int nSize = (int) vStr.size();
+		int nSize = (int) v.Str.size();
 		char** strings = new char*[nSize];
 
 		for( int i = 0; i < nSize; i++)
 		{
-			strings[i] = (char*) vStr[i].c_str();
+			strings[i] = (char*) v.Str[i].c_str();
 		}
 
 		*pnSize = nSize;
@@ -329,7 +325,7 @@ void* CNFSv2::GetItemAttributes(char* pName)
             sprintf_s(buffer, 200, "nfsproc_lookup_2 %d", pDirOpRes->status);
 			strLastError = buffer;
 			printf(strLastError.c_str());
-			xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
+			//xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
             return NULL;
 		}
 	}
@@ -366,7 +362,7 @@ int CNFSv2::ChangeCurrentDirectory(char *pName)
 		if(pNfsData == NULL)
 			return NFS_ERROR;
 		memcpy(nfsCurrentDirectory, pNfsData->Handle, FHSIZE);
-		ReleaseBuffer((char*) pNfsData);
+		delete pNfsData;
 		return NFS_SUCCESS;
 	}
 	return NFS_ERROR;
@@ -395,7 +391,7 @@ int CNFSv2::CreateDirectory(char* pName)
         }
         if (pDirOpRes->status == NFS_OK) 
 		{
-			xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
+			//xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
             return(NFS_SUCCESS);
         } 
 		else 
@@ -403,7 +399,7 @@ int CNFSv2::CreateDirectory(char* pName)
 			char  buffer[200];
             sprintf_s(buffer, 200, "nfsproc_mkdir_2 %d", pDirOpRes->status);
 			strLastError = buffer;
-			xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
+			//xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
             return(NFS_ERROR);
         }
 	}
@@ -429,7 +425,7 @@ int CNFSv2::DeleteDirectory(char* pName)
         }
         if (*pNfsStat == NFS_OK) 
 		{
-			xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
+			//xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
             return NFS_SUCCESS;
         } 
 		else 
@@ -437,7 +433,7 @@ int CNFSv2::DeleteDirectory(char* pName)
 			char  buffer[200];
             sprintf_s(buffer, 200, "nfsproc_rmdir_2 %d", pNfsStat);
 			strLastError = buffer;
-			xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
+			//xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
             return NFS_ERROR;
         }
 	}
@@ -463,7 +459,7 @@ int CNFSv2::DeleteFile(char* pName)
         }
         if (*pNfsStat == NFS_OK) 
 		{
-			xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
+			//xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
             return NFS_SUCCESS;
         } 
 		else 
@@ -471,7 +467,7 @@ int CNFSv2::DeleteFile(char* pName)
 			char  buffer[200];
             sprintf_s(buffer, 200, "nfsproc_remove_2 %d", pNfsStat);
 			strLastError = buffer;
-			xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
+			//xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
             return NFS_ERROR;
         }
 	}
@@ -516,7 +512,7 @@ int CNFSv2::CreateFile(char* pName)
 			char  buffer[200];
             sprintf_s(buffer, 200, "nfsproc_create_2 %d", pDirOpRes->status);
 			strLastError = buffer;
-			xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
+			//xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
             return NFS_ERROR;
         }
 	}
@@ -534,7 +530,7 @@ int CNFSv2::Open(char* pName)
 		if(pNfsData == NULL)
 			return NFS_ERROR;
 		memcpy(nfsCurrentFile, pNfsData->Handle, FHSIZE);
-		ReleaseBuffer((char*) pNfsData);
+		delete pNfsData;
 		return NFS_SUCCESS;
 	}
 	return NFS_ERROR;
@@ -579,7 +575,7 @@ int CNFSv2::Read(u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
 			strLastError = buffer;
             return NFS_ERROR;
         }
-		xdr_free((xdrproc_t)xdr_readres,(char*) pReadRes);
+		//xdr_free((xdrproc_t)xdr_readres,(char*) pReadRes);
 	}
 	else
 		strLastError = "V2 Client is NULL";
@@ -612,7 +608,7 @@ int CNFSv2::Write(u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
         if (pAttrStat->status == NFS_OK) 
 		{
             *pSize = pAttrStat->attrstat_u.attributes.size;
-			xdr_free((xdrproc_t)xdr_attrstat,(char*) pAttrStat);
+			//xdr_free((xdrproc_t)xdr_attrstat,(char*) pAttrStat);
             return NFS_SUCCESS;
         } 
 		else 
@@ -620,7 +616,7 @@ int CNFSv2::Write(u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
             char  buffer[200];
             sprintf_s(buffer, 200, "nfsproc_write_2 %d", pAttrStat->status);
 			strLastError = buffer;
-			xdr_free((xdrproc_t)xdr_attrstat,(char*) pAttrStat);
+			//xdr_free((xdrproc_t)xdr_attrstat,(char*) pAttrStat);
             return NFS_ERROR;
         }
 	}
@@ -648,7 +644,7 @@ int CNFSv2::Rename(char* pOldName, char* pNewName)
         }
         if (*pNfsStat == NFS_OK) 
 		{
-			xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
+			//xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
             return(NFS_SUCCESS);
         } 
 		else 
@@ -656,7 +652,7 @@ int CNFSv2::Rename(char* pOldName, char* pNewName)
 			char  buffer[200];
             sprintf_s(buffer, 200, "nfsproc_rename_2 %d", pNfsStat);
 			strLastError = buffer;
-			xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
+			//xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
             return(NFS_ERROR);
         }
 	}

@@ -311,7 +311,7 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 	baddr.sin_addr.s_addr = htonl(INADDR_ANY);
 /*	baddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY); */
 	(void)gettimeofday(&t, (struct timezone *)0);
-	msg.rm_xid = xid = getpid() ^ t.tv_sec ^ t.tv_usec;
+	msg.rm_xid = xid = _getpid() ^ t.tv_sec ^ t.tv_usec;
 	t.tv_usec = 0;
 	msg.rm_direction = CALL;
 	msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;

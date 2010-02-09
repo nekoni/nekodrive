@@ -442,7 +442,7 @@ xdrrec_getpos(xdrs)
 	register RECSTREAM *rstrm = (RECSTREAM *)xdrs->x_private;
 	register long pos;
 
-	pos = lseek((int)rstrm->tcp_handle, (long) 0, 1);
+	pos = _lseek((int)rstrm->tcp_handle, (long) 0, 1);
 	if (pos != -1)
 		switch (xdrs->x_op) {
 

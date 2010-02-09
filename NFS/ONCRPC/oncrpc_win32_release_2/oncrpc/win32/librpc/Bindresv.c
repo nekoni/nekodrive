@@ -99,7 +99,7 @@ bindresvport(sd, sin)
 		return (-1);
 	}
 	if (port == 0) {
-		port = (getpid() % NPORTS) + STARTPORT;
+		port = (_getpid() % NPORTS) + STARTPORT;
 	}
 	res = -1;
 #ifdef WIN32
