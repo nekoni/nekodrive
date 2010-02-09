@@ -19,6 +19,10 @@
 #include <string>
 #include <time.h>
 
+//vectors
+std::vector<std::string> vStr;
+
+
 CNFSv2::CNFSv2()
 {
 	clntMountV2 = NULL;
@@ -597,7 +601,7 @@ int CNFSv2::Write(u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
         attrstat *pAttrStat;
 		memcpy(dpArgWrite.file, nfsCurrentFile, FHSIZE);
         dpArgWrite.offset = Offset;
-        dpArgWrite.data.data_len = Count;
+		dpArgWrite.data.data_len = Count;
 		dpArgWrite.data.data_val = pBuffer;
 
         if( (pAttrStat = nfsproc_write_2(&dpArgWrite, clntV2)) == NULL )

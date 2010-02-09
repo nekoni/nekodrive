@@ -146,6 +146,8 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv2.dll", EntryPoint = "?Rename@CNFSv2@@QAEHPAD0@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv2_Rename(__NFSv2* pThis, String pOldName, String pNewName);
 
+        public event NFSDataEventHandler DataEvent;
+
         public NFSv2(String ServerAddrss)
         {
             _Address = IPAddress.Parse(ServerAddrss);
@@ -276,6 +278,13 @@ namespace NekoDrive.NFS.Wrappers
 
                     if (NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_Read(_nfsv2, CuttentPosition, Count, pBuffer, out pSize))
                     {
+                        if (DataEvent != null)
+                        {
+                            NFSEventArgs e = new NFSEventArgs();
+                            e.CurrentByte = CuttentPosition;
+                            e.TotalBytes = TotalLenght;
+                            DataEvent(this, e);
+                        }
                         Byte[] Data = new Byte[pSize];
                         Marshal.Copy(pBuffer, Data, 0, pSize);
                         OutputStream.Write(Data, 0, pSize);
@@ -307,21 +316,25 @@ namespace NekoDrive.NFS.Wrappers
                 if (NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_Open(_nfsv2, FileName))
                 {
                     NFSAttributes nfsAttributes = GetItemAttributes(FileName);
-                    long TotalLenght = InputStream.Length;
-                    UInt32 BlockSize = nfsAttributes.blockSize;
-                    UInt32 CuttentPosition =0;
-
-                    do
+                    UInt32 Offset = 0;
+                    UInt32 Count = nfsAttributes.blockSize;
+                    Int32 Bytes = 0;
+                    Int32 iSize = 0;
+                    Byte[] Buffer = new Byte[Count];
+                    while((Bytes = InputStream.Read(Buffer, 0, (Int32) Count)) > 0)
                     {
-                        Int32 iSize = 0;
-                        UInt32 Count = BlockSize;
-                        if ((TotalLenght - CuttentPosition) < BlockSize)
-                            Count = (UInt32) TotalLenght - CuttentPosition;
-                        IntPtr pBuffer = Marshal.AllocHGlobal((Int32)Count);
-                        if (NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_Write(_nfsv2, CuttentPosition, Count, pBuffer, out iSize))
+                        IntPtr pBuffer = Marshal.AllocHGlobal((Int32)Bytes);
+                        Marshal.Copy(Buffer, 0, pBuffer, Bytes);
+                        if (NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_Write(_nfsv2, Offset, (UInt32)Bytes, pBuffer, out iSize))
                         {
-                            CuttentPosition = (UInt32)iSize;
-                            Marshal.FreeHGlobal(pBuffer);
+                            if (DataEvent != null)
+                            {
+                                NFSEventArgs e = new NFSEventArgs();
+                                e.CurrentByte = Offset;
+                                e.TotalBytes = (UInt32)InputStream.Length;
+                                DataEvent(this, e);
+                            }
+                            Offset += (UInt32)Bytes;
                         }
                         else
                         {
@@ -329,10 +342,9 @@ namespace NekoDrive.NFS.Wrappers
                             __NFSv2_CloseFile(_nfsv2);
                             return NFSResult.NFS_ERROR;
                         }
-                    } while (CuttentPosition != TotalLenght);
-                    
+                        Marshal.FreeHGlobal(pBuffer);
+                    }
                     __NFSv2_CloseFile(_nfsv2);
-
                     return NFSResult.NFS_SUCCESS;
                 }
             }
@@ -344,5 +356,13 @@ namespace NekoDrive.NFS.Wrappers
         {
             return (NFSResult)__NFSv2_Rename(_nfsv2, OldName, NewName);
         }
+    }
+
+    public delegate void NFSDataEventHandler(object sender, NFSEventArgs e);
+
+    public class NFSEventArgs : EventArgs
+    {
+        public UInt32 TotalBytes;
+        public UInt32 CurrentByte;
     }
 }
