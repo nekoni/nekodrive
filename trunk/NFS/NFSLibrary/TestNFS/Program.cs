@@ -5,6 +5,7 @@ using NekoDrive.NFS.Wrappers;
 using System.Net;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 
 namespace TestNFS
 {
@@ -31,14 +32,16 @@ namespace TestNFS
                         List<String> ItemsList = nfsv2.GetItemList();
                         for (int x = 0; x < 100; x++)
                         {
+                            Console.WriteLine("Sleep...");
+                            Thread.Sleep(60000);
                             foreach (String Item in ItemsList)
                             {
-                                NFSAttributes nfsAttribues = nfsv2.GetItemAttributes(Item);
+                                //NFSAttributes nfsAttribues = nfsv2.GetItemAttributes(Item);
                                 Console.WriteLine("");
                                 Console.WriteLine(Item);
-                                Console.WriteLine(nfsAttribues.ToString());
-                                if (nfsAttribues.type == NFSType.NFREG)
-                                {
+                                //Console.WriteLine(nfsAttribues.ToString());
+                                //if (nfsAttribues.type == NFSType.NFREG)
+                                //{
                                     string FileName = Path.Combine(OutFolder, Item);
                                     if (File.Exists(FileName))
                                         File.Delete(FileName);
@@ -48,7 +51,7 @@ namespace TestNFS
                                         Console.WriteLine("Read error");
                                     fs.Close();
                                     fs.Dispose();
-                                }
+                                //}
                             }
                         }
                         //string FileName = Path.Combine(OutFolder, "new file");
