@@ -42,6 +42,11 @@ struct NFSData
 };
 
 
+struct StringVector
+{
+	std::vector<std::string> Str;
+};
+
 class NFSV2_API CNFSv2
 {
 private:
@@ -67,6 +72,8 @@ private:
 	nfshandle nfsCurrentDirectory;
 	//handle of the opened file
 	nfshandle nfsCurrentFile;
+	//
+	StringVector v;
 	//functions
 	void InitStructure(NFSData* pNfsData);
 public:

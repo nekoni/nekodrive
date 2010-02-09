@@ -47,7 +47,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\include"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_X86_;_NT"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_X86_;_NT;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				PrecompiledHeaderFile=".\Release/oncrpc.pch"
@@ -139,7 +139,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\include"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_X86_;_NT;"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_X86_;_NT;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/oncrpc.pch"
