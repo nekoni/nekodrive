@@ -291,3 +291,10 @@ nfs_clnt_destroy(clnt)
 {
 	clnt_destroy(clnt);
 }
+
+void 
+nfs_auth_destroy(auth)
+	AUTH *auth;
+{
+	auth_destroy(auth);
+}

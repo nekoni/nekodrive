@@ -116,7 +116,7 @@ namespace NFSv2Client
             {
                 nfsClient = new NFSv2(ipAddressControl1.Text);
                 nfsClient.DataEvent += new NFSDataEventHandler(nfsClient_DataEvent);
-                if (nfsClient.Connect() == NFSResult.NFS_SUCCESS)
+                if (nfsClient.Connect(0, 0) == NFSResult.NFS_SUCCESS)
                 {
                     nfsDevs = nfsClient.GetExportedDevices();
                     cboxRemoteDevices.Items.Clear();
