@@ -640,5 +640,12 @@ void nfs_clnt_destroy(...);
 void nfs_clnt_destroy();
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+void nfs_auth_destroy(...);
+}
+#else
+void nfs_auth_destroy();
+#endif
 
 #endif

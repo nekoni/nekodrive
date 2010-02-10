@@ -92,7 +92,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="..\..\Build\x86\Release"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -117,6 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="..\NFSv2\;..\..\ONCRPC\oncrpc_win32_release_2\oncrpc\win32\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -135,7 +136,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="NFSv2.lib Ws2_32.lib "
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\Build\x86\Release"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
