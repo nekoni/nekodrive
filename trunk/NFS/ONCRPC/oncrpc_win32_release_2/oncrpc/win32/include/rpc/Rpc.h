@@ -78,7 +78,7 @@
 #include <rpc/bcopy.h>
 
 #define WSAerrno (WSAGetLastError())
-#define gettimeofday(tv,tz) ((tv)->tv_sec = time(0), (tv)->tv_usec = 0)
+#define gettimeofday(tv,tz) ((tv)->tv_sec = (long) time(0), (tv)->tv_usec = (long) 0)
 
 DllExport int rpc_nt_init(void);
 DllExport int rpc_nt_exit(void);

@@ -203,7 +203,13 @@ DllExport struct opaque_auth _null_auth;
  *	int len;
  *	int *aup_gids;
  */
+#ifdef __cplusplus
+extern "C" {
+DllExport AUTH *authunix_create(...);
+}
+#else
 DllExport AUTH *authunix_create();
+#endif
 DllExport AUTH *authunix_create_default();	/* takes no parameters */
 DllExport AUTH *authnone_create();		/* takes no parameters */
 DllExport AUTH *authdes_create();
