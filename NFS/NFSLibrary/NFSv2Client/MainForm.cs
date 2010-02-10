@@ -175,7 +175,7 @@ namespace NFSv2Client
 
         void nfsClient_DataEvent(object sender, NFSEventArgs e)
         {
-            pg.Update(CurrentItem, e.CurrentByte, e.TotalBytes);
+            //pg.Update(CurrentItem, e.CurrentByte, e.TotalBytes);
         }
 
         private void listViewLocal_DragEnter(object sender, DragEventArgs e)

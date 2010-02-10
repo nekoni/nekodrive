@@ -10,8 +10,8 @@ namespace NekoDrive.NFS.Wrappers
 {
     public enum NFSResult
     {
-        NFS_SUCCESS,
-        NFS_ERROR
+        NFS_SUCCESS = 0,
+        NFS_ERROR = -1
     }
 
     public enum NFSType
@@ -265,100 +265,168 @@ namespace NekoDrive.NFS.Wrappers
             return (NFSResult)__NFSv2_CreateFile(_nfsv2, FileName);
         }
 
+        public NFSResult Read(String FileName, String OutputFileName)
+        {
+            FileStream fs = null;
+            try
+            {
+                NFSResult Result = NFSResult.NFS_ERROR;
+                if (File.Exists(OutputFileName))
+                    File.Delete(OutputFileName);
+                fs = new FileStream(OutputFileName, FileMode.CreateNew);
+                Result = Read(FileName, ref fs);
+                return Result;
+            }
+            finally
+            {
+                if (fs != null)
+                {
+                    fs.Close();
+                    fs.Dispose();
+                }
+            }
+        }
+
         public NFSResult Read(String FileName, ref FileStream OutputStream)
         {
-            if (OutputStream == null)
-                return NFSResult.NFS_ERROR;
-
-            NFSAttributes nfsAttributes = GetItemAttributes(FileName);
-
-            if (NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_Open(_nfsv2, FileName))
+            NFSResult Result = NFSResult.NFS_ERROR;
+            if (OutputStream != null)
             {
-                UInt32 TotalLenght = nfsAttributes.size;
-                UInt32 BlockSize = nfsAttributes.blockSize;
-                UInt32 CuttentPosition =0;
-                do
+                NFSAttributes nfsAttributes = GetItemAttributes(FileName);
+                if (NFSResult.NFS_SUCCESS == Open(FileName))
                 {
-                    UInt32 Count = BlockSize;
-                    if ((TotalLenght - CuttentPosition) < BlockSize)
-                        Count = (UInt32) TotalLenght - CuttentPosition;
-                    IntPtr pBuffer = Marshal.AllocHGlobal((Int32)Count);
-                    Int32 pSize;
-
-                    if (NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_Read(_nfsv2, CuttentPosition, Count, pBuffer, out pSize))
+                    UInt32 TotalLenght = nfsAttributes.size;
+                    UInt32 BlockSize = nfsAttributes.blockSize;
+                    UInt32 CuttentPosition = 0;
+                    do
                     {
-                        if (DataEvent != null)
+                        UInt32 Count = BlockSize;
+                        if ((TotalLenght - CuttentPosition) < BlockSize)
+                            Count = (UInt32)TotalLenght - CuttentPosition;
+
+                        Byte[] Data = null;
+                        int pSize = -1;
+                        if ((pSize = Read(CuttentPosition, Count, ref Data)) != -1)
                         {
-                            NFSEventArgs e = new NFSEventArgs();
-                            e.CurrentByte = CuttentPosition;
-                            e.TotalBytes = TotalLenght;
-                            DataEvent(this, e);
-                        }
-                        Byte[] Data = new Byte[pSize];
-                        Marshal.Copy(pBuffer, Data, 0, pSize);
-                        OutputStream.Write(Data, 0, pSize);
-                        CuttentPosition += (UInt32)pSize;
-                    }
-                    else
-                    {
-                        Marshal.FreeHGlobal(pBuffer);
-                        __NFSv2_CloseFile(_nfsv2);
-                        return NFSResult.NFS_ERROR;
-                    }
-                    Marshal.FreeHGlobal(pBuffer);
-                }while(CuttentPosition != TotalLenght);
-
-                __NFSv2_CloseFile(_nfsv2);
-                return NFSResult.NFS_SUCCESS;
-            }
-
-            return NFSResult.NFS_ERROR;
-        }
-        
-        public NFSResult Write(String FileName, FileStream InputStream)
-        {
-            if (InputStream == null)
-                return NFSResult.NFS_ERROR;
-
-            if(NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_CreateFile(_nfsv2, FileName))
-            {
-                if (NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_Open(_nfsv2, FileName))
-                {
-                    NFSAttributes nfsAttributes = GetItemAttributes(FileName);
-                    UInt32 Offset = 0;
-                    UInt32 Count = nfsAttributes.blockSize;
-                    Int32 Bytes = 0;
-                    Int32 iSize = 0;
-                    Byte[] Buffer = new Byte[Count];
-                    while((Bytes = InputStream.Read(Buffer, 0, (Int32) Count)) > 0)
-                    {
-                        IntPtr pBuffer = Marshal.AllocHGlobal((Int32)Bytes);
-                        Marshal.Copy(Buffer, 0, pBuffer, Bytes);
-                        if (NFSResult.NFS_SUCCESS == (NFSResult)__NFSv2_Write(_nfsv2, Offset, (UInt32)Bytes, pBuffer, out iSize))
-                        {
-                            if (DataEvent != null)
-                            {
-                                NFSEventArgs e = new NFSEventArgs();
-                                e.CurrentByte = Offset;
-                                e.TotalBytes = (UInt32)InputStream.Length;
-                                DataEvent(this, e);
-                            }
-                            Offset += (UInt32)Bytes;
+                            OutputStream.Write(Data, 0, pSize);
+                            OutputStream.Flush();
+                            CuttentPosition += (UInt32)pSize;
+                            Result = NFSResult.NFS_SUCCESS;
                         }
                         else
                         {
-                            Marshal.FreeHGlobal(pBuffer);
-                            __NFSv2_CloseFile(_nfsv2);
-                            return NFSResult.NFS_ERROR;
+                            Result = NFSResult.NFS_ERROR;
+                            break;
                         }
-                        Marshal.FreeHGlobal(pBuffer);
+                    } while (CuttentPosition != TotalLenght);
+                    CloseFile();
+                }
+            }
+            return Result;
+        }
+
+        public int Read(UInt32 Offset, UInt32 Count, ref Byte[] Buffer)
+        {
+            Int32 Size = -1;
+            IntPtr pBuffer = Marshal.AllocHGlobal((Int32)Count);
+            NFSResult Result = (NFSResult)__NFSv2_Read(_nfsv2, Offset, Count, pBuffer, out Size);
+            if (Result == NFSResult.NFS_ERROR)
+                Size = -1;
+            else
+            {
+                Buffer = new Byte[Size];
+                Marshal.Copy(pBuffer, Buffer, 0, Size);
+                if (DataEvent != null)
+                {
+                    NFSEventArgs e = new NFSEventArgs();
+                    e.Bytes = (UInt32)Size;
+                    DataEvent(this, e);
+                }
+            }
+            Marshal.FreeHGlobal(pBuffer);
+            return Size;
+        }
+
+        public NFSResult Write(String FileName, String InputFileName)
+        {
+            NFSResult Result = NFSResult.NFS_ERROR;
+            if (File.Exists(InputFileName))
+            {
+                FileStream wfs = new FileStream(InputFileName, FileMode.Open, FileAccess.Read);
+                Result = Write(FileName, wfs);
+                wfs.Close();
+            }
+            return Result;
+        }
+
+        public NFSResult Write(String FileName, FileStream InputStream)
+        {
+            NFSResult Result = NFSResult.NFS_ERROR;
+            if (InputStream != null)
+            {
+                if (NFSResult.NFS_SUCCESS == CreateFile(FileName))
+                {
+                    if (NFSResult.NFS_SUCCESS == Open(FileName))
+                    {
+                        NFSAttributes nfsAttributes = GetItemAttributes(FileName);
+                        UInt32 Offset = 0;
+                        UInt32 Count = nfsAttributes.blockSize;
+                        Int32 Bytes = 0;
+                        Byte[] Buffer = new Byte[Count];
+                        while ((Bytes = InputStream.Read(Buffer, 0, (Int32)Count)) > 0)
+                        {
+                            Int32 Res = Write(Offset, (UInt32) Bytes, Buffer);
+                            if (Res != -1)
+                            {
+                                Offset += (UInt32)Bytes;
+                                Result = NFSResult.NFS_SUCCESS;
+                            }
+                            else
+                            {
+                                Result = NFSResult.NFS_ERROR;
+                                break;
+                            }
+                        }
+                        CloseFile();
                     }
-                    __NFSv2_CloseFile(_nfsv2);
-                    return NFSResult.NFS_SUCCESS;
                 }
             }
 
-            return NFSResult.NFS_ERROR;
+            return Result;
+        }
+
+        public int Write(UInt32 Offset, UInt32 Count, Byte[] Buffer)
+        {
+            Int32 Size = -1;
+            if (Buffer != null)
+            {
+                IntPtr pBuffer = Marshal.AllocHGlobal((Int32)Count);
+                Marshal.Copy(Buffer, 0, pBuffer, (Int32) Count);
+                NFSResult Result = (NFSResult)__NFSv2_Write(_nfsv2, Offset, Count, pBuffer, out Size);
+                Marshal.FreeHGlobal(pBuffer);
+                if (Result == NFSResult.NFS_ERROR)
+                    Size = -1;
+                else
+                {
+                    if (DataEvent != null)
+                    {
+                        NFSEventArgs e = new NFSEventArgs();
+                        e.Bytes = (UInt32) Size;
+                        DataEvent(this, e);
+                    }
+                }
+            }
+            return Size;
+        }
+
+        public NFSResult Open(String FileName)
+        {
+            return (NFSResult) __NFSv2_Open(_nfsv2, FileName);
+        }
+
+        public void CloseFile()
+        {
+            __NFSv2_CloseFile(_nfsv2);
         }
 
         public NFSResult Rename(String OldName, String NewName)
@@ -371,7 +439,6 @@ namespace NekoDrive.NFS.Wrappers
 
     public class NFSEventArgs : EventArgs
     {
-        public UInt32 TotalBytes;
-        public UInt32 CurrentByte;
+        public UInt32 Bytes;
     }
 }
