@@ -19,7 +19,7 @@ int saveFile(const char* File, CNFSv2* nfs, unsigned int totsize, unsigned int b
 	int size = 0;
 	FILE *fp = NULL;
 
-	std::string stPath = "D:\\SOURCE\\SOURCE_CODE\\nekodrive\\NFS\\Build\\x86\\Debug\\Test\\";
+	std::string stPath = "e:\\Test\\";
 	char OutputFile[80];
 	memset(OutputFile, 0, 80);
 	strcat(OutputFile, stPath.c_str());
@@ -27,10 +27,10 @@ int saveFile(const char* File, CNFSv2* nfs, unsigned int totsize, unsigned int b
 	if((fp = fopen(OutputFile, "w")) != NULL)
 	{
 		nfs->Open((char*) File);
-		char buffer[1024];
+		char* buffer = new char[blocksize];
 		for(offset = 0; offset < totsize; )
 		{
-			//size = 1024;
+			memset(buffer, 0, blocksize);
 			if(nfs->Read(offset, blocksize, buffer, (u_long*) &size) == NFS_SUCCESS)
 			{
 				fwrite(buffer, size, 1, fp);
@@ -44,6 +44,7 @@ int saveFile(const char* File, CNFSv2* nfs, unsigned int totsize, unsigned int b
 				break;
 			}
 		}
+		delete buffer;
 		nfs->CloseFile();
 		printf("\n");
 		fclose(fp);
@@ -60,7 +61,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::vector<std::string> strD;
 	std::vector<std::string> strI;
 	CNFSv2* nfs = new CNFSv2();
-	unsigned long ServerAddress = inet_addr("161.55.201.250");
+	//unsigned long ServerAddress = inet_addr("161.55.201.250");
+	unsigned long ServerAddress = inet_addr("192.168.56.102");
 	nfs->Connect(ServerAddress, 0, 0);
 	for (int x = 0; x < 100; x++)
 	{
