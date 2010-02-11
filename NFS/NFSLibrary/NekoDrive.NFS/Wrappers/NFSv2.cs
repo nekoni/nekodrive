@@ -58,13 +58,13 @@ namespace NekoDrive.NFS.Wrappers
         }
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public unsafe struct __NFSv2
     {
         public IntPtr* _vtable;
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 4, CharSet = CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
     public struct NFSv2Data
     {
         public UInt32 DateTime;

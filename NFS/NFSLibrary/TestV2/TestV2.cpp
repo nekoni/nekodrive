@@ -8,8 +8,38 @@
 
 int writeFile(const char* File, CNFSv2* nfs)
 {
+	FILE *fp = NULL;
+	std::string stPath = "e:\\Test\\";
+	char OutputFile[80];
+	memset(OutputFile, 0, 80);
+	strcat(OutputFile, stPath.c_str());
+	strcat(OutputFile, File);
+	u_int offset = 0;
+	u_long Size = 0;
+	char buf[4096];
+	int n = 0;
 
-	//std::string stPath = "D:\\SOURCE\\SOURCE_CODE\\nekodrive\\NFS\\Build\\x86\\Debug\\Test\\";
+	if(nfs->CreateFile((char*)File) == NFS_SUCCESS)
+	{
+		if(nfs->Open((char*)File) == NFS_SUCCESS)
+		{ 
+			if ((fp = fopen(OutputFile, "rb")) != NULL) 
+			{
+				for (offset = 0; (n = fread(buf, 1, sizeof(buf), fp)) > 0; offset += n) 
+				{
+					if(nfs->Write(offset, n, buf, &Size) != NFS_SUCCESS)
+						break;
+					printf(".");
+				}			
+				fclose(fp);
+			}
+			nfs->CloseFile();
+			printf("\n");
+		}
+	}
+
+	remove(OutputFile);
+
 	return 0;
 }
 
@@ -24,7 +54,7 @@ int saveFile(const char* File, CNFSv2* nfs, unsigned int totsize, unsigned int b
 	memset(OutputFile, 0, 80);
 	strcat(OutputFile, stPath.c_str());
 	strcat(OutputFile, File);
-	if((fp = fopen(OutputFile, "w")) != NULL)
+	if((fp = fopen(OutputFile, "wb")) != NULL)
 	{
 		nfs->Open((char*) File);
 		char* buffer = new char[blocksize];
@@ -49,7 +79,6 @@ int saveFile(const char* File, CNFSv2* nfs, unsigned int totsize, unsigned int b
 		printf("\n");
 		fclose(fp);
 	}
-	remove(OutputFile);
 	
 	return 0;
 }
