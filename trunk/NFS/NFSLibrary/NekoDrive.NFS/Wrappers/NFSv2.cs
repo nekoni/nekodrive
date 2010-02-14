@@ -61,7 +61,7 @@ namespace NekoDrive.NFS.Wrappers
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public unsafe struct __NFSv2
     {
-        public IntPtr* _vtable;
+        public IntPtr _vtable;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
@@ -79,96 +79,105 @@ namespace NekoDrive.NFS.Wrappers
 
     public unsafe class NFSv2: IDisposable
     {
-        private __NFSv2* _nfsv2;
+        private IntPtr _nfsv2;
 
         private IPAddress _Address;
 
         [DllImport("NFSv2.dll", EntryPoint = "??0CNFSv2@@QAE@XZ", CallingConvention = CallingConvention.ThisCall)]
-        private static extern void __NFSv2_Constructor(__NFSv2* pThis);
+        private static extern void __NFSv2_Constructor(IntPtr pThis);
 
         [DllImport("NFSv2.dll", EntryPoint = "??1CNFSv2@@QAE@XZ", CallingConvention = CallingConvention.ThisCall)]
-        private static extern void __NFSv2_Destructor(__NFSv2* pThis);
+        private static extern void __NFSv2_Destructor(IntPtr pThis);
+
+        [DllImport("NFSv2.dll", EntryPoint = "?CreateCNFSv2@@YAPAVCNFSv2@@XZ", CallingConvention = CallingConvention.ThisCall)]
+        public static extern IntPtr __NFSv2_CreateCNFSv2();
+
+        [DllImport("NFSv2.dll", EntryPoint = "?DisposeCNFSv2@@YAXPAVCNFSv2@@@Z", CallingConvention = CallingConvention.ThisCall)]
+        public static extern void __NFSv2_DisposeCNFSv2(IntPtr pThis);
 
         [DllImport("NFSv2.dll", EntryPoint = "?ChangeCurrentDirectory@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_ChangeCurrentDirectory(__NFSv2* pThis, String pName);
+        public static extern int __NFSv2_ChangeCurrentDirectory(IntPtr pThis, String pName);
 
         [DllImport("NFSv2.dll", EntryPoint = "?ChangeMode@CNFSv2@@QAEHPADH@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_ChangeMode(__NFSv2* pThis, String pName, Int32 Mode);
+        public static extern int __NFSv2_ChangeMode(IntPtr pThis, String pName, Int32 Mode);
 
         [DllImport("NFSv2.dll", EntryPoint = "?ChangeOwner@CNFSv2@@QAEHPADHH@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_ChangeOwner(__NFSv2* pThis, String pName, Int32 UID, Int32 GID);
+        public static extern int __NFSv2_ChangeOwner(IntPtr pThis, String pName, Int32 UID, Int32 GID);
 
         [DllImport("NFSv2.dll", EntryPoint = "?CloseFile@CNFSv2@@QAEXXZ", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_CloseFile(__NFSv2* pThis);
+        public static extern int __NFSv2_CloseFile(IntPtr pThis);
 
         [DllImport("NFSv2.dll", EntryPoint = "?Connect@CNFSv2@@QAEHIHH@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_Connect(__NFSv2* pThis, UInt32 ServerAddress, Int32 UID, Int32 GID);
+        public static extern int __NFSv2_Connect(IntPtr pThis, UInt32 ServerAddress, Int32 UID, Int32 GID);
 
         [DllImport("NFSv2.dll", EntryPoint = "?CreateDirectoryW@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_CreateDirectory(__NFSv2* pThis, String pName);
+        public static extern int __NFSv2_CreateDirectory(IntPtr pThis, String pName);
 
         [DllImport("NFSv2.dll", EntryPoint = "?CreateFileW@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_CreateFile(__NFSv2* pThis, String pName);
+        public static extern int __NFSv2_CreateFile(IntPtr pThis, String pName);
 
         [DllImport("NFSv2.dll", EntryPoint = "?DeleteFileW@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_DeleteFile(__NFSv2* pThis, String pName);
+        public static extern int __NFSv2_DeleteFile(IntPtr pThis, String pName);
 
         [DllImport("NFSv2.dll", EntryPoint = "?DeleteDirectory@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_DeleteDirectory(__NFSv2* pThis, String pName);
+        public static extern int __NFSv2_DeleteDirectory(IntPtr pThis, String pName);
 
         [DllImport("NFSv2.dll", EntryPoint = "?Disconnect@CNFSv2@@QAEHXZ", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_Disconnect(__NFSv2* pThis);
+        public static extern int __NFSv2_Disconnect(IntPtr pThis);
 
         [DllImport("NFSv2.dll", EntryPoint = "?GetExportedDevices@CNFSv2@@QAEPAPADPAH@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern IntPtr __NFSv2_GetExportedDevices(__NFSv2* pThis, out Int32 pnSize);
+        public static extern IntPtr __NFSv2_GetExportedDevices(IntPtr pThis, out Int32 pnSize);
 
         [DllImport("NFSv2.dll", EntryPoint = "?GetItemAttributes@CNFSv2@@QAEPAXPAD@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern IntPtr __NFSv2_GetItemAttributes(__NFSv2* pThis, String pItem);
+        public static extern IntPtr __NFSv2_GetItemAttributes(IntPtr pThis, String pItem);
 
         [DllImport("NFSv2.dll", EntryPoint = "?GetItemsList@CNFSv2@@QAEPAPADPAH@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern IntPtr __NFSv2_GetItemsList(__NFSv2* pThis, out Int32 pnSize);
+        public static extern IntPtr __NFSv2_GetItemsList(IntPtr pThis, out Int32 pnSize);
 
         [DllImport("NFSv2.dll", EntryPoint = "?GetLastNfsError@CNFSv2@@QAEPBDXZ", CallingConvention = CallingConvention.ThisCall)]
-        public static extern String __NFSv2_GetLastNfsError(__NFSv2* pThis);
+        public static extern String __NFSv2_GetLastNfsError(IntPtr pThis);
 
         [DllImport("NFSv2.dll", EntryPoint = "?MountDevice@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_MountDevice(__NFSv2* pThis, String pDevice);
+        public static extern int __NFSv2_MountDevice(IntPtr pThis, String pDevice);
 
         [DllImport("NFSv2.dll", EntryPoint = "?Open@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_Open(__NFSv2* pThis, String pName);
+        public static extern int __NFSv2_Open(IntPtr pThis, String pName);
 
         [DllImport("NFSv2.dll", EntryPoint = "?Read@CNFSv2@@QAEHIIPADPAK@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_Read(__NFSv2* pThis, UInt32 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
+        public static extern int __NFSv2_Read(IntPtr pThis, UInt32 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
 
         [DllImport("NFSv2.dll", EntryPoint = "?ReleaseBuffer@CNFSv2@@QAEXPAX@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern void __NFSv2_ReleaseBuffer(__NFSv2* pThis, IntPtr pBuffer);
+        public static extern void __NFSv2_ReleaseBuffer(IntPtr pThis, IntPtr pBuffer);
 
         [DllImport("NFSv2.dll", EntryPoint = "?ReleaseBuffers@CNFSv2@@QAEXPAPAX@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern void __NFSv2_ReleaseBuffers(__NFSv2* pThis, IntPtr pBuffers);
+        public static extern void __NFSv2_ReleaseBuffers(IntPtr pThis, IntPtr pBuffers);
 
         [DllImport("NFSv2.dll", EntryPoint = "?Rename@CNFSv2@@QAEHPAD0@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_Rename(__NFSv2* pThis, String pOldName, String pNewName);
+        public static extern int __NFSv2_Rename(IntPtr pThis, String pOldName, String pNewName);
 
         [DllImport("NFSv2.dll", EntryPoint = "?UnMountDevice@CNFSv2@@QAEHXZ", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_UnMountDevice(__NFSv2* pThis);
+        public static extern int __NFSv2_UnMountDevice(IntPtr pThis);
 
         [DllImport("NFSv2.dll", EntryPoint = "?Write@CNFSv2@@QAEHIIPADPAK@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv2_Write(__NFSv2* pThis, UInt32 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
+        public static extern int __NFSv2_Write(IntPtr pThis, UInt32 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
 
         public event NFSDataEventHandler DataEvent;
 
         public NFSv2(String ServerAddrss)
         {
             _Address = IPAddress.Parse(ServerAddrss);
-            _nfsv2 = (__NFSv2*)Memory.Alloc(sizeof(__NFSv2));
-            __NFSv2_Constructor(_nfsv2);
+            //_nfsv2 = (IntPtr)Memory.Alloc(sizeof(__NFSv2));
+            //__NFSv2_Constructor(_nfsv2);
+            _nfsv2 = __NFSv2_CreateCNFSv2();
         }
 
         public void Dispose()
         {
             __NFSv2_Destructor(_nfsv2);
-            Memory.Free(_nfsv2);
-            _nfsv2 = null;
+            //__NFSv2_DisposeCNFSv2(_nfsv2);
+            //__NFSv2_Destructor(_nfsv2);
+            //Memory.Free(_nfsv2);
+            //_nfsv2 = null;
         }
 
         public NFSResult Connect(Int32 UserId, Int32 GroupId)

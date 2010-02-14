@@ -47,6 +47,7 @@ struct StringVector
 	std::vector<std::string> Str;
 };
 
+
 class NFSV2_API CNFSv2
 {
 private:
@@ -61,7 +62,6 @@ private:
 	std::string strLastError;
 	nfshandle nfsCurrentDirectory;
 	nfshandle nfsCurrentFile;
-	StringVector v;
 	int authType;
 	int uid;
 	int gid;
@@ -69,6 +69,7 @@ private:
 	int CheckOpenHandle();
 	int CreateAuthentication();
 public:
+	StringVector v;
 	CNFSv2();
 	~CNFSv2();
 	int Connect(unsigned int ServerAddress, int UserId, int GroupId);
@@ -94,5 +95,9 @@ public:
 	int ChangeMode(char* pName, int Mode);
 	int ChangeOwner(char* pName, int UID, int GUID);
 };
+
+NFSV2_API CNFSv2* CreateCNFSv2();
+
+NFSV2_API void DisposeCNFSv2(CNFSv2* pObject);
 
 #endif

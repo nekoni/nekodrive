@@ -19,6 +19,21 @@
 #include <string>
 #include <time.h>
 
+NFSV2_API CNFSv2* CreateCNFSv2()
+{
+    return new CNFSv2();
+}
+
+NFSV2_API void DisposeCNFSv2(CNFSv2* pObject)
+{
+    if(pObject != NULL)
+    {
+		pObject->v.Str.~vector<std::string>();
+        delete pObject;
+        pObject = NULL;
+    }
+}
+
 CNFSv2::CNFSv2()
 {
 	clntMountV2 = NULL;
@@ -102,7 +117,7 @@ int CNFSv2::Disconnect()
 		{
 			if(clntMountV2 != NULL)
 			{
-				nfs_auth_destroy(clntMountV2->cl_auth);
+				//nfs_auth_destroy(clntMountV2->cl_auth);
 				nfs_clnt_destroy(clntMountV2);
 			}
 			clntMountV2 = NULL;
@@ -137,7 +152,7 @@ int CNFSv2::UnMountDevice()
 			}
 		}
 		else
-			strLastError = "No device mouted";
+			Ret = NFS_SUCCESS;
 	}
 	return Ret;
 }
