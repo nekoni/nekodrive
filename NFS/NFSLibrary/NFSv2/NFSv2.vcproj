@@ -140,6 +140,8 @@
 				AdditionalDependencies="oncrpc.lib Ws2_32.lib msvcrtd.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\Build\x86\Release"
+				IgnoreAllDefaultLibraries="false"
+				IgnoreDefaultLibraryNames=" LIBCMT.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
