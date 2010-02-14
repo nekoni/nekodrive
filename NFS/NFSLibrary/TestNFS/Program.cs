@@ -13,7 +13,7 @@ namespace TestNFS
     {
         static void Main(string[] args)
         {
-            String IpAddress = "161.55.201.250";
+            String IpAddress = "192.168.56.4";
             string OutFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             OutFolder = Path.Combine(OutFolder, "Test");
             if (Directory.Exists(OutFolder))
@@ -48,8 +48,8 @@ namespace TestNFS
                                     if (nfsv2.Read(Item, FileName) != NFSResult.NFS_ERROR)
                                         Console.WriteLine("Read error");
 
-                                    if(nfsv2.Write(Item, FileName) != NFSResult.NFS_ERROR)
-                                        Console.WriteLine("Read error");
+                                    if (nfsv2.Write(Item, FileName) != NFSResult.NFS_ERROR)
+                                        Console.WriteLine("Write error");
                                 }
                             }
                         }
