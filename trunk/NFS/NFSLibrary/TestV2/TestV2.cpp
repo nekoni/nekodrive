@@ -87,16 +87,14 @@ int saveFile(const char* File, CNFSv2* nfs, unsigned int totsize, unsigned int b
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	std::vector<std::string> strD;
-	std::vector<std::string> strI;
-	CNFSv2* nfs = new CNFSv2();
-	//unsigned long ServerAddress = inet_addr("161.55.201.250");
-	unsigned long ServerAddress = inet_addr("192.168.56.102");
-	nfs->Connect(ServerAddress, 0, 0);
-	for (int x = 0; x < 100; x++)
+	for (int x = 0; x < 1000; x++)
 	{
-		strD.clear();
-		strI.clear();
+		std::vector<std::string> strD;
+		std::vector<std::string> strI;
+		CNFSv2* nfs = new CNFSv2();
+		unsigned long ServerAddress = inet_addr("192.168.56.4");
+		nfs->Connect(ServerAddress, 0, 0);
+		
 		int iDevices = 0;
 		char** pDevices  = nfs->GetExportedDevices(&iDevices);
 		int i = 0;
@@ -120,16 +118,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		nfs->ReleaseBuffers((void**)pItems);
 		nfs->UnMountDevice();
+		nfs->Disconnect();
+
+		strD.clear();
+		strI.clear();
+
+		delete nfs;
 	}
-	
-	//nfs->CreateFile("logo_good.gif");
-	//nfs->Open("logo_good.gif");
-	//char pBuffer[4096];
-	//u_long pSize;
-	////int ret = nfs->Read(0, 4096, pBuffer, &pSize);
-	//int ret = nfs->Write(0, 1024, pBuffer, &pSize);
-	//nfs->CreateFile("test.t");
-	delete nfs;
 	
 	Sleep(60000);
 
