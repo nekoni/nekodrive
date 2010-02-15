@@ -281,6 +281,8 @@ DllExport bool_t	xdr_double();
 DllExport bool_t	xdr_reference();
 DllExport bool_t	xdr_pointer();
 DllExport bool_t	xdr_wrapstring();
+DllExport bool_t	xdr_hyper();
+DllExport bool_t	xdr_u_hyper();
 #ifdef __cplusplus
 extern "C" {
 DllExport void		xdr_free (xdrproc_t proc, char *objp);

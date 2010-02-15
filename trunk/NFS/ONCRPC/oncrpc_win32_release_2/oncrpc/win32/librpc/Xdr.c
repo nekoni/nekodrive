@@ -607,3 +607,29 @@ xdr_wrapstring(xdrs, cpp)
 	}
 	return (FALSE);
 }
+
+bool_t
+xdr_hyper(XDR *xdrs, hyper *hp)
+{
+	if (xdrs->x_op == XDR_ENCODE) {
+	if (XDR_PUTLONG(xdrs, (int *)hp) == TRUE)
+		return (XDR_PUTLONG(xdrs, (int *)((char *)hp +
+			BYTES_PER_XDR_UNIT)));
+	return (FALSE);
+	}
+
+	if (xdrs->x_op == XDR_DECODE) {
+	if (XDR_PUTLONG(xdrs, (int *)hp) == FALSE ||
+	    (XDR_PUTLONG(xdrs, (int *)((char *)hp +
+			BYTES_PER_XDR_UNIT)) == FALSE))
+		return (FALSE);
+	return (TRUE);
+	}
+return (TRUE);
+}
+     
+bool_t
+xdr_u_hyper(XDR *xdrs, unsigned hyper *hp)
+{
+	return (xdr_hyper(xdrs, (hyper *)hp));
+}
