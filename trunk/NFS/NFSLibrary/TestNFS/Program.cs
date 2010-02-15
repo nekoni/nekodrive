@@ -13,7 +13,7 @@ namespace TestNFS
     {
         static void Main(string[] args)
         {
-            String IpAddress = "161.55.180.150";
+            String IpAddress = "161.55.201.250";
             string OutFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             OutFolder = Path.Combine(OutFolder, "Test");
             if (Directory.Exists(OutFolder))

@@ -100,4 +100,7 @@ typedef char *caddr_t;
 typedef unsigned int u_int;
 typedef unsigned long u_long;
 typedef unsigned short u_short;
+typedef unsigned __int64 u_quad_t;
+typedef __int64 quad_t;
+typedef unsigned int uint32_t;
 #endif /* ndef __TYPES_RPC_HEADER__ */
