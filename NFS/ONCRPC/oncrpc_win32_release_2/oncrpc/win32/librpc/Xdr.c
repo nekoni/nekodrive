@@ -608,74 +608,189 @@ xdr_wrapstring(xdrs, cpp)
 	return (FALSE);
 }
 
+
 /*
- * XDR hyper integers
- * same as xdr_u_hyper - open coded to save a proc call!
+ * XDR 64-bit integers
  */
 bool_t
-xdr_hyper (xdrs, llp)
-	XDR *xdrs; 
-	quad_t *llp;
+xdr_int64_t(xdrs, llp)
+	XDR *xdrs;
+	int64_t *llp;
 {
-  long int t1, t2;
+	u_long ul[2];
 
-  if (xdrs->x_op == XDR_ENCODE)
-    {
-      t1 = (long) ((*llp) >> 32);
-      t2 = (long) (*llp);
-      return (XDR_PUTLONG(xdrs, &t1) && XDR_PUTLONG(xdrs, &t2));
-    }
-
-  if (xdrs->x_op == XDR_DECODE)
-    {
-      if (!XDR_GETLONG(xdrs, &t1) || !XDR_GETLONG(xdrs, &t2))
-	return FALSE;
-      *llp = ((quad_t) t1) << 32;
-      *llp |= (uint32_t) t2;
-      return TRUE;
-    }
-
-  if (xdrs->x_op == XDR_FREE)
-    return TRUE;
-
-  return FALSE;
+	switch (xdrs->x_op) {
+	case XDR_ENCODE:
+		ul[0] = (u_long)((u_int64_t)*llp >> 32) & 0xffffffff;
+		ul[1] = (u_long)((u_int64_t)*llp) & 0xffffffff;
+		if (XDR_PUTLONG(xdrs, (long *)&ul[0]) == FALSE)
+			return (FALSE);
+		return (XDR_PUTLONG(xdrs, (long *)&ul[1]));
+	case XDR_DECODE:
+		if (XDR_GETLONG(xdrs, (long *)&ul[0]) == FALSE)
+			return (FALSE);
+		if (XDR_GETLONG(xdrs, (long *)&ul[1]) == FALSE)
+			return (FALSE);
+		*llp = (int64_t)
+		    (((u_int64_t)ul[0] << 32) | ((u_int64_t)ul[1]));
+		return (TRUE);
+	case XDR_FREE:
+		return (TRUE);
+	}
+	/* NOTREACHED */
+	return (FALSE);
 }
 
 
-
 /*
- * XDR hyper integers
- * same as xdr_hyper - open coded to save a proc call!
+ * XDR unsigned 64-bit integers
  */
 bool_t
-xdr_u_hyper (xdrs, ullp)
-			 XDR *xdrs;
-			 u_quad_t *ullp;
+xdr_u_int64_t(xdrs, ullp)
+	XDR *xdrs;
+	u_int64_t *ullp;
 {
-  long int t1, t2;
+	u_long ul[2];
 
-  if (xdrs->x_op == XDR_ENCODE)
-    {
-      t1 = (unsigned long) ((*ullp) >> 32);
-      t2 = (unsigned long) (*ullp);
-      return (XDR_PUTLONG(xdrs, &t1) && XDR_PUTLONG(xdrs, &t2));
-    }
-
-  if (xdrs->x_op == XDR_DECODE)
-    {
-      if (!XDR_GETLONG(xdrs, &t1) || !XDR_GETLONG(xdrs, &t2))
-	return FALSE;
-      *ullp = ((u_quad_t) t1) << 32;
-      *ullp |= (uint32_t) t2;
-      return TRUE;
-    }
-
-  if (xdrs->x_op == XDR_FREE)
-    return TRUE;
-
-  return FALSE;
+	switch (xdrs->x_op) {
+	case XDR_ENCODE:
+		ul[0] = (u_long)(*ullp >> 32) & 0xffffffff;
+		ul[1] = (u_long)(*ullp) & 0xffffffff;
+		if (XDR_PUTLONG(xdrs, (long *)&ul[0]) == FALSE)
+			return (FALSE);
+		return (XDR_PUTLONG(xdrs, (long *)&ul[1]));
+	case XDR_DECODE:
+		if (XDR_GETLONG(xdrs, (long *)&ul[0]) == FALSE)
+			return (FALSE);
+		if (XDR_GETLONG(xdrs, (long *)&ul[1]) == FALSE)
+			return (FALSE);
+		*ullp = (u_int64_t)
+		    (((u_int64_t)ul[0] << 32) | ((u_int64_t)ul[1]));
+		return (TRUE);
+	case XDR_FREE:
+		return (TRUE);
+	}
+	/* NOTREACHED */
+	return (FALSE);
 }
 
+
+/*
+ * XDR hypers
+ */
+bool_t
+xdr_hyper(xdrs, llp)
+	XDR *xdrs;
+	longlong_t *llp;
+{
+	return (xdr_int64_t(xdrs, (int64_t *)llp));
+}
+
+
+/*
+ * XDR unsigned hypers
+ */
+bool_t
+xdr_u_hyper(xdrs, ullp)
+	XDR *xdrs;
+	u_longlong_t *ullp;
+{
+	return (xdr_u_int64_t(xdrs, (u_int64_t *)ullp));
+}
+
+
+/*
+ * XDR longlong_t's
+ */
+bool_t
+xdr_longlong_t(xdrs, llp)
+	XDR *xdrs;
+	longlong_t *llp;
+{
+	return (xdr_int64_t(xdrs, (int64_t *)llp));
+}
+
+
+/*
+ * XDR u_longlong_t's
+ */
+bool_t
+xdr_u_longlong_t(xdrs, ullp)
+	XDR *xdrs;
+	u_longlong_t *ullp;
+{
+	return (xdr_u_int64_t(xdrs, (u_int64_t *)ullp));
+}
+
+
+///*
+// * XDR hyper integers
+// * same as xdr_u_hyper - open coded to save a proc call!
+// */
+//bool_t
+//xdr_hyper (xdrs, llp)
+//	XDR *xdrs; 
+//	quad_t *llp;
+//{
+//  long int t1, t2;
+//
+//  if (xdrs->x_op == XDR_ENCODE)
+//    {
+//      t1 = (long) ((*llp) >> 32);
+//      t2 = (long) (*llp);
+//      return (XDR_PUTLONG(xdrs, &t1) && XDR_PUTLONG(xdrs, &t2));
+//    }
+//
+//  if (xdrs->x_op == XDR_DECODE)
+//    {
+//      if (!XDR_GETLONG(xdrs, &t1) || !XDR_GETLONG(xdrs, &t2))
+//	return FALSE;
+//      *llp = ((quad_t) t1) << 32;
+//      *llp |= (uint32_t) t2;
+//      return TRUE;
+//    }
+//
+//  if (xdrs->x_op == XDR_FREE)
+//    return TRUE;
+//
+//  return FALSE;
+//}
+//
+//
+//
+///*
+// * XDR hyper integers
+// * same as xdr_hyper - open coded to save a proc call!
+// */
+//bool_t
+//xdr_u_hyper (xdrs, ullp)
+//			 XDR *xdrs;
+//			 u_quad_t *ullp;
+//{
+//  long int t1, t2;
+//
+//  if (xdrs->x_op == XDR_ENCODE)
+//    {
+//      t1 = (unsigned long) ((*ullp) >> 32);
+//      t2 = (unsigned long) (*ullp);
+//      return (XDR_PUTLONG(xdrs, &t1) && XDR_PUTLONG(xdrs, &t2));
+//    }
+//
+//  if (xdrs->x_op == XDR_DECODE)
+//    {
+//      if (!XDR_GETLONG(xdrs, &t1) || !XDR_GETLONG(xdrs, &t2))
+//	return FALSE;
+//      *ullp = ((u_quad_t) t1) << 32;
+//      *ullp |= (uint32_t) t2;
+//      return TRUE;
+//    }
+//
+//  if (xdrs->x_op == XDR_FREE)
+//    return TRUE;
+//
+//  return FALSE;
+//}
+//
 
 //bool_t
 //xdr_hyper(XDR *xdrs, hyper *hp)

@@ -101,6 +101,10 @@ typedef unsigned int u_int;
 typedef unsigned long u_long;
 typedef unsigned short u_short;
 typedef unsigned __int64 u_quad_t;
+typedef unsigned __int64 u_int64_t;
+typedef unsigned __int64 u_longlong_t;
+typedef __int64 longlong_t;
 typedef __int64 quad_t;
 typedef unsigned int uint32_t;
+typedef __int64 int64_t;
 #endif /* ndef __TYPES_RPC_HEADER__ */

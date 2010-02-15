@@ -18,6 +18,8 @@
 #define CREATEVERFSIZE 8
 #define WRITEVERFSIZE 8
 
+#pragma pack(1) 
+
 
 typedef unsigned __int64 u_hyper;
 

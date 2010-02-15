@@ -89,7 +89,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::vector<std::string> strD;
 	std::vector<std::string> strI;
 	CNFSv3* nfs = new CNFSv3();
-	unsigned long ServerAddress = inet_addr("161.55.201.250");
+	unsigned long ServerAddress = inet_addr("192.168.56.3");
 	nfs->Connect(ServerAddress, 0, 0);
 	int iDevices = 0;
 	char** pDevices  = nfs->GetExportedDevices(&iDevices);
@@ -108,6 +108,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	for(char** iList = pItems; i < iItems; ++iList, i++)
 	{
 		strI.push_back(*iList);
+		printf("%s\n",  strI[i].c_str());
 		/*NFSData* nfsData = (NFSData*) nfs->GetItemAttributes((char*)strI[i].c_str());
 		printf("%s %d %d %d\n", strI[i].c_str(), nfsData->Blocks, nfsData->BlockSize, nfsData->Size);
 		saveFile(strI[i].c_str(), nfs, nfsData->Size, nfsData->BlockSize);
@@ -118,6 +119,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	nfs->UnMountDevice();
 	nfs->Disconnect();
 	delete nfs;
+	Sleep(60000);
 	return 0;
 }
 //
