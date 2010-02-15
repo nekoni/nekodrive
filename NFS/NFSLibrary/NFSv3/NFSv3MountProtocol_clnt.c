@@ -1,45 +1,33 @@
-/*
- * NekoDrive
- * 2010 by Mirko Gatto
- * mirko.gatto@gmail.com
- *
- *
- * Users may use, copy or modify this library 
- * according GNU General Public License v3 (http://www.gnu.org/licenses/gpl.html)
- */
-
-#include "rpc/rpc.h"
-#include "NFSv2MountProtocol.h"
+#include <rpc/rpc.h>
+#include "NFSv3MountProtocol.h"
 
 /* Default timeout can be changed using clnt_control() */
 static struct timeval TIMEOUT = { 25, 0 };
 
-
-
 void *
-mountproc_null_1(argp, clnt)
+mountproc3_null_3(argp, clnt)
 	void *argp;
 	CLIENT *clnt;
 {
 	static char res;
 
 	bzero((char *)&res, sizeof(res));
-	if (clnt_call(clnt, MOUNTPROC_NULL, xdr_void, argp, xdr_void, &res, TIMEOUT) != RPC_SUCCESS) {
+	if (clnt_call(clnt, MOUNTPROC3_NULL, xdr_void, argp, xdr_void, &res, TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
 	}
 	return ((void *)&res);
 }
 
 
-fhstatus *
-mountproc_mnt_1(argp, clnt)
+mountres3 *
+mountproc3_mnt_3(argp, clnt)
 	dirpath *argp;
 	CLIENT *clnt;
 {
-	static fhstatus res;
+	static mountres3 res;
 
 	bzero((char *)&res, sizeof(res));
-	if (clnt_call(clnt, MOUNTPROC_MNT, xdr_dirpath, argp, xdr_fhstatus, &res, TIMEOUT) != RPC_SUCCESS) {
+	if (clnt_call(clnt, MOUNTPROC3_MNT, xdr_dirpath, argp, xdr_mountres3, &res, TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
 	}
 	return (&res);
@@ -47,14 +35,14 @@ mountproc_mnt_1(argp, clnt)
 
 
 mountlist *
-mountproc_dump_1(argp, clnt)
+mountproc3_dump_3(argp, clnt)
 	void *argp;
 	CLIENT *clnt;
 {
 	static mountlist res;
 
 	bzero((char *)&res, sizeof(res));
-	if (clnt_call(clnt, MOUNTPROC_DUMP, xdr_void, argp, xdr_mountlist, &res, TIMEOUT) != RPC_SUCCESS) {
+	if (clnt_call(clnt, MOUNTPROC3_DUMP, xdr_void, argp, xdr_mountlist, &res, TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
 	}
 	return (&res);
@@ -62,14 +50,14 @@ mountproc_dump_1(argp, clnt)
 
 
 void *
-mountproc_umnt_1(argp, clnt)
+mountproc3_umnt_3(argp, clnt)
 	dirpath *argp;
 	CLIENT *clnt;
 {
 	static char res;
 
 	bzero((char *)&res, sizeof(res));
-	if (clnt_call(clnt, MOUNTPROC_UMNT, xdr_dirpath, argp, xdr_void, &res, TIMEOUT) != RPC_SUCCESS) {
+	if (clnt_call(clnt, MOUNTPROC3_UMNT, xdr_dirpath, argp, xdr_void, &res, TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
 	}
 	return ((void *)&res);
@@ -77,14 +65,14 @@ mountproc_umnt_1(argp, clnt)
 
 
 void *
-mountproc_umntall_1(argp, clnt)
+mountproc3_umntall_3(argp, clnt)
 	void *argp;
 	CLIENT *clnt;
 {
 	static char res;
 
 	bzero((char *)&res, sizeof(res));
-	if (clnt_call(clnt, MOUNTPROC_UMNTALL, xdr_void, argp, xdr_void, &res, TIMEOUT) != RPC_SUCCESS) {
+	if (clnt_call(clnt, MOUNTPROC3_UMNTALL, xdr_void, argp, xdr_void, &res, TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
 	}
 	return ((void *)&res);
@@ -92,14 +80,14 @@ mountproc_umntall_1(argp, clnt)
 
 
 exports *
-mountproc_export_1(argp, clnt)
+mountproc3_export_3(argp, clnt)
 	void *argp;
 	CLIENT *clnt;
 {
 	static exports res;
 
 	bzero((char *)&res, sizeof(res));
-	if (clnt_call(clnt, MOUNTPROC_EXPORT, xdr_void, argp, xdr_exports, &res, TIMEOUT) != RPC_SUCCESS) {
+	if (clnt_call(clnt, MOUNTPROC3_EXPORT, xdr_void, argp, xdr_exports, &res, TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
 	}
 	return (&res);

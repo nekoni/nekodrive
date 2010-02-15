@@ -100,5 +100,4 @@ typedef char *caddr_t;
 typedef unsigned int u_int;
 typedef unsigned long u_long;
 typedef unsigned short u_short;
-
 #endif /* ndef __TYPES_RPC_HEADER__ */

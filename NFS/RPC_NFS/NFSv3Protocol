@@ -1,49 +1,24 @@
 #define NFS3_FHSIZE 64
-//The maximum size in bytes of the opaque file handle.
 #define NFS3_COOKIEVERFSIZE 8
-//The size in bytes of the opaque cookie verifier passed by
-//READDIR and READDIRPLUS.
 #define NFS3_CREATEVERFSIZE 8
-//The size in bytes of the opaque verifier used for
-//exclusive CREATE.
 #define NFS3_WRITEVERFSIZE 8
-//The size in bytes of the opaque verifier used for
-//asynchronous WRITE.
-//uint64
-typedef unsigned hyper uint64;
-//int64
+typedef u_hyper uint64;
 typedef hyper int64;
-//uint32
 typedef unsigned long uint32;
-//int32
 typedef long int32;
-//filename3
 typedef string filename3<>;
-//nfspath3
 typedef string nfspath3<>;
-//fileid3
 typedef uint64 fileid3;
-//cookie3
 typedef uint64 cookie3;
-//cookieverf3
 typedef opaque cookieverf3[NFS3_COOKIEVERFSIZE];
-//createverf3
 typedef opaque createverf3[NFS3_CREATEVERFSIZE];
-//writeverf3
 typedef opaque writeverf3[NFS3_WRITEVERFSIZE];
-//uid3
 typedef uint32 uid3;
-//gid3
 typedef uint32 gid3;
-//size3
 typedef uint64 size3;
-//offset3
 typedef uint64 offset3;
-//mode3
 typedef uint32 mode3;
-//count3
 typedef uint32 count3;
-//nfsstat3
       enum nfsstat3 {
          NFS3_OK             = 0,
          NFS3ERR_PERM        = 1,
@@ -67,7 +42,7 @@ typedef uint32 count3;
          NFS3ERR_STALE       = 70,
          NFS3ERR_REMOTE      = 71,
          NFS3ERR_BADHANDLE   = 10001,
-	 NFS3ERR_NOT_SYNC    = 10002,
+		 NFS3ERR_NOT_SYNC    = 10002,
          NFS3ERR_BAD_COOKIE  = 10003,
          NFS3ERR_NOTSUPP     = 10004,
          NFS3ERR_TOOSMALL    = 10005,
@@ -75,7 +50,6 @@ typedef uint32 count3;
          NFS3ERR_BADTYPE     = 10007,
          NFS3ERR_JUKEBOX     = 10008
       };
-//ftype3
       enum ftype3 {
          NF3REG    = 1,
          NF3DIR    = 2,
@@ -85,21 +59,18 @@ typedef uint32 count3;
          NF3SOCK   = 6,
          NF3FIFO   = 7
       };
-//specdata3
       struct specdata3 {
            uint32     specdata1;
            uint32     specdata2;
       };
-//nfs_fh3
       struct nfs_fh3 {
-         opaque       data<NFS3_FHSIZE>;
-      };
-//nfstime3
+			opaque	data<FHSIZE3>;
+	  };
+
       struct nfstime3 {
          uint32   seconds;
          uint32   nseconds;
       };
-//fattr3
       struct fattr3 {
          ftype3     type;
          mode3      mode;
@@ -116,8 +87,6 @@ typedef uint32 count3;
          nfstime3   ctime;
       };
 
-//post_op_attr
-
       union post_op_attr switch (bool attributes_follow) {
       case TRUE:
          fattr3   attributes;
@@ -125,16 +94,11 @@ typedef uint32 count3;
          void;
       };
 
-//wcc_attr
-
       struct wcc_attr {
          size3       size;
          nfstime3    mtime;
          nfstime3    ctime;
       };
-
-
-//pre_op_attr
 
       union pre_op_attr switch (bool attributes_follow) {
       case TRUE:
@@ -143,14 +107,11 @@ typedef uint32 count3;
            void;
       };
 
-//wcc_data
-
       struct wcc_data {
          pre_op_attr    before;
          post_op_attr   after;
       };
 
-//post_op_fh3
 
       union post_op_fh3 switch (bool handle_follows) {
       case TRUE:
@@ -158,8 +119,6 @@ typedef uint32 count3;
       case FALSE:
            void;
       };
-
-//sattr3
 
       enum time_how {
          DONT_CHANGE        = 0,
@@ -219,15 +178,12 @@ typedef uint32 count3;
 	};
 
 
-
-//diropargs3
-
       struct diropargs3 {
          nfs_fh3     dir;
          filename3   name;
       };
 
-struct GETATTR3args {
+	struct GETATTR3args {
          nfs_fh3  obj;
       };
 
@@ -264,14 +220,14 @@ struct GETATTR3args {
          wcc_data  obj_wcc;
       };
 
-union SETATTR3res switch (nfsstat3 status) {
-      case NFS3_OK:
-         SETATTR3resok   resok;
-      default:
-         SETATTR3resfail resfail;
+	  union SETATTR3res switch (nfsstat3 status) {
+		case NFS3_OK:
+			SETATTR3resok   resok;
+		default:
+			SETATTR3resfail resfail;
       };
 
-struct LOOKUP3args {
+	  struct LOOKUP3args {
            diropargs3  what;
       };
 
@@ -292,8 +248,7 @@ struct LOOKUP3args {
            LOOKUP3resfail  resfail;
       };
 
-
-const ACCESS3_READ    = 0x0001;
+	  const ACCESS3_READ    = 0x0001;
       const ACCESS3_LOOKUP  = 0x0002;
       const ACCESS3_MODIFY  = 0x0004;
       const ACCESS3_EXTEND  = 0x0008;
@@ -321,7 +276,7 @@ const ACCESS3_READ    = 0x0001;
            ACCESS3resfail resfail;
       };
 
-struct READLINK3args {
+	  struct READLINK3args {
            nfs_fh3  symlink;
       };
 
@@ -342,7 +297,7 @@ struct READLINK3args {
       };
 
 
-struct READ3args {
+	  struct READ3args {
            nfs_fh3  file;
            offset3  offset;
            count3   count;
@@ -367,7 +322,7 @@ struct READ3args {
       };
 
 
-enum stable_how {
+	  enum stable_how {
            UNSTABLE  = 0,
            DATA_SYNC = 1,
            FILE_SYNC = 2
@@ -399,8 +354,7 @@ enum stable_how {
            WRITE3resfail  resfail;
       };
 
-
-enum createmode3 {
+	  enum createmode3 {
            UNCHECKED = 0,
            GUARDED   = 1,
            EXCLUSIVE = 2
@@ -408,8 +362,9 @@ enum createmode3 {
 
       union createhow3 switch (createmode3 mode) {
       case UNCHECKED:
+		   sattr3       obj_attributes_un;
       case GUARDED:
-           sattr3       obj_attributes;
+           sattr3       obj_attributes_gu;
       case EXCLUSIVE:
            createverf3  verf;
       };
@@ -436,7 +391,7 @@ enum createmode3 {
            CREATE3resfail  resfail;
       };
 
-struct MKDIR3args {
+	  struct MKDIR3args {
            diropargs3   where;
            sattr3       attributes;
       };
@@ -459,7 +414,7 @@ struct MKDIR3args {
       };
 
 
-struct symlinkdata3 {
+      struct symlinkdata3 {
            sattr3    symlink_attributes;
            nfspath3  symlink_data;
       };
@@ -487,18 +442,20 @@ struct symlinkdata3 {
       };
 
 
-struct devicedata3 {
+	  struct devicedata3 {
            sattr3     dev_attributes;
            specdata3  spec;
       };
 
       union mknoddata3 switch (ftype3 type) {
       case NF3CHR:
+		   devicedata3  device_chr;
       case NF3BLK:
-           devicedata3  device;
+           devicedata3  device_blk;
       case NF3SOCK:
+           sattr3       pipe_attributes_sock;
       case NF3FIFO:
-           sattr3       pipe_attributes;
+           sattr3       pipe_attributes_fifo;
       default:
            void;
       };
@@ -509,7 +466,7 @@ struct devicedata3 {
       };
 
 
-struct MKNOD3resok {
+	  struct MKNOD3resok {
            post_op_fh3   obj;
            post_op_attr  obj_attributes;
            wcc_data      dir_wcc;
@@ -527,7 +484,7 @@ struct MKNOD3resok {
       };
 
 
-struct REMOVE3args {
+	  struct REMOVE3args {
            diropargs3  obj;
       };
 
@@ -547,7 +504,7 @@ struct REMOVE3args {
       };
 
 
-struct RMDIR3args {
+	  struct RMDIR3args {
            diropargs3  obj;
       };
 
@@ -566,7 +523,7 @@ struct RMDIR3args {
            RMDIR3resfail resfail;
       };
 
-struct RENAME3args {
+	  struct RENAME3args {
            diropargs3   from;
            diropargs3   to;
       };
@@ -588,7 +545,7 @@ struct RENAME3args {
            RENAME3resfail resfail;
       };
 
-struct LINK3args {
+	  struct LINK3args {
            nfs_fh3     file;
            diropargs3  link;
       };
@@ -605,20 +562,20 @@ struct LINK3args {
 
       union LINK3res switch (nfsstat3 status) {
       case NFS3_OK:
-    LINK3resok    resok;
+		   LINK3resok    resok;
       default:
            LINK3resfail  resfail;
       };
 
 
-struct READDIR3args {
+	  struct READDIR3args {
            nfs_fh3      dir;
            cookie3      cookie;
            cookieverf3  cookieverf;
            count3       count;
       };
 
-struct entry3 {
+	  struct entry3 {
            fileid3      fileid;
            filename3    name;
            cookie3      cookie;
@@ -647,7 +604,7 @@ struct entry3 {
            READDIR3resfail resfail;
       };
 
-struct READDIRPLUS3args {
+	  struct READDIRPLUS3args {
            nfs_fh3      dir;
            cookie3      cookie;
            cookieverf3  cookieverf;
@@ -676,7 +633,7 @@ struct READDIRPLUS3args {
       };
 
 
-struct READDIRPLUS3resfail {
+	  struct READDIRPLUS3resfail {
            post_op_attr dir_attributes;
       };
 
@@ -688,7 +645,7 @@ struct READDIRPLUS3resfail {
       };
 
 
-struct FSSTAT3args {
+	  struct FSSTAT3args {
            nfs_fh3   fsroot;
       };
 
@@ -716,7 +673,7 @@ struct FSSTAT3args {
 
 
 
-const FSF3_LINK        = 0x0001;
+	  const FSF3_LINK        = 0x0001;
       const FSF3_SYMLINK     = 0x0002;
       const FSF3_HOMOGENEOUS = 0x0008;
       const FSF3_CANSETTIME  = 0x0010;
@@ -751,7 +708,7 @@ const FSF3_LINK        = 0x0001;
       };
 
 
-struct PATHCONF3args {
+	  struct PATHCONF3args {
            nfs_fh3   obj;
       };
 
@@ -777,7 +734,7 @@ struct PATHCONF3args {
       };
 
 
-struct COMMIT3args {
+	  struct COMMIT3args {
            nfs_fh3    file;
            offset3    offset;
            count3     count;

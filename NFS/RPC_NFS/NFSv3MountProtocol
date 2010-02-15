@@ -1,8 +1,11 @@
-#define MNTPATHLEN  1024;  /* Maximum bytes in a path name */
-#define MNTNAMLEN  255;   /* Maximum bytes in a name */
-#define FHSIZE3   64;    /* Maximum bytes in a V3 file handle */
+#define MNTPATHLEN  1024  /* Maximum bytes in a path name */
+#define MNTNAMLEN  255   /* Maximum bytes in a name */
+#define FHSIZE3   64    /* Maximum bytes in a V3 file handle */
 
-typedef opaque fhandle3<FHSIZE3>;
+struct fhandle3 {
+	opaque	data<FHSIZE3>;
+};
+
 typedef string dirpath<MNTPATHLEN>;
 typedef string name<MNTNAMLEN>;
 
@@ -26,7 +29,7 @@ struct mountres3_ok {
       };
 
       union mountres3 switch (mountstat3 fhs_status) {
-      case MNT_OK:
+      case MNT3_OK:
            mountres3_ok  mountinfo;
       default:
            void;
