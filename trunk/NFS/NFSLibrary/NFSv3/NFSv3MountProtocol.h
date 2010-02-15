@@ -13,6 +13,8 @@
 #ifndef __IncNFSV3MountProtocolh
 #define __IncNFSV3MountProtocolh
 
+#pragma pack(1) 
+
 #include <rpc/types.h>
 #define FHSIZE 64
 

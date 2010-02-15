@@ -336,16 +336,16 @@ xdr_fattr3(xdrs, objp)
 	if (!xdr_gid3(xdrs, &objp->gid)) {
 		return (FALSE);
 	}
-	if (!xdr_size3(xdrs, &objp->size)) {
+	if (!xdr_u_hyper(xdrs, &objp->size)) {
 		return (FALSE);
 	}
-	if (!xdr_size3(xdrs, &objp->used)) {
+	if (!xdr_u_hyper(xdrs, &objp->used)) {
 		return (FALSE);
 	}
 	if (!xdr_specdata3(xdrs, &objp->rdev)) {
 		return (FALSE);
 	}
-	if (!xdr_uint64(xdrs, &objp->fsid)) {
+	if (!xdr_u_hyper(xdrs, &objp->fsid)) {
 		return (FALSE);
 	}
 	if (!xdr_fileid3(xdrs, &objp->fileid)) {

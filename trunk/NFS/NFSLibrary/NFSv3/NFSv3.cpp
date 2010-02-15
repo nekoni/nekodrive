@@ -240,13 +240,9 @@ char** CNFSv3::GetItemsList(int* pnSize)
         READDIR3res *pReadDirRes;
 		dpRdArgs.cookie = 0;
 		memset(dpRdArgs.cookieverf, 0, COOKIEVERFSIZE);
-		dpRdArgs.count = 10;
-
-		dpRdArgs.dir.data.data_len = FHSIZE;
-		dpRdArgs.dir.data.data_val = new char[FHSIZE];
-		memset(dpRdArgs.dir.data.data_val, 0, FHSIZE);
-		
-		memcpy(dpRdArgs.dir.data.data_val, nfsCurrentDirectory.data.data_val, FHSIZE);
+		dpRdArgs.count = 8192;
+		dpRdArgs.dir.data.data_len = nfsCurrentDirectory.data.data_len;
+		dpRdArgs.dir.data.data_val = nfsCurrentDirectory.data.data_val;
 		while(true)
 		{
 			if( (pReadDirRes = nfsproc3_readdir_3(&dpRdArgs, clntV3)) == NULL ) 
