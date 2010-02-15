@@ -240,7 +240,7 @@ char** CNFSv3::GetItemsList(int* pnSize)
         READDIR3res *pReadDirRes;
 		dpRdArgs.cookie = 0;
 		memset(dpRdArgs.cookieverf, 0, COOKIEVERFSIZE);
-		dpRdArgs.count = 8192;
+		dpRdArgs.count = 10;
 
 		dpRdArgs.dir.data.data_len = FHSIZE;
 		dpRdArgs.dir.data.data_val = new char[FHSIZE];

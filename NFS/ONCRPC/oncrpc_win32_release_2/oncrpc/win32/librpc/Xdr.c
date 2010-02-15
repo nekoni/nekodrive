@@ -608,28 +608,97 @@ xdr_wrapstring(xdrs, cpp)
 	return (FALSE);
 }
 
+/*
+ * XDR hyper integers
+ * same as xdr_u_hyper - open coded to save a proc call!
+ */
 bool_t
-xdr_hyper(XDR *xdrs, hyper *hp)
+xdr_hyper (xdrs, llp)
+	XDR *xdrs; 
+	quad_t *llp;
 {
-	if (xdrs->x_op == XDR_ENCODE) {
-	if (XDR_PUTLONG(xdrs, (int *)hp) == TRUE)
-		return (XDR_PUTLONG(xdrs, (int *)((char *)hp +
-			BYTES_PER_XDR_UNIT)));
-	return (FALSE);
-	}
+  long int t1, t2;
 
-	if (xdrs->x_op == XDR_DECODE) {
-	if (XDR_PUTLONG(xdrs, (int *)hp) == FALSE ||
-	    (XDR_PUTLONG(xdrs, (int *)((char *)hp +
-			BYTES_PER_XDR_UNIT)) == FALSE))
-		return (FALSE);
-	return (TRUE);
-	}
-return (TRUE);
+  if (xdrs->x_op == XDR_ENCODE)
+    {
+      t1 = (long) ((*llp) >> 32);
+      t2 = (long) (*llp);
+      return (XDR_PUTLONG(xdrs, &t1) && XDR_PUTLONG(xdrs, &t2));
+    }
+
+  if (xdrs->x_op == XDR_DECODE)
+    {
+      if (!XDR_GETLONG(xdrs, &t1) || !XDR_GETLONG(xdrs, &t2))
+	return FALSE;
+      *llp = ((quad_t) t1) << 32;
+      *llp |= (uint32_t) t2;
+      return TRUE;
+    }
+
+  if (xdrs->x_op == XDR_FREE)
+    return TRUE;
+
+  return FALSE;
 }
-     
+
+
+
+/*
+ * XDR hyper integers
+ * same as xdr_hyper - open coded to save a proc call!
+ */
 bool_t
-xdr_u_hyper(XDR *xdrs, unsigned hyper *hp)
+xdr_u_hyper (xdrs, ullp)
+			 XDR *xdrs;
+			 u_quad_t *ullp;
 {
-	return (xdr_hyper(xdrs, (hyper *)hp));
+  long int t1, t2;
+
+  if (xdrs->x_op == XDR_ENCODE)
+    {
+      t1 = (unsigned long) ((*ullp) >> 32);
+      t2 = (unsigned long) (*ullp);
+      return (XDR_PUTLONG(xdrs, &t1) && XDR_PUTLONG(xdrs, &t2));
+    }
+
+  if (xdrs->x_op == XDR_DECODE)
+    {
+      if (!XDR_GETLONG(xdrs, &t1) || !XDR_GETLONG(xdrs, &t2))
+	return FALSE;
+      *ullp = ((u_quad_t) t1) << 32;
+      *ullp |= (uint32_t) t2;
+      return TRUE;
+    }
+
+  if (xdrs->x_op == XDR_FREE)
+    return TRUE;
+
+  return FALSE;
 }
+
+
+//bool_t
+//xdr_hyper(XDR *xdrs, hyper *hp)
+//{
+//	if (xdrs->x_op == XDR_ENCODE) {
+//	if (XDR_PUTLONG(xdrs, (int *)hp) == TRUE)
+//		return (XDR_PUTLONG(xdrs, (int *)((char *)hp +
+//			BYTES_PER_XDR_UNIT)));
+//	return (FALSE);
+//	}
+//
+//	if (xdrs->x_op == XDR_DECODE) {
+//	if (XDR_PUTLONG(xdrs, (int *)hp) == FALSE ||
+//	    (XDR_PUTLONG(xdrs, (int *)((char *)hp +
+//			BYTES_PER_XDR_UNIT)) == FALSE))
+//		return (FALSE);
+//	return (TRUE);
+//	}
+//return (TRUE);
+//}
+//     
+//bool_t
+//xdr_u_hyper(XDR *xdrs, unsigned hyper *hp)
+//{
+//	return (xdr_hyper(xdrs, (hyper *)hp));
+//}
