@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace NFSv2Client
+namespace NFSClient
 {
     static class Program
     {

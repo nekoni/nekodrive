@@ -23,7 +23,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace NFSv2Client
+namespace NFSClient
 {
    internal class NativeMethods
    {

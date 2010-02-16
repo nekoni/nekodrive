@@ -1,4 +1,4 @@
-﻿namespace NFSv2Client
+﻿namespace NFSClient
 {
     partial class Progress
     {
@@ -62,6 +62,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Progress";
             this.ResumeLayout(false);
             this.PerformLayout();

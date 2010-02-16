@@ -30,7 +30,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
 
-namespace NFSv2Client
+namespace NFSClient
 {
    [DesignerAttribute( typeof( IPAddressControlDesigner ) )]
    public partial class

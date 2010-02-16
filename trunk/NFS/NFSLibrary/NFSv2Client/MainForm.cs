@@ -9,8 +9,9 @@ using System.IO;
 using NekoDrive.NFS.Wrappers;
 using NekoDrive.NFS;
 using System.Net;
+using System.Threading;
 
-namespace NFSv2Client
+namespace NFSClient
 {
     public partial class MainForm : Form
     {
@@ -34,6 +35,13 @@ namespace NFSv2Client
         string CurrentList;
         string CurrentItem;
         Progress pg = new Progress();
+        delegate void ShowProgressDelegate(bool ShowHide);
+        ShowProgressDelegate show;
+        ulong Size;
+        uint CurrentPos;
+
+        delegate void UpdateProgressDelegate(string name, int total, int current);
+        UpdateProgressDelegate update;
 
         #endregion
 
@@ -42,17 +50,41 @@ namespace NFSv2Client
         public MainForm()
         {
             InitializeComponent();
-
-            ipAddressControl1.Text = "161.55.201.250";
-            pg.Show();
-            pg.Hide();
-
             cboxVer.SelectedIndex = 0;
+            show = new ShowProgressDelegate(ShowProgress);
+            update = new UpdateProgressDelegate(UpdateProgress);
         }
 
         #endregion
 
         #region Methods
+
+        void ShowProgress(bool Show)
+        {
+            if (this.InvokeRequired)
+            {
+                pg.Invoke(show, new object[] { Show });
+            }
+            else
+            {
+                if (Show)
+                    pg.ShowDialog();
+                else
+                    pg.Close();
+            }
+        }
+
+        void UpdateProgress(string name, int total, int current)
+        {
+            if (this.InvokeRequired)
+            {
+                pg.Invoke(show, new object[] { name, total, current });
+            }
+            else
+            {
+                pg.Update(name, (uint) current, (uint) total);
+            }
+        }
 
         void RefreshLocal(string Dir)
         {
@@ -162,17 +194,33 @@ namespace NFSv2Client
             {
                 if (CurrentEffect == DragDropEffects.Copy)
                 {
-                    foreach (ListViewItem lvItem in lvDragItem)
+                    string LocalFolder = tbLocalPath.Text;
+                    ThreadPool.QueueUserWorkItem(new
+                    WaitCallback(delegate
                     {
-                        pg.Visible = true;
-                        CurrentItem = lvItem.Text;
-                        FileStream fs = new FileStream(Path.Combine(tbLocalPath.Text, lvItem.Text), FileMode.CreateNew);
-                        if (nfsClient.Read(lvItem.Text, ref fs) != NFSResult.NFS_SUCCESS)
-                            Console.WriteLine("Read error");
-                        fs.Close();
-                        pg.Visible = false;
-                        //nfsClient.DownloadFile(lvItem.Text, Path.Combine(tbLocalPath.Text, lvItem.Text));
-                    }
+                        foreach (ListViewItem lvItem in lvDragItem)
+                        {
+                            string OutputFile = Path.Combine(LocalFolder, lvItem.Text);
+                            if (File.Exists(OutputFile))
+                            {
+                                if (MessageBox.Show("Do you want to overwrite " + OutputFile + "?", "NFSClient", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                    File.Delete(OutputFile);
+                                else
+                                    continue;
+                            }
+                            ShowProgress(true);
+                            CurrentItem = lvItem.Text;
+                            if(nfsClient.Read(CurrentItem, OutputFile) != NFSResult.NFS_SUCCESS)
+                            {
+                                MessageBox.Show("An error has occurred while downloading " + CurrentItem);
+                                continue;
+                            }
+                            ShowProgress(false);
+                            
+                        }   
+                    }));
+                    pg.ShowDialog();
+                    
                     RefreshLocal(tbLocalPath.Text);
                 }
             }
@@ -180,6 +228,7 @@ namespace NFSv2Client
 
         void nfsClient_DataEvent(object sender, NFSEventArgs e)
         {
+            
             //pg.Update(CurrentItem, e.CurrentByte, e.TotalBytes);
         }
 

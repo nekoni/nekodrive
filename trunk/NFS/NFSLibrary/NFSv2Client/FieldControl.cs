@@ -26,7 +26,7 @@ using System.Globalization;
 using System.Windows.Forms;
 
 
-namespace NFSv2Client
+namespace NFSClient
 {
    internal enum Direction
    {
