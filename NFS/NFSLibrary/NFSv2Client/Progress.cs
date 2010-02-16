@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace NFSv2Client
+namespace NFSClient
 {
     public partial class Progress : Form
     {
@@ -20,11 +20,6 @@ namespace NFSv2Client
             label1.Text = FileName;
             progressBar1.Value = (int)Position;
             progressBar1.Maximum = (int) TotalLenght;
-        }
-
-        public void Close()
-        {
-            this.Close();
         }
     }
 }

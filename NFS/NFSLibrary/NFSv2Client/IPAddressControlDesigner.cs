@@ -25,7 +25,7 @@ using System.Collections;
 using System.Windows.Forms.Design;
 using System.Windows.Forms.Design.Behavior;
 
-namespace NFSv2Client
+namespace NFSClient
 {
    class IPAddressControlDesigner : ControlDesigner
    {

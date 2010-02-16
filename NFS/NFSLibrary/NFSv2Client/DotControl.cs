@@ -26,7 +26,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
 
-namespace NFSv2Client
+namespace NFSClient
 {
    internal class DotControl : Control
    {

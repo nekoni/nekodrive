@@ -1,4 +1,4 @@
-namespace NFSv2Client
+namespace NFSClient
 {
     partial class MainForm
     {
@@ -35,7 +35,7 @@ namespace NFSv2Client
             this.btnConnect = new System.Windows.Forms.Button();
             this.gbTargetConnection = new System.Windows.Forms.GroupBox();
             this.cboxVer = new System.Windows.Forms.ComboBox();
-            this.ipAddressControl1 = new NFSv2Client.IPAddressControl();
+            this.ipAddressControl1 = new NFSClient.IPAddressControl();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listViewLocal = new System.Windows.Forms.ListView();
