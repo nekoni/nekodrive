@@ -46,5 +46,9 @@ namespace NekoDrive.NFS.Wrappers
         NFSResult Write(String FileName, FileStream InputStream);
 
         int Write(UInt64 Offset, UInt32 Count, Byte[] Buffer);
+
+        bool FileExists(String FileName);
+
+        NFSResult Rename(String OldItemName, String NewItemName);
     }
 }

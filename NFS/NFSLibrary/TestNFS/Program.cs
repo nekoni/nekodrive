@@ -38,7 +38,7 @@ namespace TestNFS
             //}
             for (int z = 0; z < 1000; z++)
             {
-                using (NFSv2 nfsv2 = new NFSv2(IpAddress))
+                using (NFSv2 nfsv2 = new NFSv2(IPAddress.Parse(IpAddress)))
                 {
                     nfsv2.DataEvent += new NFSDataEventHandler(nfsv2_DataEvent);
                     if (nfsv2.Connect(0, 0) == NFSResult.NFS_SUCCESS)

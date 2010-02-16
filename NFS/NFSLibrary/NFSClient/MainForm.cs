@@ -34,15 +34,14 @@ namespace NFSClient
         List<ListViewItem> lvDragItem = new List<ListViewItem>();
         string CurrentList;
         string CurrentItem;
-        Progress pg = new Progress();
+        ulong CurrentSize;
         delegate void ShowProgressDelegate(bool ShowHide);
         ShowProgressDelegate show;
-        ulong Size;
-        uint CurrentPos;
-
-        delegate void UpdateProgressDelegate(string name, int total, int current);
+        delegate void UpdateProgressDelegate(string name, ulong total, int current);
         UpdateProgressDelegate update;
-
+        Thread downloadThread;
+        Thread uploadThread;
+        string LocalFolder = string.Empty;
         #endregion
 
         #region Constructor
@@ -51,8 +50,12 @@ namespace NFSClient
         {
             InitializeComponent();
             cboxVer.SelectedIndex = 0;
+            ipAddressControl1.Text = "192.168.56.3";
             show = new ShowProgressDelegate(ShowProgress);
             update = new UpdateProgressDelegate(UpdateProgress);
+            btnNewFolder.Enabled = false;
+        
+            ShowProgress(false);
         }
 
         #endregion
@@ -61,33 +64,65 @@ namespace NFSClient
 
         void ShowProgress(bool Show)
         {
-            if (this.InvokeRequired)
+            if (pb.InvokeRequired)
             {
-                pg.Invoke(show, new object[] { Show });
+                pb.Invoke(show, new object[] { Show });
             }
             else
             {
                 if (Show)
-                    pg.ShowDialog();
+                {
+                    pb.Show();
+                    lblCurrentFile.Text = CurrentItem;
+                    btnCancel.Show();
+                    pnlMain.Enabled = false;
+                    cboxVer.Enabled = false;
+                    btnConnect.Enabled = false;
+                    btnNewFolder.Enabled = false;
+                    ipAddressControl1.Enabled = false;
+                }
                 else
-                    pg.Close();
+                {
+                    pb.Hide();
+                    lblCurrentFile.Text = CurrentItem = string.Empty;
+                    pb.Value = 0;
+                    btnCancel.Hide();
+                    pnlMain.Enabled = true;
+                    cboxVer.Enabled = true;
+                    btnConnect.Enabled = true;
+                    btnNewFolder.Enabled = true;
+                    ipAddressControl1.Enabled = true;
+                    if (CurrentList != "Local")
+                        RefreshLocal(LocalFolder);
+                    else
+                        RefreshRemote();
+                }
             }
         }
 
-        void UpdateProgress(string name, int total, int current)
+        void UpdateProgress(string name, ulong total, int current)
         {
-            if (this.InvokeRequired)
+            if (pb.InvokeRequired)
             {
-                pg.Invoke(show, new object[] { name, total, current });
+                pb.Invoke(update, new object[] { name, total, current });
             }
             else
             {
-                pg.Update(name, (uint) current, (uint) total);
+                lblCurrentFile.Text = CurrentItem;
+                pb.Maximum = (int)total;
+                int Value = pb.Value + current;
+                if (Value < (int) total)
+                    pb.Value += current;
+                else
+                    pb.Value =(int) total;
             }
         }
 
         void RefreshLocal(string Dir)
         {
+            if (Dir == string.Empty)
+                return;
+
             Environment.CurrentDirectory = tbLocalPath.Text = Dir;
             DirectoryInfo CurrentDirecotry = new DirectoryInfo(tbLocalPath.Text);
             listViewLocal.Items.Clear();
@@ -99,10 +134,9 @@ namespace NFSClient
             }
         }
 
-        void RefreshRemote(int i)
+        void RefreshRemote()
         {
             listViewRemote.Items.Clear();
-            nfsClient.MountDevice(nfsDevs[i]);
             foreach (string Item in nfsClient.GetItemList())
             {
                 NFSAttributes nfsAttribute = nfsClient.GetItemAttributes(Item);
@@ -122,6 +156,14 @@ namespace NFSClient
             }
         }
 
+        void MountDevice(int i)
+        {
+            btnNewFolder.Enabled = true;
+            listViewRemote.Items.Clear();
+            nfsClient.MountDevice(nfsDevs[i]);
+            RefreshRemote();
+        }
+
         #endregion
 
         #region Local Event
@@ -131,7 +173,7 @@ namespace NFSClient
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             if (DialogResult.OK == fbd.ShowDialog())
             {
-                RefreshLocal(fbd.SelectedPath);
+                RefreshLocal(LocalFolder = fbd.SelectedPath);
             }
         }
 
@@ -140,7 +182,7 @@ namespace NFSClient
             int i = cboxRemoteDevices.SelectedIndex;
             if (i != -1)
             {
-                RefreshRemote(i);
+                MountDevice(i);
             }
         }
 
@@ -194,42 +236,64 @@ namespace NFSClient
             {
                 if (CurrentEffect == DragDropEffects.Copy)
                 {
-                    string LocalFolder = tbLocalPath.Text;
-                    ThreadPool.QueueUserWorkItem(new
-                    WaitCallback(delegate
-                    {
-                        foreach (ListViewItem lvItem in lvDragItem)
-                        {
-                            string OutputFile = Path.Combine(LocalFolder, lvItem.Text);
-                            if (File.Exists(OutputFile))
-                            {
-                                if (MessageBox.Show("Do you want to overwrite " + OutputFile + "?", "NFSClient", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                                    File.Delete(OutputFile);
-                                else
-                                    continue;
-                            }
-                            ShowProgress(true);
-                            CurrentItem = lvItem.Text;
-                            if(nfsClient.Read(CurrentItem, OutputFile) != NFSResult.NFS_SUCCESS)
-                            {
-                                MessageBox.Show("An error has occurred while downloading " + CurrentItem);
-                                continue;
-                            }
-                            ShowProgress(false);
-                            
-                        }   
-                    }));
-                    pg.ShowDialog();
-                    
-                    RefreshLocal(tbLocalPath.Text);
+                    LocalFolder = tbLocalPath.Text;
+                    downloadThread = new Thread(new ThreadStart(Download));
+                    downloadThread.Start();
                 }
             }
         }
 
+        void Download()
+        {
+            foreach (ListViewItem lvItem in lvDragItem)
+            {
+                string OutputFile = Path.Combine(LocalFolder, lvItem.Text);
+                if (File.Exists(OutputFile))
+                {
+                    if (MessageBox.Show("Do you want to overwrite " + OutputFile + "?", "NFSClient", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        File.Delete(OutputFile);
+                    else
+                        continue;
+                }
+                ShowProgress(true);
+                CurrentItem = lvItem.Text;
+                CurrentSize = ulong.Parse(lvItem.SubItems[1].Text);
+                if (nfsClient.Read(CurrentItem, OutputFile) != NFSResult.NFS_SUCCESS)
+                {
+                    MessageBox.Show("An error has occurred while downloading " + CurrentItem);
+                    continue;
+                }
+                ShowProgress(false);
+            }   
+        }
+
+        void Upload()
+        {
+            foreach (ListViewItem lvItem in lvDragItem)
+            {
+                if (nfsClient.FileExists(lvItem.Text))
+                {
+                    if (MessageBox.Show("Do you want to overwrite " + lvItem.Text + "?", "NFSClient", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        nfsClient.DeleteFile(lvItem.Text);
+                    else
+                        continue;
+                }
+                ShowProgress(true);
+                CurrentItem = lvItem.Text;
+                CurrentSize = ulong.Parse(lvItem.SubItems[1].Text);
+                string OutpuFileName = Path.Combine(LocalFolder, CurrentItem);
+                if (nfsClient.Write(CurrentItem, OutpuFileName) != NFSResult.NFS_SUCCESS)
+                {
+                    MessageBox.Show("An error has occurred while uploading " + CurrentItem);
+                    continue;
+                }
+                ShowProgress(false);
+            }   
+        }
+
         void nfsClient_DataEvent(object sender, NFSEventArgs e)
         {
-            
-            //pg.Update(CurrentItem, e.CurrentByte, e.TotalBytes);
+            UpdateProgress(CurrentItem, CurrentSize, (int)e.Bytes);
         }
 
         private void listViewLocal_DragEnter(object sender, DragEventArgs e)
@@ -262,15 +326,8 @@ namespace NFSClient
             {
                 if (CurrentEffect == DragDropEffects.Copy)
                 {
-                    foreach (ListViewItem lvItems in lvDragItem)
-                    {
-                        FileStream wfs = new FileStream(Path.Combine(tbLocalPath.Text, lvItems.Text), FileMode.Open, FileAccess.Read);
-                        if (nfsClient.Write(Path.GetFileName(Path.Combine(tbLocalPath.Text, lvItems.Text)), wfs) != NFSResult.NFS_SUCCESS)
-                            Console.WriteLine("Write error");
-                        wfs.Close();
-                        //nfsClient.UploadFile(Path.Combine(tbLocalPath.Text, lvItems.Text));
-                    }
-                    RefreshRemote(cboxRemoteDevices.SelectedIndex);
+                    uploadThread = new Thread(new ThreadStart(Upload));
+                    uploadThread.Start();
                 }
             }
         }
@@ -293,10 +350,15 @@ namespace NFSClient
                 {
                     foreach (ListViewItem lvi in listViewRemote.SelectedItems)
                     {
-                        if(MessageBox.Show("Do you really want to delete " + lvi.Text + " ?", "NFSv3 Client", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                            nfsClient.DeleteFile(lvi.Text);
+                        if (MessageBox.Show("Do you really want to delete " + lvi.Text + " ?", "NFS Client", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            if (lvi.ImageIndex == 0)
+                                nfsClient.DeleteFile(lvi.Text);
+                            else
+                                nfsClient.DeleteDirectory(lvi.Text);
+                        }
                     }
-                    RefreshRemote(cboxRemoteDevices.SelectedIndex);
+                    RefreshRemote();
                 }
             }
         }
@@ -310,7 +372,72 @@ namespace NFSClient
                 nfsClient.Dispose();
             }
         }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            if (uploadThread != null && uploadThread.IsAlive)
+                uploadThread.Abort();
+            if (downloadThread != null && downloadThread.IsAlive)
+                downloadThread.Abort();
+            ShowProgress(false);
+        }
+
+        private void listViewLocal_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (listViewLocal.SelectedItems != null)
+                {
+                    foreach (ListViewItem lvi in listViewLocal.SelectedItems)
+                    {
+                        if (MessageBox.Show("Do you really want to delete " + lvi.Text + " ?", "NFS Client", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            File.Delete(Path.Combine(this.tbLocalPath.Text, lvi.Text));
+                    }
+                    RefreshLocal(tbLocalPath.Text);
+                }
+            }
+        }
+
         #endregion
-       
+
+        private void btnNewFolder_Click(object sender, EventArgs e)
+        {
+            if (nfsClient == null)
+                return;
+
+            NewFolder nf = new NewFolder();
+            if (nf.ShowDialog() == DialogResult.OK)
+            {
+                if (nfsClient.CreateDirectory(nf.NewFolderName) == NFSResult.NFS_SUCCESS)
+                {
+                    RefreshRemote();
+                }
+                else
+                    MessageBox.Show("An error has occurred creting the directory", "NFS Client", MessageBoxButtons.OK);
+            }
+        }
+
+        private void listViewRemote_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            string NewLabel = e.Label;
+            ListViewItem lvi = listViewRemote.Items[e.Item];
+            if (nfsClient.Rename(lvi.Text, NewLabel) != NFSResult.NFS_SUCCESS)
+            {
+                MessageBox.Show("An error has occurred renaming the directory", "NFS Client", MessageBoxButtons.OK);
+            }   
+        }
+
+        private void listViewRemote_DoubleClick(object sender, EventArgs e)
+        {
+            if (listViewRemote.SelectedItems != null)
+            {
+                ListViewItem lvi = listViewRemote.SelectedItems[0];
+                if (lvi.ImageIndex == 1)
+                {
+                    if(nfsClient.ChangeCurrentDirectory(lvi.Text) == NFSResult.NFS_SUCCESS)
+                        RefreshRemote();
+                }
+            }
+        }
     }
 }

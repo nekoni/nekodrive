@@ -181,13 +181,15 @@ namespace NekoDrive.NFS.Wrappers
             IntPtr pAttributes;
 
             pAttributes = __NFSv2_GetItemAttributes(_nfsv2, ItemName);
-            NFSv2Data nfsData =(NFSv2Data) Marshal.PtrToStructure(pAttributes, typeof(NFSv2Data));
+            if (pAttributes != IntPtr.Zero)
+            {
+                NFSv2Data nfsData = (NFSv2Data)Marshal.PtrToStructure(pAttributes, typeof(NFSv2Data));
+                NFSAttributes nfsAttributes = new NFSAttributes(nfsData.DateTime, nfsData.Type, nfsData.Size, nfsData.Handle);
+                __NFSv2_ReleaseBuffer(_nfsv2, pAttributes);
 
-            NFSAttributes nfsAttributes = new NFSAttributes(nfsData.DateTime, nfsData.Type, nfsData.Size, nfsData.Handle);
-
-            __NFSv2_ReleaseBuffer(_nfsv2, pAttributes);
-
-            return nfsAttributes;
+                return nfsAttributes;
+            }
+            return null;
         }
 
         public NFSResult ChangeCurrentDirectory(String DirectoryName)
@@ -361,7 +363,7 @@ namespace NekoDrive.NFS.Wrappers
                     if (DataEvent != null)
                     {
                         NFSEventArgs e = new NFSEventArgs();
-                        e.Bytes = (UInt32) Size;
+                        e.Bytes = (UInt32) Count;
                         DataEvent(this, e);
                     }
                 }
@@ -382,6 +384,11 @@ namespace NekoDrive.NFS.Wrappers
         public NFSResult Rename(String OldName, String NewName)
         {
             return (NFSResult)__NFSv2_Rename(_nfsv2, OldName, NewName);
+        }
+
+        public bool FileExists(String FileName)
+        {
+            return (GetItemAttributes(FileName) != null);
         }
     }
 }

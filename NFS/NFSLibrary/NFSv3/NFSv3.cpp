@@ -592,8 +592,11 @@ int CNFSv3::Write(uint64 Offset, uint32 Count, char* pBuffer, u_int* pSize)
 			dpWriteArgs.file.data.data_val = nfsCurrentFile;
 			dpWriteArgs.file.data.data_len = FHSIZE;
 			dpWriteArgs.offset = Offset;
+			dpWriteArgs.count = Count;
 			dpWriteArgs.data.data_len = Count;
 			dpWriteArgs.data.data_val = pBuffer;
+			dpWriteArgs.stable = UNSTABLE;
+
 			if( (pWriteRes = nfsproc3_write_3(&dpWriteArgs, clntV3)) == NULL )
 				strLastError = clnt_sperror(clntV3, "nfsproc3_write_3");
 			else

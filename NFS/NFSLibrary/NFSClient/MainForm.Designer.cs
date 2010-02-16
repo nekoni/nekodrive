@@ -34,8 +34,10 @@ namespace NFSClient
             this.cboxRemoteDevices = new System.Windows.Forms.ComboBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.gbTargetConnection = new System.Windows.Forms.GroupBox();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.lblCurrentFile = new System.Windows.Forms.Label();
+            this.pb = new System.Windows.Forms.ProgressBar();
             this.cboxVer = new System.Windows.Forms.ComboBox();
-            this.ipAddressControl1 = new NFSClient.IPAddressControl();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listViewLocal = new System.Windows.Forms.ListView();
@@ -52,6 +54,8 @@ namespace NFSClient
             this.columnHeader7 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnNewFolder = new System.Windows.Forms.Button();
+            this.ipAddressControl1 = new NFSClient.IPAddressControl();
             this.gbTargetConnection.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -94,15 +98,46 @@ namespace NFSClient
             // 
             this.gbTargetConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbTargetConnection.Controls.Add(this.btnCancel);
+            this.gbTargetConnection.Controls.Add(this.lblCurrentFile);
+            this.gbTargetConnection.Controls.Add(this.pb);
             this.gbTargetConnection.Controls.Add(this.cboxVer);
             this.gbTargetConnection.Controls.Add(this.ipAddressControl1);
             this.gbTargetConnection.Controls.Add(this.btnConnect);
             this.gbTargetConnection.Location = new System.Drawing.Point(13, 13);
             this.gbTargetConnection.Name = "gbTargetConnection";
-            this.gbTargetConnection.Size = new System.Drawing.Size(518, 54);
+            this.gbTargetConnection.Size = new System.Drawing.Size(611, 54);
             this.gbTargetConnection.TabIndex = 4;
             this.gbTargetConnection.TabStop = false;
             this.gbTargetConnection.Text = "Target Connection";
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.Location = new System.Drawing.Point(354, 22);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(50, 26);
+            this.btnCancel.TabIndex = 7;
+            this.btnCancel.Text = "cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // lblCurrentFile
+            // 
+            this.lblCurrentFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCurrentFile.AutoSize = true;
+            this.lblCurrentFile.Location = new System.Drawing.Point(410, 13);
+            this.lblCurrentFile.Name = "lblCurrentFile";
+            this.lblCurrentFile.Size = new System.Drawing.Size(0, 13);
+            this.lblCurrentFile.TabIndex = 6;
+            // 
+            // pb
+            // 
+            this.pb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pb.Location = new System.Drawing.Point(410, 32);
+            this.pb.Name = "pb";
+            this.pb.Size = new System.Drawing.Size(195, 16);
+            this.pb.TabIndex = 5;
             // 
             // cboxVer
             // 
@@ -116,16 +151,6 @@ namespace NFSClient
             this.cboxVer.Size = new System.Drawing.Size(46, 21);
             this.cboxVer.TabIndex = 4;
             // 
-            // ipAddressControl1
-            // 
-            this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
-            this.ipAddressControl1.Location = new System.Drawing.Point(6, 22);
-            this.ipAddressControl1.MinimumSize = new System.Drawing.Size(112, 20);
-            this.ipAddressControl1.Name = "ipAddressControl1";
-            this.ipAddressControl1.ReadOnly = false;
-            this.ipAddressControl1.Size = new System.Drawing.Size(112, 20);
-            this.ipAddressControl1.TabIndex = 2;
-            // 
             // pnlMain
             // 
             this.pnlMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -136,7 +161,7 @@ namespace NFSClient
             this.pnlMain.Enabled = false;
             this.pnlMain.Location = new System.Drawing.Point(13, 74);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(523, 569);
+            this.pnlMain.Size = new System.Drawing.Size(616, 569);
             this.pnlMain.TabIndex = 5;
             // 
             // splitContainer1
@@ -156,8 +181,8 @@ namespace NFSClient
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listViewRemote);
             this.splitContainer1.Panel2.Controls.Add(this.panel2);
-            this.splitContainer1.Size = new System.Drawing.Size(494, 550);
-            this.splitContainer1.SplitterDistance = 237;
+            this.splitContainer1.Size = new System.Drawing.Size(587, 550);
+            this.splitContainer1.SplitterDistance = 281;
             this.splitContainer1.TabIndex = 6;
             // 
             // listViewLocal
@@ -175,13 +200,14 @@ namespace NFSClient
             this.listViewLocal.Location = new System.Drawing.Point(0, 41);
             this.listViewLocal.Name = "listViewLocal";
             this.listViewLocal.ShowGroups = false;
-            this.listViewLocal.Size = new System.Drawing.Size(237, 509);
+            this.listViewLocal.Size = new System.Drawing.Size(281, 509);
             this.listViewLocal.SmallImageList = this.imageList1;
             this.listViewLocal.TabIndex = 1;
             this.listViewLocal.UseCompatibleStateImageBehavior = false;
             this.listViewLocal.View = System.Windows.Forms.View.Details;
             this.listViewLocal.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewLocal_DragDrop);
             this.listViewLocal.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewLocal_DragEnter);
+            this.listViewLocal.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewLocal_KeyDown);
             this.listViewLocal.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.listViewLocal_ItemDrag);
             this.listViewLocal.DragOver += new System.Windows.Forms.DragEventHandler(this.listViewLocal_DragOver);
             // 
@@ -214,13 +240,13 @@ namespace NFSClient
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(237, 41);
+            this.panel1.Size = new System.Drawing.Size(281, 41);
             this.panel1.TabIndex = 0;
             // 
             // btnBrowse
             // 
             this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowse.Location = new System.Drawing.Point(168, 8);
+            this.btnBrowse.Location = new System.Drawing.Point(212, 8);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(56, 23);
             this.btnBrowse.TabIndex = 2;
@@ -235,7 +261,7 @@ namespace NFSClient
             this.tbLocalPath.Enabled = false;
             this.tbLocalPath.Location = new System.Drawing.Point(81, 10);
             this.tbLocalPath.Name = "tbLocalPath";
-            this.tbLocalPath.Size = new System.Drawing.Size(81, 20);
+            this.tbLocalPath.Size = new System.Drawing.Size(125, 20);
             this.tbLocalPath.TabIndex = 1;
             // 
             // label1
@@ -262,11 +288,13 @@ namespace NFSClient
             this.listViewRemote.LabelEdit = true;
             this.listViewRemote.Location = new System.Drawing.Point(0, 41);
             this.listViewRemote.Name = "listViewRemote";
-            this.listViewRemote.Size = new System.Drawing.Size(253, 509);
+            this.listViewRemote.Size = new System.Drawing.Size(302, 509);
             this.listViewRemote.SmallImageList = this.imageList1;
             this.listViewRemote.TabIndex = 2;
             this.listViewRemote.UseCompatibleStateImageBehavior = false;
             this.listViewRemote.View = System.Windows.Forms.View.Details;
+            this.listViewRemote.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.listViewRemote_AfterLabelEdit);
+            this.listViewRemote.DoubleClick += new System.EventHandler(this.listViewRemote_DoubleClick);
             this.listViewRemote.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewRemote_DragDrop);
             this.listViewRemote.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewRemote_DragEnter);
             this.listViewRemote.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewRemote_KeyDown);
@@ -289,24 +317,46 @@ namespace NFSClient
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.btnNewFolder);
             this.panel2.Controls.Add(this.lblRemoteDevices);
             this.panel2.Controls.Add(this.cboxRemoteDevices);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(253, 41);
+            this.panel2.Size = new System.Drawing.Size(302, 41);
             this.panel2.TabIndex = 0;
+            // 
+            // btnNewFolder
+            // 
+            this.btnNewFolder.Location = new System.Drawing.Point(222, 9);
+            this.btnNewFolder.Name = "btnNewFolder";
+            this.btnNewFolder.Size = new System.Drawing.Size(71, 23);
+            this.btnNewFolder.TabIndex = 2;
+            this.btnNewFolder.Text = "New Folder";
+            this.btnNewFolder.UseVisualStyleBackColor = true;
+            this.btnNewFolder.Click += new System.EventHandler(this.btnNewFolder_Click);
+            // 
+            // ipAddressControl1
+            // 
+            this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
+            this.ipAddressControl1.Location = new System.Drawing.Point(6, 22);
+            this.ipAddressControl1.MinimumSize = new System.Drawing.Size(112, 20);
+            this.ipAddressControl1.Name = "ipAddressControl1";
+            this.ipAddressControl1.ReadOnly = false;
+            this.ipAddressControl1.Size = new System.Drawing.Size(112, 20);
+            this.ipAddressControl1.TabIndex = 2;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(548, 655);
+            this.ClientSize = new System.Drawing.Size(641, 655);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.gbTargetConnection);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(657, 693);
             this.Name = "MainForm";
-            this.Text = "Windows NFS V2 Client";
+            this.Text = "Windows NFS Client";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.gbTargetConnection.ResumeLayout(false);
             this.gbTargetConnection.PerformLayout();
@@ -346,6 +396,10 @@ namespace NFSClient
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ComboBox cboxVer;
+        private System.Windows.Forms.Label lblCurrentFile;
+        private System.Windows.Forms.ProgressBar pb;
+        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button btnNewFolder;
     }
 }
 
