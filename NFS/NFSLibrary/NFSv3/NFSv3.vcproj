@@ -175,6 +175,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\NFSCommon.h"
+				>
+			</File>
+			<File
 				RelativePath=".\NFSv3.h"
 				>
 			</File>
@@ -225,6 +229,18 @@
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="0"
 						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\NFSCommon.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
 			</File>

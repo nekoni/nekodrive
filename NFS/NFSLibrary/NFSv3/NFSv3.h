@@ -35,10 +35,8 @@ struct NFSData
 {
 	unsigned long DateTime;
 	unsigned int Type;
-	unsigned int Size;
-	unsigned int Blocks;
-	unsigned int BlockSize;
-	fhandle3 Handle;
+	unsigned __int64 Size;
+	char Handle[FHSIZE];
 };
 
 
@@ -60,8 +58,8 @@ private:
 	struct timeval timeOut;
 	std::string strCurrentDevice;
 	std::string strLastError;
-	fhandle3 nfsCurrentDirectory;
-	fhandle3 nfsCurrentFile;
+	char nfsCurrentDirectory[FHSIZE];
+	char nfsCurrentFile[FHSIZE];
 	int authType;
 	int uid;
 	int gid;
@@ -88,8 +86,8 @@ public:
 	int CreateFile(char* pName);
 	int Open(char* pName);
 	void CloseFile();
-	int Read(u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
-	int Write(u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
+	int Read(unsigned __int64 Offset, u_long Count, char* pBuffer, u_int* pSize);
+	int Write(unsigned __int64 Offset, u_long Count, char* pBuffer, u_int* pSize);
 	int Rename(char* pOldName, char* pNewName);
 	const char* GetLastNfsError();
 	int ChangeMode(char* pName, int Mode);

@@ -13,6 +13,8 @@
 #ifndef __IncNFSV2MOUNTh
 #define __IncNFSV2MOUNTh
 
+#pragma pack(1) 
+
 #include <rpc/types.h>
 #define MNTPATHLEN 1024
 #define MNTNAMLEN 255

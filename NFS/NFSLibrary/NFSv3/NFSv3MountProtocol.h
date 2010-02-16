@@ -234,20 +234,4 @@ extern exports *mountproc3_export_3(...);
 extern exports *mountproc3_export_3();
 #endif /* __cplusplus */
 
-#ifdef __cplusplus
-extern "C" {
-void nfs_clnt_destroy(...);
-}
-#else
-void nfs_clnt_destroy();
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-void nfs_auth_destroy(...);
-}
-#else
-void nfs_auth_destroy();
-#endif
-
 #endif

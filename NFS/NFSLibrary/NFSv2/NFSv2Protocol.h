@@ -13,6 +13,8 @@
 #ifndef __IncNFSV2Protocolh
 #define __IncNFSV2Protocolh
 
+#pragma pack(1) 
+
 #include <rpc/types.h>
 #define MAXDATA 8192
 #define MAXPATHLEN 1024
@@ -631,21 +633,5 @@ extern statfsres *nfsproc_statfs_2(...);
 #else
 extern statfsres *nfsproc_statfs_2();
 #endif /* __cplusplus */
-
-#ifdef __cplusplus
-extern "C" {
-void nfs_clnt_destroy(...);
-}
-#else
-void nfs_clnt_destroy();
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-void nfs_auth_destroy(...);
-}
-#else
-void nfs_auth_destroy();
-#endif
 
 #endif

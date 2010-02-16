@@ -13,6 +13,7 @@
 #include "NFSv2.h"
 #include "NFSv2MountProtocol.h"
 #include "NFSv2Protocol.h"
+#include "NFSCommon.h"
 #include "rpc/Pmap_cln.h"
 #include <stdio.h>
 #include <vector>
@@ -117,7 +118,6 @@ int CNFSv2::Disconnect()
 		{
 			if(clntMountV2 != NULL)
 			{
-				//nfs_auth_destroy(clntMountV2->cl_auth);
 				nfs_clnt_destroy(clntMountV2);
 			}
 			clntMountV2 = NULL;
@@ -233,7 +233,7 @@ char** CNFSv2::GetItemsList(int* pnSize)
 		readdirargs dpRdArgs;
         readdirres *pReadDirRes;
 		dpRdArgs.cookie = 0;
-		dpRdArgs.count = 8192;
+		dpRdArgs.count = 4096;
 		memset(dpRdArgs.dir, 0, FHSIZE);
 		memcpy(dpRdArgs.dir, nfsCurrentDirectory, FHSIZE);
 		while(true)
