@@ -97,7 +97,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::vector<std::string> strD;
 		std::vector<std::string> strI;
 		CNFSv2* nfs = new CNFSv2();
-		unsigned long ServerAddress = inet_addr("161.55.201.250");
+		unsigned long ServerAddress = inet_addr("192.168.56.3");
 		nfs->Connect(ServerAddress, 0, 0);
 		
 		int iDevices = 0;
@@ -110,6 +110,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		nfs->ReleaseBuffers((void**)pDevices);
 		nfs->MountDevice((char*)strD[0].c_str());
 		int iItems = 0;
+		nfs->ChangeCurrentDirectory("test");
 		char** pItems = nfs->GetItemsList(&iItems);
 		i = 0;
 		for(char** iList = pItems; i < iItems; ++iList, i++)
@@ -229,7 +230,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::vector<std::string> strD;
 		std::vector<std::string> strI;
 		CNFSv3* nfs = new CNFSv3();
-		unsigned long ServerAddress = inet_addr("161.55.201.250");//inet_addr("192.168.56.3");
+		unsigned long ServerAddress = inet_addr("192.168.56.3");//inet_addr("192.168.56.3");
 		nfs->Connect(ServerAddress, 0, 0);
 		int iDevices = 0;
 		char** pDevices  = nfs->GetExportedDevices(&iDevices);
