@@ -83,7 +83,7 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv3.dll", EntryPoint = "?Open@CNFSv3@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv3_Open(IntPtr pThis, String pName);
 
-        [DllImport("NFSv3.dll", EntryPoint = "?Read@CNFSv3@@QAEHIIPADPAK@Z", CallingConvention = CallingConvention.ThisCall)]
+        [DllImport("NFSv3.dll", EntryPoint = "?Read@CNFSv3@@QAEH_KKPADPAI@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv3_Read(IntPtr pThis, UInt64 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
 
         [DllImport("NFSv3.dll", EntryPoint = "?ReleaseBuffer@CNFSv3@@QAEXPAX@Z", CallingConvention = CallingConvention.ThisCall)]
@@ -98,7 +98,7 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv3.dll", EntryPoint = "?UnMountDevice@CNFSv3@@QAEHXZ", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv3_UnMountDevice(IntPtr pThis);
 
-        [DllImport("NFSv3.dll", EntryPoint = "?Write@CNFSv3@@QAEHIIPADPAK@Z", CallingConvention = CallingConvention.ThisCall)]
+        [DllImport("NFSv3.dll", EntryPoint = "?Write@CNFSv3@@QAEH_KKPADPAI@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv3_Write(IntPtr pThis, UInt64 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
 
         public event NFSDataEventHandler DataEvent;

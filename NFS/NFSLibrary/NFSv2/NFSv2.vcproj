@@ -137,7 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="oncrpc.lib Ws2_32.lib msvcrtd.lib"
+				AdditionalDependencies="oncrpc.lib Ws2_32.lib msvcrt.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\Build\x86\Release"
 				IgnoreAllDefaultLibraries="false"
@@ -206,6 +206,14 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

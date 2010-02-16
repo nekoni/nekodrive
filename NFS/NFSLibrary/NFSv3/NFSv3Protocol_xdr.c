@@ -1,3 +1,15 @@
+/*
+ * NekoDrive
+ * 2010 by Mirko Gatto
+ * mirko.gatto@gmail.com
+ *
+ *
+ * Users may use, copy or modify this library 
+ * according GNU General Public License v3 (http://www.gnu.org/licenses/gpl.html)
+ */
+
+#pragma pack(1)
+
 #include <rpc/rpc.h>
 #include "NFSv3Protocol.h"
 
@@ -13,9 +25,6 @@ xdr_uint64(xdrs, objp)
 	return (TRUE);
 }
 
-
-
-
 bool_t
 xdr_int64(xdrs, objp)
 	XDR *xdrs;
@@ -26,9 +35,6 @@ xdr_int64(xdrs, objp)
 	}
 	return (TRUE);
 }
-
-
-
 
 bool_t
 xdr_uint32(xdrs, objp)
@@ -41,9 +47,6 @@ xdr_uint32(xdrs, objp)
 	return (TRUE);
 }
 
-
-
-
 bool_t
 xdr_int32(xdrs, objp)
 	XDR *xdrs;
@@ -54,9 +57,6 @@ xdr_int32(xdrs, objp)
 	}
 	return (TRUE);
 }
-
-
-
 
 bool_t
 xdr_filename3(xdrs, objp)

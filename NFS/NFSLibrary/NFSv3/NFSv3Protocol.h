@@ -3,7 +3,6 @@
  * 2010 by Mirko Gatto
  * mirko.gatto@gmail.com
  *
- * NFS Protocol V2 RPC Calls
  *
  * Users may use, copy or modify this library 
  * according GNU General Public License v3 (http://www.gnu.org/licenses/gpl.html)
@@ -12,6 +11,9 @@
 
 #ifndef __IncNFSV3Protocolh
 #define __IncNFSV3Protocolh
+
+#pragma pack(1) 
+
 #include <rpc/types.h>
 #define FHSIZE 64
 #define COOKIEVERFSIZE 8
@@ -25,9 +27,6 @@
 #define MODE_LNK 0120000
 #define MODE_SOCK 0140000
 #define MODE_FIFO 0010000
-
-#pragma pack(1) 
-
 
 typedef unsigned __int64 u_hyper;
 

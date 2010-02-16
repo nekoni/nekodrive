@@ -3,7 +3,6 @@
  * 2010 by Mirko Gatto
  * mirko.gatto@gmail.com
  *
- * NFS V2 Wrapper
  *
  * Users may use, copy or modify this library 
  * according GNU General Public License v3 (http://www.gnu.org/licenses/gpl.html)

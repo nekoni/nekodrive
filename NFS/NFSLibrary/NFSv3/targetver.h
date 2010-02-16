@@ -1,12 +1,15 @@
+/*
+ * NekoDrive
+ * 2010 by Mirko Gatto
+ * mirko.gatto@gmail.com
+ *
+ *
+ * Users may use, copy or modify this library 
+ * according GNU General Public License v3 (http://www.gnu.org/licenses/gpl.html)
+ */
+
 #pragma once
 
-// The following macros define the minimum required platform.  The minimum required platform
-// is the earliest version of Windows, Internet Explorer etc. that has the necessary features to run 
-// your application.  The macros work by enabling all features available on platform versions up to and 
-// including the version specified.
-
-// Modify the following defines if you have to target a platform prior to the ones specified below.
-// Refer to MSDN for the latest info on corresponding values for different platforms.
 #ifndef WINVER                          // Specifies that the minimum required platform is Windows Vista.
 #define WINVER 0x0600           // Change this to the appropriate value to target other versions of Windows.
 #endif
