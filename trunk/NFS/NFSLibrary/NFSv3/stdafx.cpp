@@ -1,8 +1,14 @@
-// stdafx.cpp : source file that includes just the standard includes
-// NFSv3.pch will be the pre-compiled header
-// stdafx.obj will contain the pre-compiled type information
+/*
+ * NekoDrive
+ * 2010 by Mirko Gatto
+ * mirko.gatto@gmail.com
+ *
+ *
+ * Users may use, copy or modify this library 
+ * according GNU General Public License v3 (http://www.gnu.org/licenses/gpl.html)
+ */
+
+#pragma pack(1)
 
 #include "stdafx.h"
 
-// TODO: reference any additional headers you need in STDAFX.H
-// and not in this file
