@@ -1241,12 +1241,12 @@ xdr_createhow3(xdrs, objp)
 	}
 	switch (objp->mode) {
 	case UNCHECKED:
-		if (!xdr_sattr3(xdrs, &objp->createhow3_u.obj_attributes_un)) {
+		if (!xdr_sattr3(xdrs, &objp->createhow3_u.obj_attributes)) {
 			return (FALSE);
 		}
 		break;
 	case GUARDED:
-		if (!xdr_sattr3(xdrs, &objp->createhow3_u.obj_attributes_gu)) {
+		if (!xdr_sattr3(xdrs, &objp->createhow3_u.obj_attributes)) {
 			return (FALSE);
 		}
 		break;
@@ -1539,22 +1539,22 @@ xdr_mknoddata3(xdrs, objp)
 	}
 	switch (objp->type) {
 	case NF3CHR:
-		if (!xdr_devicedata3(xdrs, &objp->mknoddata3_u.device_chr)) {
+		if (!xdr_devicedata3(xdrs, &objp->mknoddata3_u.device)) {
 			return (FALSE);
 		}
 		break;
 	case NF3BLK:
-		if (!xdr_devicedata3(xdrs, &objp->mknoddata3_u.device_blk)) {
+		if (!xdr_devicedata3(xdrs, &objp->mknoddata3_u.device)) {
 			return (FALSE);
 		}
 		break;
 	case NF3SOCK:
-		if (!xdr_sattr3(xdrs, &objp->mknoddata3_u.pipe_attributes_sock)) {
+		if (!xdr_sattr3(xdrs, &objp->mknoddata3_u.pipe_attributes)) {
 			return (FALSE);
 		}
 		break;
 	case NF3FIFO:
-		if (!xdr_sattr3(xdrs, &objp->mknoddata3_u.pipe_attributes_fifo)) {
+		if (!xdr_sattr3(xdrs, &objp->mknoddata3_u.pipe_attributes)) {
 			return (FALSE);
 		}
 		break;

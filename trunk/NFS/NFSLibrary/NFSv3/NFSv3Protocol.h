@@ -17,6 +17,14 @@
 #define COOKIEVERFSIZE 8
 #define CREATEVERFSIZE 8
 #define WRITEVERFSIZE 8
+#define MODE_FMT 0170000
+#define MODE_DIR 0040000
+#define MODE_CHR 0020000
+#define MODE_BLK 0060000
+#define MODE_REG 0100000
+#define MODE_LNK 0120000
+#define MODE_SOCK 0140000
+#define MODE_FIFO 0010000
 
 #pragma pack(1) 
 
@@ -1000,8 +1008,7 @@ bool_t xdr_createmode3();
 struct createhow3 {
 	createmode3 mode;
 	union {
-		sattr3 obj_attributes_un;
-		sattr3 obj_attributes_gu;
+		sattr3 obj_attributes;
 		createverf3 verf;
 	} createhow3_u;
 };
@@ -1223,10 +1230,8 @@ bool_t xdr_devicedata3();
 struct mknoddata3 {
 	ftype3 type;
 	union {
-		devicedata3 device_chr;
-		devicedata3 device_blk;
-		sattr3 pipe_attributes_sock;
-		sattr3 pipe_attributes_fifo;
+		devicedata3 device;
+		sattr3 pipe_attributes;
 	} mknoddata3_u;
 };
 typedef struct mknoddata3 mknoddata3;
