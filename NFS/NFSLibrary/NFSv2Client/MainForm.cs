@@ -7,6 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using NekoDrive.NFS.Wrappers;
+using NekoDrive.NFS;
+using System.Net;
 
 namespace NFSv2Client
 {
@@ -25,7 +27,7 @@ namespace NFSv2Client
 
         #region Properties
 
-        NFSv2 nfsClient;
+        INFS nfsClient;
         List<string> nfsDevs = null;
         DragDropEffects CurrentEffect;
         List<ListViewItem> lvDragItem = new List<ListViewItem>();
@@ -114,15 +116,18 @@ namespace NFSv2Client
         {
             try
             {
-                nfsClient = new NFSv2(ipAddressControl1.Text);
+                NFS.NFSVersion ver = NFS.NFSVersion.v2;
+                if (cboxVer.SelectedItem.ToString() == "V3")
+                    ver = NFS.NFSVersion.v3;
+
+                nfsClient = NFS.GetNFS(new IPAddress(ipAddressControl1.GetAddressBytes()), ver);
                 nfsClient.DataEvent += new NFSDataEventHandler(nfsClient_DataEvent);
-                if (nfsClient.Connect(0, 0) == NFSResult.NFS_SUCCESS)
+                if (nfsClient.Connect() == NFSResult.NFS_SUCCESS)
                 {
                     nfsDevs = nfsClient.GetExportedDevices();
                     cboxRemoteDevices.Items.Clear();
                     foreach (string nfsdev in nfsDevs)
                         cboxRemoteDevices.Items.Add(nfsdev);
-                    //MessageBox.Show("Connected to the target.", "NFSv2 Client", MessageBoxButtons.OK);
                     RefreshLocal(Environment.CurrentDirectory);
                     listViewRemote.Items.Clear();
                     pnlMain.Enabled = true;
