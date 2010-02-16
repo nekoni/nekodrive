@@ -35,6 +35,7 @@ namespace NFSv2Client
             this.btnConnect = new System.Windows.Forms.Button();
             this.gbTargetConnection = new System.Windows.Forms.GroupBox();
             this.cboxVer = new System.Windows.Forms.ComboBox();
+            this.ipAddressControl1 = new NFSv2Client.IPAddressControl();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listViewLocal = new System.Windows.Forms.ListView();
@@ -51,7 +52,6 @@ namespace NFSv2Client
             this.columnHeader7 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.ipAddressControl1 = new NFSv2Client.IPAddressControl();
             this.gbTargetConnection.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -107,7 +107,6 @@ namespace NFSv2Client
             // cboxVer
             // 
             this.cboxVer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboxVer.Enabled = false;
             this.cboxVer.FormattingEnabled = true;
             this.cboxVer.Items.AddRange(new object[] {
             "V2",
@@ -116,6 +115,16 @@ namespace NFSv2Client
             this.cboxVer.Name = "cboxVer";
             this.cboxVer.Size = new System.Drawing.Size(46, 21);
             this.cboxVer.TabIndex = 4;
+            // 
+            // ipAddressControl1
+            // 
+            this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
+            this.ipAddressControl1.Location = new System.Drawing.Point(6, 22);
+            this.ipAddressControl1.MinimumSize = new System.Drawing.Size(112, 20);
+            this.ipAddressControl1.Name = "ipAddressControl1";
+            this.ipAddressControl1.ReadOnly = false;
+            this.ipAddressControl1.Size = new System.Drawing.Size(112, 20);
+            this.ipAddressControl1.TabIndex = 2;
             // 
             // pnlMain
             // 
@@ -287,16 +296,6 @@ namespace NFSv2Client
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(253, 41);
             this.panel2.TabIndex = 0;
-            // 
-            // ipAddressControl1
-            // 
-            this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
-            this.ipAddressControl1.Location = new System.Drawing.Point(6, 22);
-            this.ipAddressControl1.MinimumSize = new System.Drawing.Size(112, 20);
-            this.ipAddressControl1.Name = "ipAddressControl1";
-            this.ipAddressControl1.ReadOnly = false;
-            this.ipAddressControl1.Size = new System.Drawing.Size(112, 20);
-            this.ipAddressControl1.TabIndex = 2;
             // 
             // MainForm
             // 
