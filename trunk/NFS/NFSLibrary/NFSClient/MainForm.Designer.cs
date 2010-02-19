@@ -40,7 +40,6 @@ namespace NFSClient
             this.lblCurrentFile = new System.Windows.Forms.Label();
             this.pb = new System.Windows.Forms.ProgressBar();
             this.cboxVer = new System.Windows.Forms.ComboBox();
-            this.ipAddressControl1 = new NFSClient.IPAddressControl();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listViewLocal = new System.Windows.Forms.ListView();
@@ -58,6 +57,7 @@ namespace NFSClient
             this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnNewFolder = new System.Windows.Forms.Button();
+            this.ipAddressControl1 = new NFSClient.IPAddressControl();
             this.gbTargetConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).BeginInit();
             this.pnlMain.SuspendLayout();
@@ -186,16 +186,6 @@ namespace NFSClient
             this.cboxVer.Name = "cboxVer";
             this.cboxVer.Size = new System.Drawing.Size(46, 21);
             this.cboxVer.TabIndex = 4;
-            // 
-            // ipAddressControl1
-            // 
-            this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
-            this.ipAddressControl1.Location = new System.Drawing.Point(6, 22);
-            this.ipAddressControl1.MinimumSize = new System.Drawing.Size(112, 20);
-            this.ipAddressControl1.Name = "ipAddressControl1";
-            this.ipAddressControl1.ReadOnly = false;
-            this.ipAddressControl1.Size = new System.Drawing.Size(112, 20);
-            this.ipAddressControl1.TabIndex = 2;
             // 
             // pnlMain
             // 
@@ -383,6 +373,16 @@ namespace NFSClient
             this.btnNewFolder.UseVisualStyleBackColor = true;
             this.btnNewFolder.Click += new System.EventHandler(this.btnNewFolder_Click);
             // 
+            // ipAddressControl1
+            // 
+            this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
+            this.ipAddressControl1.Location = new System.Drawing.Point(6, 22);
+            this.ipAddressControl1.MinimumSize = new System.Drawing.Size(112, 20);
+            this.ipAddressControl1.Name = "ipAddressControl1";
+            this.ipAddressControl1.ReadOnly = false;
+            this.ipAddressControl1.Size = new System.Drawing.Size(112, 20);
+            this.ipAddressControl1.TabIndex = 2;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -390,11 +390,10 @@ namespace NFSClient
             this.ClientSize = new System.Drawing.Size(692, 666);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.gbTargetConnection);
-            this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(700, 693);
             this.Name = "MainForm";
-            this.Text = "Windows NFS Client - NekoDrive Test Component";
+            this.Text = "Windows NFS Client - NekoDrive Test Component - mirko.gatto@gmail.com";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
