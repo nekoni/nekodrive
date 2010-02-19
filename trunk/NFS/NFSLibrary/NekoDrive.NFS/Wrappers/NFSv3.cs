@@ -7,21 +7,19 @@ using System.IO;
 
 namespace NekoDrive.NFS.Wrappers
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
-    public struct NFSv3Data
+    public class NFSv3 : INFS
     {
-        public UInt32 DateTime;
-        public UInt32 Type;
-        public UInt64 Size;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)]
-        public byte[] Handle;
-    }
+        [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
+        private struct NFSv3Data
+        {
+            public UInt32 DateTime;
+            public UInt32 Type;
+            public UInt64 Size;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)]
+            public byte[] Handle;
+        }
 
-    public unsafe class NFSv3 : INFS, IDisposable
-    {
         private IntPtr _nfsv3;
-
-        private IPAddress _Address;
 
         [DllImport("NFSv3.dll", EntryPoint = "??0CNFSv3@@QAE@XZ", CallingConvention = CallingConvention.ThisCall)]
         private static extern void __NFSv3_Constructor(IntPtr pThis);
@@ -47,8 +45,8 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv3.dll", EntryPoint = "?CloseFile@CNFSv3@@QAEXXZ", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv3_CloseFile(IntPtr pThis);
 
-        [DllImport("NFSv3.dll", EntryPoint = "?Connect@CNFSv3@@QAEHIHH@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int __NFSv3_Connect(IntPtr pThis, UInt32 ServerAddress, Int32 UID, Int32 GID);
+        [DllImport("NFSv3.dll", EntryPoint = "?Connect@CNFSv3@@QAEHPBDHHJ@Z", CallingConvention = CallingConvention.ThisCall)]
+        public static extern int __NFSv3_Connect(IntPtr pThis, String ServerAddress, Int32 UID, Int32 GID, Int32 CommandTimeout);
 
         [DllImport("NFSv3.dll", EntryPoint = "?CreateDirectoryW@CNFSv3@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv3_CreateDirectory(IntPtr pThis, String pName);
@@ -101,27 +99,24 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv3.dll", EntryPoint = "?Write@CNFSv3@@QAEH_KKPADPAI@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv3_Write(IntPtr pThis, UInt64 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
 
-        public event NFSDataEventHandler DataEvent;
-
-        public NFSv3(IPAddress ServerAddrss)
+        public void Create()
         {
-            _Address = ServerAddrss;
             _nfsv3 = __NFSv3_CreateCNFSv3();
         }
 
-        public void Dispose()
+        public void Destroy()
         {
             __NFSv3_Destructor(_nfsv3);
         }
 
-        public NFSResult Connect()
+        public NFSResult Connect(IPAddress Address)
         {
-            return Connect(0, 0);
+            return Connect(Address, 0, 0, 60);
         }
 
-        public NFSResult Connect(Int32 UserId, Int32 GroupId)
+        public NFSResult Connect(IPAddress Address, Int32 UserId, Int32 GroupId, Int32 CommandTimeout)
         {
-            return (NFSResult)__NFSv3_Connect(_nfsv3, (UInt32)_Address.Address, UserId, GroupId);
+            return (NFSResult)__NFSv3_Connect(_nfsv3, Address.ToString(), UserId, GroupId, CommandTimeout);
         }
 
         public NFSResult Disconnect()
@@ -129,21 +124,11 @@ namespace NekoDrive.NFS.Wrappers
             return (NFSResult)__NFSv3_Disconnect(_nfsv3);
         }
 
-        public List<String> GetExportedDevices()
+        public IntPtr GetExportedDevices(out Int32 Size)
         {
-            Int32 Size;
             IntPtr pDevices;
-            IntPtr pCurrentDevice;
-            List<String> DevicesList = new List<String>();
-
             pDevices = __NFSv3_GetExportedDevices(_nfsv3, out Size);
-            for (Int32 i = 0; i < Size; i++)
-            {
-                pCurrentDevice = Marshal.ReadIntPtr(new IntPtr(pDevices.ToInt32() + IntPtr.Size * i));
-                DevicesList.Add(Marshal.PtrToStringAnsi(pCurrentDevice));
-            }
-            __NFSv3_ReleaseBuffers(_nfsv3, pDevices);
-            return DevicesList;
+            return pDevices;
         }
 
         public NFSResult MountDevice(String DeviceName)
@@ -156,38 +141,18 @@ namespace NekoDrive.NFS.Wrappers
             return (NFSResult)__NFSv3_UnMountDevice(_nfsv3);
         }
 
-        public List<String> GetItemList()
+        public IntPtr GetItemList(out Int32 Size)
         {
-            Int32 Size;
             IntPtr pItems;
-            IntPtr pCurrentItem;
-            List<String> ItemsList = new List<String>();
-
             pItems = __NFSv3_GetItemsList(_nfsv3, out Size);
-            for (Int32 i = 0; i < Size; i++)
-            {
-                pCurrentItem = Marshal.ReadIntPtr(new IntPtr(pItems.ToInt32() + IntPtr.Size * i));
-                ItemsList.Add(Marshal.PtrToStringAnsi(pCurrentItem));
-            }
-            __NFSv3_ReleaseBuffers(_nfsv3, pItems);
-            return ItemsList;
+            return pItems;
         }
 
-        public NFSAttributes GetItemAttributes(String ItemName)
+        public IntPtr GetItemAttributes(String ItemName)
         {
             IntPtr pAttributes;
-
             pAttributes = __NFSv3_GetItemAttributes(_nfsv3, ItemName);
-            if (pAttributes != IntPtr.Zero)
-            {
-                NFSv3Data nfsData = (NFSv3Data)Marshal.PtrToStructure(pAttributes, typeof(NFSv3Data));
-                NFSAttributes nfsAttributes = new NFSAttributes(nfsData.DateTime, nfsData.Type, nfsData.Size, nfsData.Handle);
-                __NFSv3_ReleaseBuffer(_nfsv3, pAttributes);
-
-                return nfsAttributes;
-            }
-
-            return null;
+            return pAttributes;
         }
 
         public NFSResult ChangeCurrentDirectory(String DirectoryName)
@@ -215,158 +180,14 @@ namespace NekoDrive.NFS.Wrappers
             return (NFSResult)__NFSv3_CreateFile(_nfsv3, FileName);
         }
 
-        public NFSResult Read(String FileName, String OutputFileName)
+        public NFSResult Read(UInt64 Offset, UInt32 Count, IntPtr pBuffer, out Int32 Size)
         {
-            FileStream fs = null;
-            try
-            {
-                NFSResult Result = NFSResult.NFS_ERROR;
-                if (File.Exists(OutputFileName))
-                    File.Delete(OutputFileName);
-                fs = new FileStream(OutputFileName, FileMode.CreateNew);
-                Result = Read(FileName, ref fs);
-                return Result;
-            }
-            finally
-            {
-                if (fs != null)
-                {
-                    fs.Close();
-                    fs.Dispose();
-                }
-            }
+            return (NFSResult)__NFSv3_Read(_nfsv3, Offset, Count, pBuffer, out Size);
         }
 
-        public NFSResult Read(String FileName, ref FileStream OutputStream)
+        public NFSResult Write(UInt64 Offset, UInt32 Count, IntPtr pBuffer, out Int32 Size)
         {
-            NFSResult Result = NFSResult.NFS_ERROR;
-            if (OutputStream != null)
-            {
-                NFSAttributes nfsAttributes = GetItemAttributes(FileName);
-                if (NFSResult.NFS_SUCCESS == Open(FileName))
-                {
-                    UInt64 TotalLenght = nfsAttributes.size;
-                    UInt32 BlockSize = 4096;
-                    UInt32 CuttentPosition = 0;
-                    do
-                    {
-                        UInt32 Count = BlockSize;
-                        if ((TotalLenght - CuttentPosition) < BlockSize)
-                            Count = (UInt32)TotalLenght - CuttentPosition;
-
-                        Byte[] Data = null;
-                        int pSize = -1;
-                        if ((pSize = Read(CuttentPosition, Count, ref Data)) != -1)
-                        {
-                            OutputStream.Write(Data, 0, pSize);
-                            OutputStream.Flush();
-                            CuttentPosition += (UInt32) pSize;
-                            Result = NFSResult.NFS_SUCCESS;
-                        }
-                        else
-                        {
-                            Result = NFSResult.NFS_ERROR;
-                            break;
-                        }
-                    } while (CuttentPosition != TotalLenght);
-                    CloseFile();
-                }
-            }
-            return Result;
-        }
-
-        public int Read(UInt64 Offset, UInt32 Count, ref Byte[] Buffer)
-        {
-            Int32 Size = -1;
-            IntPtr pBuffer = Marshal.AllocHGlobal((Int32)Count);
-            NFSResult Result = (NFSResult)__NFSv3_Read(_nfsv3, Offset, Count, pBuffer, out Size);
-            if (Result == NFSResult.NFS_ERROR)
-                Size = -1;
-            else
-            {
-                Buffer = new Byte[Size];
-                Marshal.Copy(pBuffer, Buffer, 0, Size);
-                if (DataEvent != null)
-                {
-                    NFSEventArgs e = new NFSEventArgs();
-                    e.Bytes = (UInt32)Size;
-                    DataEvent(this, e);
-                }
-            }
-            Marshal.FreeHGlobal(pBuffer);
-            return Size;
-        }
-
-        public NFSResult Write(String FileName, String InputFileName)
-        {
-            NFSResult Result = NFSResult.NFS_ERROR;
-            if (File.Exists(InputFileName))
-            {
-                FileStream wfs = new FileStream(InputFileName, FileMode.Open, FileAccess.Read);
-                Result = Write(FileName, wfs);
-                wfs.Close();
-            }
-            return Result;
-        }
-
-        public NFSResult Write(String FileName, FileStream InputStream)
-        {
-            NFSResult Result = NFSResult.NFS_ERROR;
-            if (InputStream != null)
-            {
-                if (NFSResult.NFS_SUCCESS == CreateFile(FileName))
-                {
-                    if (NFSResult.NFS_SUCCESS == Open(FileName))
-                    {
-                        NFSAttributes nfsAttributes = GetItemAttributes(FileName);
-                        UInt64 Offset = 0;
-                        UInt32 Count = 4096;
-                        Int32 Bytes = 0;
-                        Byte[] Buffer = new Byte[Count];
-                        while ((Bytes = InputStream.Read(Buffer, 0, (Int32)Count)) > 0)
-                        {
-                            Int32 Res = Write(Offset, (UInt32)Bytes, Buffer);
-                            if (Res != -1)
-                            {
-                                Offset += (UInt32)Bytes;
-                                Result = NFSResult.NFS_SUCCESS;
-                            }
-                            else
-                            {
-                                Result = NFSResult.NFS_ERROR;
-                                break;
-                            }
-                        }
-                        CloseFile();
-                    }
-                }
-            }
-
-            return Result;
-        }
-
-        public int Write(UInt64 Offset, UInt32 Count, Byte[] Buffer)
-        {
-            Int32 Size = -1;
-            if (Buffer != null)
-            {
-                IntPtr pBuffer = Marshal.AllocHGlobal((Int32)Count);
-                Marshal.Copy(Buffer, 0, pBuffer, (Int32)Count);
-                NFSResult Result = (NFSResult)__NFSv3_Write(_nfsv3, Offset, Count, pBuffer, out Size);
-                Marshal.FreeHGlobal(pBuffer);
-                if (Result == NFSResult.NFS_ERROR)
-                    Size = -1;
-                else
-                {
-                    if (DataEvent != null)
-                    {
-                        NFSEventArgs e = new NFSEventArgs();
-                        e.Bytes = (UInt32) Count;
-                        DataEvent(this, e);
-                    }
-                }
-            }
-            return Size;
+            return (NFSResult)__NFSv3_Write(_nfsv3, Offset, Count, pBuffer, out Size);
         }
 
         public NFSResult Open(String FileName)
@@ -384,9 +205,36 @@ namespace NekoDrive.NFS.Wrappers
             return (NFSResult)__NFSv3_Rename(_nfsv3, OldName, NewName);
         }
 
-        public bool FileExists(String FileName)
+        public NFSAttributes GetNfsAttribute(IntPtr pAttributes)
         {
-            return (GetItemAttributes(FileName) != null);
+            if (pAttributes != IntPtr.Zero)
+            {
+                NFSv3Data nfsData = (NFSv3Data)Marshal.PtrToStructure(pAttributes, typeof(NFSv3Data));
+                NFSAttributes nfsAttributes = new NFSAttributes(nfsData.DateTime, nfsData.Type, nfsData.Size, nfsData.Handle);
+                return nfsAttributes;
+            }
+            return null;
+        }
+
+        public void ReleaseBuffer(IntPtr pBuffer)
+        {
+            if (pBuffer != IntPtr.Zero)
+            {
+                __NFSv3_ReleaseBuffer(_nfsv3, pBuffer);
+            }
+        }
+
+        public void ReleaseBuffers(IntPtr pBuffers)
+        {
+            if (pBuffers != IntPtr.Zero)
+            {
+                __NFSv3_ReleaseBuffers(_nfsv3, pBuffers);
+            }
+        }
+
+        public String GetLastNfsError()
+        {
+            return __NFSv3_GetLastNfsError(_nfsv3);
         }
     }
 }

@@ -10,6 +10,7 @@ using NekoDrive.NFS.Wrappers;
 using NekoDrive.NFS;
 using System.Net;
 using System.Threading;
+using System.Net.NetworkInformation;
 
 namespace NFSClient
 {
@@ -28,7 +29,7 @@ namespace NFSClient
 
         #region Properties
 
-        INFS nfsClient;
+        NFS nfsClient;
         List<string> nfsDevs = null;
         DragDropEffects CurrentEffect;
         List<ListViewItem> lvDragItem = new List<ListViewItem>();
@@ -80,6 +81,7 @@ namespace NFSClient
                     btnConnect.Enabled = false;
                     btnNewFolder.Enabled = false;
                     ipAddressControl1.Enabled = false;
+                    nupTimeOut.Enabled = false;
                 }
                 else
                 {
@@ -92,6 +94,7 @@ namespace NFSClient
                     btnConnect.Enabled = true;
                     btnNewFolder.Enabled = true;
                     ipAddressControl1.Enabled = true;
+                    nupTimeOut.Enabled = true;
                     if (CurrentList != "Local")
                         RefreshLocal(LocalFolder);
                     else
@@ -140,19 +143,28 @@ namespace NFSClient
             foreach (string Item in nfsClient.GetItemList())
             {
                 NFSAttributes nfsAttribute = nfsClient.GetItemAttributes(Item);
-                if (nfsAttribute.type == NFSType.NFDIR)
+                if (nfsAttribute != null)
                 {
-                    ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.size.ToString(), nfsAttribute.dateTime.ToString() });
-                    lvi.ImageIndex = 1;
-                    listViewRemote.Items.Add(lvi);
-                }
-                else
-                    if (nfsAttribute.type == NFSType.NFREG)
+                    if (nfsAttribute.type == NFSType.NFDIR)
                     {
                         ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.size.ToString(), nfsAttribute.dateTime.ToString() });
-                        lvi.ImageIndex = 0;
+                        lvi.ImageIndex = 1;
                         listViewRemote.Items.Add(lvi);
                     }
+                    else
+                        if (nfsAttribute.type == NFSType.NFREG)
+                        {
+                            ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.size.ToString(), nfsAttribute.dateTime.ToString() });
+                            lvi.ImageIndex = 0;
+                            listViewRemote.Items.Add(lvi);
+                        }
+                }
+                else
+                {
+                    ListViewItem lvi = new ListViewItem(new string[] { Item, "", "" });
+                    lvi.ImageIndex = 0;
+                    listViewRemote.Items.Add(lvi);
+                }
             }
         }
 
@@ -162,6 +174,22 @@ namespace NFSClient
             listViewRemote.Items.Clear();
             nfsClient.MountDevice(nfsDevs[i]);
             RefreshRemote();
+        }
+
+        public bool PingServer(IPAddress Ip)
+        {
+            //ping the server
+            Ping pingSender = new Ping();
+            PingOptions pingOptions = new PingOptions();
+            pingOptions.DontFragment = true;
+            string data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+            byte[] buffer = Encoding.ASCII.GetBytes(data);
+            int timeout = 5000;
+            PingReply reply = pingSender.Send(Ip, timeout, buffer, pingOptions);
+            if (reply.Status == IPStatus.Success)
+                return true;
+            else
+                return false;
         }
 
         #endregion
@@ -190,28 +218,34 @@ namespace NFSClient
         {
             try
             {
-                NFS.NFSVersion ver = NFS.NFSVersion.v2;
-                if (cboxVer.SelectedItem.ToString() == "V3")
-                    ver = NFS.NFSVersion.v3;
-
-                nfsClient = NFS.GetNFS(new IPAddress(ipAddressControl1.GetAddressBytes()), ver);
-                nfsClient.DataEvent += new NFSDataEventHandler(nfsClient_DataEvent);
-                if (nfsClient.Connect() == NFSResult.NFS_SUCCESS)
+                IPAddress ipAddress = new IPAddress(ipAddressControl1.GetAddressBytes());
+                if (PingServer(ipAddress))
                 {
-                    nfsDevs = nfsClient.GetExportedDevices();
-                    cboxRemoteDevices.Items.Clear();
-                    foreach (string nfsdev in nfsDevs)
-                        cboxRemoteDevices.Items.Add(nfsdev);
-                    RefreshLocal(Environment.CurrentDirectory);
-                    listViewRemote.Items.Clear();
-                    pnlMain.Enabled = true;
+                    NFS.NFSVersion ver = NFS.NFSVersion.v2;
+                    if (cboxVer.SelectedItem.ToString() == "V3")
+                        ver = NFS.NFSVersion.v3;
+
+                    nfsClient = new NFS(ver);
+                    nfsClient.DataEvent += new NFSDataEventHandler(nfsClient_DataEvent);
+                    if (nfsClient.Connect(ipAddress, 0, 0, (int) nupTimeOut.Value) == NFSResult.NFS_SUCCESS)
+                    {
+                        nfsDevs = nfsClient.GetExportedDevices();
+                        cboxRemoteDevices.Items.Clear();
+                        foreach (string nfsdev in nfsDevs)
+                            cboxRemoteDevices.Items.Add(nfsdev);
+                        RefreshLocal(Environment.CurrentDirectory);
+                        listViewRemote.Items.Clear();
+                        pnlMain.Enabled = true;
+                    }
+                    else
+                        throw new ApplicationException("Connection error");
                 }
                 else
-                    throw new ApplicationException("Connection error");
+                    throw new Exception("Server not found!");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "NFSv2 Client");
+                MessageBox.Show(ex.ToString(), "NFS Client");
                 pnlMain.Enabled = false;
             }
         }
@@ -245,50 +279,88 @@ namespace NFSClient
 
         void Download()
         {
-            foreach (ListViewItem lvItem in lvDragItem)
+            try
             {
-                string OutputFile = Path.Combine(LocalFolder, lvItem.Text);
-                if (File.Exists(OutputFile))
-                {
-                    if (MessageBox.Show("Do you want to overwrite " + OutputFile + "?", "NFSClient", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        File.Delete(OutputFile);
-                    else
-                        continue;
-                }
                 ShowProgress(true);
-                CurrentItem = lvItem.Text;
-                CurrentSize = ulong.Parse(lvItem.SubItems[1].Text);
-                if (nfsClient.Read(CurrentItem, OutputFile) != NFSResult.NFS_SUCCESS)
+                foreach (ListViewItem lvItem in lvDragItem)
                 {
-                    MessageBox.Show("An error has occurred while downloading " + CurrentItem);
-                    continue;
+                    string OutputFile = Path.Combine(LocalFolder, lvItem.Text);
+                    if (File.Exists(OutputFile))
+                    {
+                        if (MessageBox.Show("Do you want to overwrite " + OutputFile + "?", "NFSClient", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            try
+                            {
+                                File.Delete(OutputFile);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("An error has occurred deleting the file (" + ex.Message + ")", "NFS Client", MessageBoxButtons.OK);
+                                continue;
+                            }
+                        }
+                        else
+                            continue;
+                    }
+                    CurrentItem = lvItem.Text;
+                    CurrentSize = ulong.Parse(lvItem.SubItems[1].Text);
+                    if (nfsClient.Read(CurrentItem, OutputFile) != NFSResult.NFS_SUCCESS)
+                    {
+                        MessageBox.Show("An error has occurred while downloading " + CurrentItem + " (" + nfsClient.GetLastError() + ")");
+                        continue;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "NFS Client");
                 ShowProgress(false);
-            }   
+            }
+            finally
+            {
+                ShowProgress(false);
+            }
         }
 
         void Upload()
         {
-            foreach (ListViewItem lvItem in lvDragItem)
+            try
             {
-                if (nfsClient.FileExists(lvItem.Text))
-                {
-                    if (MessageBox.Show("Do you want to overwrite " + lvItem.Text + "?", "NFSClient", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        nfsClient.DeleteFile(lvItem.Text);
-                    else
-                        continue;
-                }
                 ShowProgress(true);
-                CurrentItem = lvItem.Text;
-                CurrentSize = ulong.Parse(lvItem.SubItems[1].Text);
-                string OutpuFileName = Path.Combine(LocalFolder, CurrentItem);
-                if (nfsClient.Write(CurrentItem, OutpuFileName) != NFSResult.NFS_SUCCESS)
+                foreach (ListViewItem lvItem in lvDragItem)
                 {
-                    MessageBox.Show("An error has occurred while uploading " + CurrentItem);
-                    continue;
+                    if (nfsClient.FileExists(lvItem.Text))
+                    {
+                        if (MessageBox.Show("Do you want to overwrite " + lvItem.Text + "?", "NFSClient", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            if (nfsClient.DeleteFile(lvItem.Text) != NFSResult.NFS_SUCCESS)
+                            {
+                                MessageBox.Show("An error has occurred deleting the file (" + nfsClient.GetLastError() + ")", "NFS Client", MessageBoxButtons.OK);
+                                continue;
+                            }
+                        }
+                        else
+                            continue;
+                    }
+                    CurrentItem = lvItem.Text;
+                    CurrentSize = ulong.Parse(lvItem.SubItems[1].Text);
+                    string OutpuFileName = Path.Combine(LocalFolder, CurrentItem);
+                    if (nfsClient.Write(CurrentItem, OutpuFileName) != NFSResult.NFS_SUCCESS)
+                    {
+                        MessageBox.Show("An error has occurred while uploading " + CurrentItem + " (" + nfsClient.GetLastError() + ")");
+                        continue;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "NFS Client");
                 ShowProgress(false);
-            }   
+            }
+            finally
+            {
+                ShowProgress(false);
+            }
         }
 
         void nfsClient_DataEvent(object sender, NFSEventArgs e)
@@ -344,22 +416,37 @@ namespace NFSClient
 
         private void listViewRemote_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Delete)
+            try
             {
-                if (listViewRemote.SelectedItems != null)
+                if (e.KeyCode == Keys.Delete)
                 {
-                    foreach (ListViewItem lvi in listViewRemote.SelectedItems)
+                    if (listViewRemote.SelectedItems != null)
                     {
-                        if (MessageBox.Show("Do you really want to delete " + lvi.Text + " ?", "NFS Client", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        foreach (ListViewItem lvi in listViewRemote.SelectedItems)
                         {
-                            if (lvi.ImageIndex == 0)
-                                nfsClient.DeleteFile(lvi.Text);
-                            else
-                                nfsClient.DeleteDirectory(lvi.Text);
+                            if (MessageBox.Show("Do you really want to delete " + lvi.Text + " ?", "NFS Client", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            {
+                                if (lvi.ImageIndex == 0)
+                                {
+                                    if (nfsClient.DeleteFile(lvi.Text) != NFSResult.NFS_SUCCESS)
+                                    {
+                                        MessageBox.Show("An error has occurred deleting the file (" + nfsClient.GetLastError() + ")", "NFS Client", MessageBoxButtons.OK);
+                                    }
+                                }
+                                else
+                                    if (nfsClient.DeleteDirectory(lvi.Text) != NFSResult.NFS_SUCCESS)
+                                    {
+                                        MessageBox.Show("An error has occurred deleting the directory (" + nfsClient.GetLastError() + ")", "NFS Client", MessageBoxButtons.OK);
+                                    }
+                            }
                         }
+                        RefreshRemote();
                     }
-                    RefreshRemote();
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "NFS Client");
             }
         }
 
@@ -384,60 +471,122 @@ namespace NFSClient
 
         private void listViewLocal_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Delete)
+            try
             {
-                if (listViewLocal.SelectedItems != null)
+                if (e.KeyCode == Keys.Delete)
                 {
-                    foreach (ListViewItem lvi in listViewLocal.SelectedItems)
+                    if (listViewLocal.SelectedItems != null)
                     {
-                        if (MessageBox.Show("Do you really want to delete " + lvi.Text + " ?", "NFS Client", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                            File.Delete(Path.Combine(this.tbLocalPath.Text, lvi.Text));
+                        foreach (ListViewItem lvi in listViewLocal.SelectedItems)
+                        {
+                            if (MessageBox.Show("Do you really want to delete " + lvi.Text + " ?", "NFS Client", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                File.Delete(Path.Combine(this.tbLocalPath.Text, lvi.Text));
+                        }
+                        RefreshLocal(tbLocalPath.Text);
                     }
-                    RefreshLocal(tbLocalPath.Text);
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "NFS Client");
             }
         }
 
-        #endregion
-
         private void btnNewFolder_Click(object sender, EventArgs e)
         {
-            if (nfsClient == null)
-                return;
-
-            NewFolder nf = new NewFolder();
-            if (nf.ShowDialog() == DialogResult.OK)
+            try
             {
-                if (nfsClient.CreateDirectory(nf.NewFolderName) == NFSResult.NFS_SUCCESS)
+                if (nfsClient == null)
+                    return;
+
+                NewFolder nf = new NewFolder();
+                if (nf.ShowDialog() == DialogResult.OK)
                 {
-                    RefreshRemote();
+                    if (nfsClient.CreateDirectory(nf.NewFolderName) == NFSResult.NFS_SUCCESS)
+                    {
+                        RefreshRemote();
+                    }
+                    else
+                        MessageBox.Show("An error has occurred creting the directory (" + nfsClient.GetLastError() + ")", "NFS Client", MessageBoxButtons.OK);
                 }
-                else
-                    MessageBox.Show("An error has occurred creting the directory", "NFS Client", MessageBoxButtons.OK);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "NFS Client");
             }
         }
 
         private void listViewRemote_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
-            string NewLabel = e.Label;
-            ListViewItem lvi = listViewRemote.Items[e.Item];
-            if (nfsClient.Rename(lvi.Text, NewLabel) != NFSResult.NFS_SUCCESS)
+            try
             {
-                MessageBox.Show("An error has occurred renaming the directory", "NFS Client", MessageBoxButtons.OK);
-            }   
+                string NewLabel = e.Label;
+                ListViewItem lvi = listViewRemote.Items[e.Item];
+                if (nfsClient.Rename(lvi.Text, NewLabel) != NFSResult.NFS_SUCCESS)
+                {
+                    MessageBox.Show("An error has occurred renaming the item (" + nfsClient.GetLastError() + ")", "NFS Client", MessageBoxButtons.OK);
+                    e.CancelEdit = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "NFS Client");
+            }
         }
 
         private void listViewRemote_DoubleClick(object sender, EventArgs e)
         {
-            if (listViewRemote.SelectedItems != null)
+            try
             {
-                ListViewItem lvi = listViewRemote.SelectedItems[0];
-                if (lvi.ImageIndex == 1)
+                if (listViewRemote.SelectedItems != null)
                 {
-                    if(nfsClient.ChangeCurrentDirectory(lvi.Text) == NFSResult.NFS_SUCCESS)
-                        RefreshRemote();
+                    ListViewItem lvi = listViewRemote.SelectedItems[0];
+                    if (lvi.ImageIndex == 1)
+                    {
+                        if (nfsClient.ChangeCurrentDirectory(lvi.Text) == NFSResult.NFS_SUCCESS)
+                            RefreshRemote();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "NFS Client");
+            }
         }
+
+        private void listViewLocal_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            try
+            {
+                string NewLabel = e.Label;
+                ListViewItem lvi = listViewLocal.Items[e.Item];
+                string Folder = tbLocalPath.Text;
+                File.Move(Path.Combine(Folder, lvi.Text), Path.Combine(Folder, NewLabel));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error has occurred renaming the item (" + ex.ToString() + ")", "NFS Client", MessageBoxButtons.OK);
+                e.CancelEdit = true;
+            }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            tbLocalPath.Text = NFSClient.Properties.Settings.Default.DefaultFolder;
+            ipAddressControl1.Text = NFSClient.Properties.Settings.Default.ServerAddress;
+            nupTimeOut.Value = (Decimal) NFSClient.Properties.Settings.Default.Timeout;
+            cboxVer.SelectedIndex = NFSClient.Properties.Settings.Default.DefaultProtocol;
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            NFSClient.Properties.Settings.Default.DefaultFolder = tbLocalPath.Text;
+            NFSClient.Properties.Settings.Default.ServerAddress = ipAddressControl1.Text;
+            NFSClient.Properties.Settings.Default.Timeout = (int)nupTimeOut.Value;
+            NFSClient.Properties.Settings.Default.DefaultProtocol = cboxVer.SelectedIndex;
+            NFSClient.Properties.Settings.Default.Save();
+        }
+
+        #endregion
     }
 }

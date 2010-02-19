@@ -42,7 +42,6 @@ CNFSv2::CNFSv2()
 	clntV2 = NULL;
 	sSocket = RPC_ANYSOCK;
 	strCurrentDevice = "";
-	uiServer = 0;
 	timeOut.tv_sec = 60;
 	timeOut.tv_usec = 0;
 	sSrvAddr.sin_family = AF_INET;
@@ -53,7 +52,7 @@ CNFSv2::CNFSv2()
 	gid = -2;
 }
 
-int CNFSv2::Connect(unsigned int ServerAddress, int UserId, int GroupId)
+int CNFSv2::Connect(const char* ServerAddress, int UserId, int GroupId, long CommandTimeout)
 {
 	int Ret = NFS_ERROR;
 	WORD wVersionRequested;
@@ -70,12 +69,13 @@ int CNFSv2::Connect(unsigned int ServerAddress, int UserId, int GroupId)
 	else
 	{
 		u_short uPort;
-		sSrvAddr.sin_addr.s_addr = ServerAddress;
+		sSrvAddr.sin_addr.s_addr = inet_addr(ServerAddress);
 		strServer.assign(inet_ntoa(sSrvAddr.sin_addr));
 		if( (uPort = pmap_getport(&sSrvAddr, MOUNTPROG, MOUNTVERS, IPPROTO_UDP)) == 0)
 			strLastError = clnt_spcreateerror((char*)strServer.c_str());
 		else
 		{
+			timeOut.tv_sec = CommandTimeout;
 			sSrvAddr.sin_port = htons(uPort);
 			if ((clntMountV2 = clntudp_create(&sSrvAddr, MOUNTPROG, MOUNTVERS, timeOut, (int*)&sSocket)) == NULL) 
   				 strLastError = clnt_spcreateerror((char*)strServer.c_str());

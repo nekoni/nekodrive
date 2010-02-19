@@ -48,7 +48,6 @@ struct StringVector
 class NFSV3_API CNFSv3
 {
 private:
-	unsigned int uiServer;
 	std::string strServer;
 	CLIENT* clntMountV3;
 	CLIENT* clntV3;
@@ -69,7 +68,7 @@ public:
 	StringVector v;
 	CNFSv3();
 	~CNFSv3();
-	int Connect(unsigned int ServerAddress, int UserId, int GroupId);
+	int Connect(const char* ServerAddress, int UserId, int GroupId, long CommandTimeout);
 	int Disconnect();
 	char** GetExportedDevices(int* pnSize);
 	char** GetItemsList(int* pnSize);
