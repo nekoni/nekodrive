@@ -534,8 +534,16 @@ int CNFSv3::CheckOpenHandle()
 {
 	int sum = 0;
 	for(int x = 0; x < FHSIZE; x++)
-		sum += nfsCurrentFile[x];
-	return sum;
+	{
+		if(nfsCurrentFile[x] == 0)
+		{
+			sum++;
+		}
+	}
+	if(sum == FHSIZE)
+		return 0;
+	else
+		return sum;
 }
 
 int CNFSv3::Read(unsigned __int64 Offset, u_long Count, char* pBuffer, u_int* pSize)
