@@ -2,28 +2,31 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Net;
 
 namespace NekoDrive.NFS.Wrappers
 {
-    public interface INFS: IDisposable
+    public interface INFS
     {
-        event NFSDataEventHandler DataEvent;
+        void Create();
 
-        NFSResult Connect();
+        void Destroy();
 
-        NFSResult Connect(Int32 UserId, Int32 GroupId);
+        NFSResult Connect(IPAddress Address);
+
+        NFSResult Connect(IPAddress Address, Int32 UserId, Int32 GroupId, Int32 CommandTimeout);
 
         NFSResult Disconnect();
 
-        List<String> GetExportedDevices();
+        IntPtr GetExportedDevices(out Int32 Size);
 
         NFSResult MountDevice(String DeviceName);
 
         NFSResult UnMountDevice();
 
-        List<String> GetItemList();
+        IntPtr GetItemList(out Int32 Size);
 
-        NFSAttributes GetItemAttributes(String ItemName);
+        IntPtr GetItemAttributes(String ItemName);
 
         NFSResult ChangeCurrentDirectory(String DirectoryName);
 
@@ -35,20 +38,22 @@ namespace NekoDrive.NFS.Wrappers
 
         NFSResult CreateFile(String FileName);
 
-        NFSResult Read(String FileName, String OutputFileName);
+        NFSResult Read(UInt64 Offset, UInt32 Count, IntPtr pBuffer, out Int32 Size);
 
-        NFSResult Read(String FileName, ref FileStream OutputStream);
+        NFSResult Write(UInt64 Offset, UInt32 Count, IntPtr pBuffer, out Int32 Size);
 
-        int Read(UInt64 Offset, UInt32 Count, ref Byte[] Buffer);
+        NFSResult Open(String FileName);
 
-        NFSResult Write(String FileName, String InputFileName);
+        void CloseFile();
 
-        NFSResult Write(String FileName, FileStream InputStream);
+        NFSResult Rename(String OldName, String NewName);
 
-        int Write(UInt64 Offset, UInt32 Count, Byte[] Buffer);
+        NFSAttributes GetNfsAttribute(IntPtr pAttributes);
 
-        bool FileExists(String FileName);
+        void ReleaseBuffer(IntPtr pBuffer);
 
-        NFSResult Rename(String OldItemName, String NewItemName);
+        void ReleaseBuffers(IntPtr pBuffers);
+
+        String GetLastNfsError();
     }
 }

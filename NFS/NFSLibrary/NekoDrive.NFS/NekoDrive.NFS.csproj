@@ -60,7 +60,9 @@
     <Compile Include="Wrappers\INFS.cs" />
     <Compile Include="Wrappers\NFSCommon.cs" />
     <Compile Include="Wrappers\NFSv2.cs" />
-    <Compile Include="Wrappers\NFSv3.cs" />
+    <Compile Include="Wrappers\NFSv3.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

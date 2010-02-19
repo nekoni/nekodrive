@@ -44,7 +44,6 @@ CNFSv3::CNFSv3()
 	strCurrentDevice = "";
 	memset(nfsCurrentFile, 0, sizeof(FHSIZE));
 	memset(nfsCurrentDirectory, 0, sizeof(FHSIZE));
-	uiServer = 0;
 	timeOut.tv_sec = 60;
 	timeOut.tv_usec = 0;
 	sSrvAddr.sin_family = AF_INET;
@@ -53,7 +52,7 @@ CNFSv3::CNFSv3()
 	gid = -2;
 }
 
-int CNFSv3::Connect(unsigned int ServerAddress, int UserId, int GroupId)
+int CNFSv3::Connect(const char* ServerAddress, int UserId, int GroupId, long CommandTimeout)
 {
 	int Ret = NFS_ERROR;
 	WORD wVersionRequested;
@@ -70,12 +69,13 @@ int CNFSv3::Connect(unsigned int ServerAddress, int UserId, int GroupId)
 	else
 	{
 		u_short uPort;
-		sSrvAddr.sin_addr.s_addr = ServerAddress;
+		sSrvAddr.sin_addr.s_addr = inet_addr(ServerAddress);
 		strServer.assign(inet_ntoa(sSrvAddr.sin_addr));
 		if( (uPort = pmap_getport(&sSrvAddr, MOUNT_PROGRAM, MOUNT_V3, IPPROTO_UDP)) == 0)
 			strLastError = clnt_spcreateerror((char*)strServer.c_str());
 		else
 		{
+			timeOut.tv_sec = CommandTimeout;
 			sSrvAddr.sin_port = htons(uPort);
 			if ((clntMountV3 = clntudp_create(&sSrvAddr, MOUNT_PROGRAM, MOUNT_V3, timeOut, (int*)&sSocket)) == NULL) 
   				 strLastError = clnt_spcreateerror((char*)strServer.c_str());

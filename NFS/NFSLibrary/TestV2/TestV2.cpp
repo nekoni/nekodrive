@@ -230,8 +230,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::vector<std::string> strD;
 		std::vector<std::string> strI;
 		CNFSv3* nfs = new CNFSv3();
-		unsigned long ServerAddress = inet_addr("192.168.56.3");//inet_addr("192.168.56.3");
-		nfs->Connect(ServerAddress, 0, 0);
+		nfs->Connect("192.168.56.3", 0, 0, 60);
 		int iDevices = 0;
 		char** pDevices  = nfs->GetExportedDevices(&iDevices);
 		int i = 0;
