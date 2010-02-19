@@ -390,10 +390,11 @@ namespace NFSClient
             this.ClientSize = new System.Drawing.Size(692, 666);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.gbTargetConnection);
+            this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(700, 693);
             this.Name = "MainForm";
-            this.Text = "Windows NFS Client";
+            this.Text = "Windows NFS Client - NekoDrive Test Component";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
