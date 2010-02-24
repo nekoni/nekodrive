@@ -62,7 +62,7 @@ xdr_changeid4(xdrs, objp)
 	XDR *xdrs;
 	changeid4 *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -76,7 +76,7 @@ xdr_clientid4(xdrs, objp)
 	XDR *xdrs;
 	clientid4 *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -90,7 +90,7 @@ xdr_count4(xdrs, objp)
 	XDR *xdrs;
 	count4 *objp;
 {
-	if (!xdr_uint_t(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -104,7 +104,7 @@ xdr_length4(xdrs, objp)
 	XDR *xdrs;
 	length4 *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -118,7 +118,7 @@ xdr_mode4(xdrs, objp)
 	XDR *xdrs;
 	mode4 *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -132,7 +132,7 @@ xdr_nfs_cookie4(xdrs, objp)
 	XDR *xdrs;
 	nfs_cookie4 *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -160,7 +160,7 @@ xdr_offset4(xdrs, objp)
 	XDR *xdrs;
 	offset4 *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -174,7 +174,7 @@ xdr_qop4(xdrs, objp)
 	XDR *xdrs;
 	qop4 *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -202,7 +202,7 @@ xdr_sequenceid4(xdrs, objp)
 	XDR *xdrs;
 	sequenceid4 *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -216,7 +216,7 @@ xdr_seqid4(xdrs, objp)
 	XDR *xdrs;
 	seqid4 *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -244,7 +244,7 @@ xdr_slotid4(xdrs, objp)
 	XDR *xdrs;
 	slotid4 *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -373,7 +373,7 @@ xdr_nfstime4(xdrs, objp)
 	if (!xdr_int64_t(xdrs, &objp->seconds)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->nseconds)) {
+	if (!xdr_u_int(xdrs, &objp->nseconds)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -422,7 +422,7 @@ xdr_nfs_lease4(xdrs, objp)
 	XDR *xdrs;
 	nfs_lease4 *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -436,10 +436,10 @@ xdr_fsid4(xdrs, objp)
 	XDR *xdrs;
 	fsid4 *objp;
 {
-	if (!xdr_uint64_t(xdrs, &objp->major)) {
+	if (!xdr_u_int64_t(xdrs, &objp->major)) {
 		return (FALSE);
 	}
-	if (!xdr_uint64_t(xdrs, &objp->minor)) {
+	if (!xdr_u_int64_t(xdrs, &objp->minor)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -453,10 +453,10 @@ xdr_change_policy4(xdrs, objp)
 	XDR *xdrs;
 	change_policy4 *objp;
 {
-	if (!xdr_uint64_t(xdrs, &objp->cp_major)) {
+	if (!xdr_u_int64_t(xdrs, &objp->cp_major)) {
 		return (FALSE);
 	}
-	if (!xdr_uint64_t(xdrs, &objp->cp_minor)) {
+	if (!xdr_u_int64_t(xdrs, &objp->cp_minor)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -504,7 +504,7 @@ xdr_acetype4(xdrs, objp)
 	XDR *xdrs;
 	acetype4 *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -518,7 +518,7 @@ xdr_aceflag4(xdrs, objp)
 	XDR *xdrs;
 	aceflag4 *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -532,7 +532,7 @@ xdr_acemask4(xdrs, objp)
 	XDR *xdrs;
 	acemask4 *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -569,7 +569,7 @@ xdr_aclflag4(xdrs, objp)
 	XDR *xdrs;
 	aclflag4 *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -617,10 +617,10 @@ xdr_specdata4(xdrs, objp)
 	XDR *xdrs;
 	specdata4 *objp;
 {
-	if (!xdr_uint(xdrs, &objp->specdata1)) {
+	if (!xdr_u_int(xdrs, &objp->specdata1)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->specdata2)) {
+	if (!xdr_u_int(xdrs, &objp->specdata2)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -671,7 +671,7 @@ xdr_stateid4(xdrs, objp)
 	XDR *xdrs;
 	stateid4 *objp;
 {
-	if (!xdr_uint(xdrs, &objp->seqid)) {
+	if (!xdr_u_int(xdrs, &objp->seqid)) {
 		return (FALSE);
 	}
 	if (!xdr_opaque(xdrs, objp->other, 12)) {
@@ -918,7 +918,7 @@ xdr_fs4_status(xdrs, objp)
 	if (!xdr_utf8str_cs(xdrs, &objp->fss_current)) {
 		return (FALSE);
 	}
-	if (!xdr_int32_t(xdrs, &objp->fss_age)) {
+	if (!xdr_int(xdrs, &objp->fss_age)) {
 		return (FALSE);
 	}
 	if (!xdr_nfstime4(xdrs, &objp->fss_version)) {
@@ -1025,7 +1025,7 @@ xdr_retention_get4(xdrs, objp)
 	XDR *xdrs;
 	retention_get4 *objp;
 {
-	if (!xdr_uint64_t(xdrs, &objp->rg_duration)) {
+	if (!xdr_u_int64_t(xdrs, &objp->rg_duration)) {
 		return (FALSE);
 	}
 	if (!xdr_array(xdrs, (char **)&objp->rg_begin_time.rg_begin_time_val, (u_int *)&objp->rg_begin_time.rg_begin_time_len, 1, sizeof(nfstime4), xdr_nfstime4)) {
@@ -1045,7 +1045,7 @@ xdr_retention_set4(xdrs, objp)
 	if (!xdr_bool(xdrs, &objp->rs_enable)) {
 		return (FALSE);
 	}
-	if (!xdr_array(xdrs, (char **)&objp->rs_duration.rs_duration_val, (u_int *)&objp->rs_duration.rs_duration_len, 1, sizeof(uint64_t), xdr_uint64_t)) {
+	if (!xdr_array(xdrs, (char **)&objp->rs_duration.rs_duration_val, (u_int *)&objp->rs_duration.rs_duration_len, 1, sizeof(uint64_t), xdr_u_int64_t)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1059,7 +1059,7 @@ xdr_fs_charset_cap4(xdrs, objp)
 	XDR *xdrs;
 	fs_charset_cap4 *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1115,7 +1115,7 @@ xdr_fattr4_fh_expire_type(xdrs, objp)
 	XDR *xdrs;
 	fattr4_fh_expire_type *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1143,7 +1143,7 @@ xdr_fattr4_size(xdrs, objp)
 	XDR *xdrs;
 	fattr4_size *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1269,7 +1269,7 @@ xdr_fattr4_aclsupport(xdrs, objp)
 	XDR *xdrs;
 	fattr4_aclsupport *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1353,7 +1353,7 @@ xdr_fattr4_fileid(xdrs, objp)
 	XDR *xdrs;
 	fattr4_fileid *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1367,7 +1367,7 @@ xdr_fattr4_files_avail(xdrs, objp)
 	XDR *xdrs;
 	fattr4_files_avail *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1395,7 +1395,7 @@ xdr_fattr4_files_free(xdrs, objp)
 	XDR *xdrs;
 	fattr4_files_free *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1409,7 +1409,7 @@ xdr_fattr4_files_total(xdrs, objp)
 	XDR *xdrs;
 	fattr4_files_total *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1465,7 +1465,7 @@ xdr_fattr4_maxfilesize(xdrs, objp)
 	XDR *xdrs;
 	fattr4_maxfilesize *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1479,7 +1479,7 @@ xdr_fattr4_maxlink(xdrs, objp)
 	XDR *xdrs;
 	fattr4_maxlink *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1493,7 +1493,7 @@ xdr_fattr4_maxname(xdrs, objp)
 	XDR *xdrs;
 	fattr4_maxname *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1507,7 +1507,7 @@ xdr_fattr4_maxread(xdrs, objp)
 	XDR *xdrs;
 	fattr4_maxread *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1521,7 +1521,7 @@ xdr_fattr4_maxwrite(xdrs, objp)
 	XDR *xdrs;
 	fattr4_maxwrite *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1577,7 +1577,7 @@ xdr_fattr4_mounted_on_fileid(xdrs, objp)
 	XDR *xdrs;
 	fattr4_mounted_on_fileid *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1605,7 +1605,7 @@ xdr_fattr4_numlinks(xdrs, objp)
 	XDR *xdrs;
 	fattr4_numlinks *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1647,7 +1647,7 @@ xdr_fattr4_quota_avail_hard(xdrs, objp)
 	XDR *xdrs;
 	fattr4_quota_avail_hard *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1661,7 +1661,7 @@ xdr_fattr4_quota_avail_soft(xdrs, objp)
 	XDR *xdrs;
 	fattr4_quota_avail_soft *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1675,7 +1675,7 @@ xdr_fattr4_quota_used(xdrs, objp)
 	XDR *xdrs;
 	fattr4_quota_used *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1703,7 +1703,7 @@ xdr_fattr4_space_avail(xdrs, objp)
 	XDR *xdrs;
 	fattr4_space_avail *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1717,7 +1717,7 @@ xdr_fattr4_space_free(xdrs, objp)
 	XDR *xdrs;
 	fattr4_space_free *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1731,7 +1731,7 @@ xdr_fattr4_space_total(xdrs, objp)
 	XDR *xdrs;
 	fattr4_space_total *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1745,7 +1745,7 @@ xdr_fattr4_space_used(xdrs, objp)
 	XDR *xdrs;
 	fattr4_space_used *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1969,7 +1969,7 @@ xdr_fattr4_layout_alignment(xdrs, objp)
 	XDR *xdrs;
 	fattr4_layout_alignment *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -1983,7 +1983,7 @@ xdr_fattr4_layout_blksize(xdrs, objp)
 	XDR *xdrs;
 	fattr4_layout_blksize *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -2095,7 +2095,7 @@ xdr_fattr4_retention_hold(xdrs, objp)
 	XDR *xdrs;
 	fattr4_retention_hold *objp;
 {
-	if (!xdr_uint64_t(xdrs, objp)) {
+	if (!xdr_u_int64_t(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -2188,7 +2188,7 @@ xdr_cb_client4(xdrs, objp)
 	XDR *xdrs;
 	cb_client4 *objp;
 {
-	if (!xdr_uint(xdrs, &objp->cb_program)) {
+	if (!xdr_u_int(xdrs, &objp->cb_program)) {
 		return (FALSE);
 	}
 	if (!xdr_netaddr4(xdrs, &objp->cb_location)) {
@@ -2239,7 +2239,7 @@ xdr_server_owner4(xdrs, objp)
 	XDR *xdrs;
 	server_owner4 *objp;
 {
-	if (!xdr_uint64_t(xdrs, &objp->so_minor_id)) {
+	if (!xdr_u_int64_t(xdrs, &objp->so_minor_id)) {
 		return (FALSE);
 	}
 	if (!xdr_bytes(xdrs, (char **)&objp->so_major_id.so_major_id_val, (u_int *)&objp->so_major_id.so_major_id_len, NFS4_OPAQUE_LIMIT)) {
@@ -2334,7 +2334,7 @@ xdr_ssv_mic_plain_tkn4(xdrs, objp)
 	XDR *xdrs;
 	ssv_mic_plain_tkn4 *objp;
 {
-	if (!xdr_uint(xdrs, &objp->smpt_ssv_seq)) {
+	if (!xdr_u_int(xdrs, &objp->smpt_ssv_seq)) {
 		return (FALSE);
 	}
 	if (!xdr_bytes(xdrs, (char **)&objp->smpt_orig_plain.smpt_orig_plain_val, (u_int *)&objp->smpt_orig_plain.smpt_orig_plain_len, ~0)) {
@@ -2354,7 +2354,7 @@ xdr_ssv_mic_tkn4(xdrs, objp)
 	XDR *xdrs;
 	ssv_mic_tkn4 *objp;
 {
-	if (!xdr_uint(xdrs, &objp->smt_ssv_seq)) {
+	if (!xdr_u_int(xdrs, &objp->smt_ssv_seq)) {
 		return (FALSE);
 	}
 	if (!xdr_bytes(xdrs, (char **)&objp->smt_hmac.smt_hmac_val, (u_int *)&objp->smt_hmac.smt_hmac_len, ~0)) {
@@ -2377,7 +2377,7 @@ xdr_ssv_seal_plain_tkn4(xdrs, objp)
 	if (!xdr_bytes(xdrs, (char **)&objp->sspt_confounder.sspt_confounder_val, (u_int *)&objp->sspt_confounder.sspt_confounder_len, ~0)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->sspt_ssv_seq)) {
+	if (!xdr_u_int(xdrs, &objp->sspt_ssv_seq)) {
 		return (FALSE);
 	}
 	if (!xdr_bytes(xdrs, (char **)&objp->sspt_orig_plain.sspt_orig_plain_val, (u_int *)&objp->sspt_orig_plain.sspt_orig_plain_len, ~0)) {
@@ -2400,7 +2400,7 @@ xdr_ssv_seal_cipher_tkn4(xdrs, objp)
 	XDR *xdrs;
 	ssv_seal_cipher_tkn4 *objp;
 {
-	if (!xdr_uint(xdrs, &objp->ssct_ssv_seq)) {
+	if (!xdr_u_int(xdrs, &objp->ssct_ssv_seq)) {
 		return (FALSE);
 	}
 	if (!xdr_bytes(xdrs, (char **)&objp->ssct_iv.ssct_iv_val, (u_int *)&objp->ssct_iv.ssct_iv_len, ~0)) {
@@ -2424,7 +2424,7 @@ xdr_fs_locations_server4(xdrs, objp)
 	XDR *xdrs;
 	fs_locations_server4 *objp;
 {
-	if (!xdr_int32_t(xdrs, &objp->fls_currency)) {
+	if (!xdr_int(xdrs, &objp->fls_currency)) {
 		return (FALSE);
 	}
 	if (!xdr_bytes(xdrs, (char **)&objp->fls_info.fls_info_val, (u_int *)&objp->fls_info.fls_info_len, ~0)) {
@@ -2461,10 +2461,10 @@ xdr_fs_locations_info4(xdrs, objp)
 	XDR *xdrs;
 	fs_locations_info4 *objp;
 {
-	if (!xdr_uint(xdrs, &objp->fli_flags)) {
+	if (!xdr_u_int(xdrs, &objp->fli_flags)) {
 		return (FALSE);
 	}
-	if (!xdr_int32_t(xdrs, &objp->fli_valid_for)) {
+	if (!xdr_int(xdrs, &objp->fli_valid_for)) {
 		return (FALSE);
 	}
 	if (!xdr_pathname4(xdrs, &objp->fli_fs_root)) {
@@ -2498,7 +2498,7 @@ xdr_nfl_util4(xdrs, objp)
 	XDR *xdrs;
 	nfl_util4 *objp;
 {
-	if (!xdr_uint(xdrs, objp)) {
+	if (!xdr_u_int(xdrs, objp)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -2530,7 +2530,7 @@ xdr_nfsv4_1_file_layouthint4(xdrs, objp)
 	XDR *xdrs;
 	nfsv4_1_file_layouthint4 *objp;
 {
-	if (!xdr_uint(xdrs, &objp->nflh_care)) {
+	if (!xdr_u_int(xdrs, &objp->nflh_care)) {
 		return (FALSE);
 	}
 	if (!xdr_nfl_util4(xdrs, &objp->nflh_util)) {
@@ -2568,7 +2568,7 @@ xdr_nfsv4_1_file_layout_ds_addr4(xdrs, objp)
 	XDR *xdrs;
 	nfsv4_1_file_layout_ds_addr4 *objp;
 {
-	if (!xdr_array(xdrs, (char **)&objp->nflda_stripe_indices.nflda_stripe_indices_val, (u_int *)&objp->nflda_stripe_indices.nflda_stripe_indices_len, ~0, sizeof(uint32_t), xdr_uint)) {
+	if (!xdr_array(xdrs, (char **)&objp->nflda_stripe_indices.nflda_stripe_indices_val, (u_int *)&objp->nflda_stripe_indices.nflda_stripe_indices_len, ~0, sizeof(uint32_t), xdr_u_int)) {
 		return (FALSE);
 	}
 	if (!xdr_array(xdrs, (char **)&objp->nflda_multipath_ds_list.nflda_multipath_ds_list_val, (u_int *)&objp->nflda_multipath_ds_list.nflda_multipath_ds_list_len, ~0, sizeof(multipath_list4), xdr_multipath_list4)) {
@@ -2594,7 +2594,7 @@ xdr_nfsv4_1_file_layout4(xdrs, objp)
 	if (!xdr_nfl_util4(xdrs, &objp->nfl_util)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->nfl_first_stripe_index)) {
+	if (!xdr_u_int(xdrs, &objp->nfl_first_stripe_index)) {
 		return (FALSE);
 	}
 	if (!xdr_offset4(xdrs, &objp->nfl_pattern_offset)) {
@@ -2620,7 +2620,7 @@ xdr_ACCESS4args(xdrs, objp)
 	XDR *xdrs;
 	ACCESS4args *objp;
 {
-	if (!xdr_uint(xdrs, &objp->access)) {
+	if (!xdr_u_int(xdrs, &objp->access)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -2634,10 +2634,10 @@ xdr_ACCESS4resok(xdrs, objp)
 	XDR *xdrs;
 	ACCESS4resok *objp;
 {
-	if (!xdr_uint(xdrs, &objp->supported)) {
+	if (!xdr_u_int(xdrs, &objp->supported)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->access)) {
+	if (!xdr_u_int(xdrs, &objp->access)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -3474,10 +3474,10 @@ xdr_nfs_modified_limit4(xdrs, objp)
 	XDR *xdrs;
 	nfs_modified_limit4 *objp;
 {
-	if (!xdr_uint(xdrs, &objp->num_blocks)) {
+	if (!xdr_u_int(xdrs, &objp->num_blocks)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->bytes_per_block)) {
+	if (!xdr_u_int(xdrs, &objp->bytes_per_block)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -3496,7 +3496,7 @@ xdr_nfs_space_limit4(xdrs, objp)
 	}
 	switch (objp->limitby) {
 	case NFS_LIMIT_SIZE:
-		if (!xdr_uint64_t(xdrs, &objp->nfs_space_limit4_u.filesize)) {
+		if (!xdr_u_int64_t(xdrs, &objp->nfs_space_limit4_u.filesize)) {
 			return (FALSE);
 		}
 		break;
@@ -3613,10 +3613,10 @@ xdr_OPEN4args(xdrs, objp)
 	if (!xdr_seqid4(xdrs, &objp->seqid)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->share_access)) {
+	if (!xdr_u_int(xdrs, &objp->share_access)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->share_deny)) {
+	if (!xdr_u_int(xdrs, &objp->share_deny)) {
 		return (FALSE);
 	}
 	if (!xdr_open_owner4(xdrs, &objp->owner)) {
@@ -3763,7 +3763,7 @@ xdr_OPEN4resok(xdrs, objp)
 	if (!xdr_change_info4(xdrs, &objp->cinfo)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->rflags)) {
+	if (!xdr_u_int(xdrs, &objp->rflags)) {
 		return (FALSE);
 	}
 	if (!xdr_bitmap4(xdrs, &objp->attrset)) {
@@ -3890,10 +3890,10 @@ xdr_OPEN_DOWNGRADE4args(xdrs, objp)
 	if (!xdr_seqid4(xdrs, &objp->seqid)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->share_access)) {
+	if (!xdr_u_int(xdrs, &objp->share_access)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->share_deny)) {
+	if (!xdr_u_int(xdrs, &objp->share_deny)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -4403,7 +4403,7 @@ xdr_secinfo4(xdrs, objp)
 	XDR *xdrs;
 	secinfo4 *objp;
 {
-	if (!xdr_uint(xdrs, &objp->flavor)) {
+	if (!xdr_u_int(xdrs, &objp->flavor)) {
 		return (FALSE);
 	}
 	switch (objp->flavor) {
@@ -4499,7 +4499,7 @@ xdr_SETCLIENTID4args(xdrs, objp)
 	if (!xdr_cb_client4(xdrs, &objp->callback)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->callback_ident)) {
+	if (!xdr_u_int(xdrs, &objp->callback_ident)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -4769,14 +4769,14 @@ xdr_callback_sec_parms4(xdrs, objp)
 	XDR *xdrs;
 	callback_sec_parms4 *objp;
 {
-	if (!xdr_uint(xdrs, &objp->cb_secflavor)) {
+	if (!xdr_u_int(xdrs, &objp->cb_secflavor)) {
 		return (FALSE);
 	}
 	switch (objp->cb_secflavor) {
 	case AUTH_NONE:
 		break;
 	case AUTH_UNIX:
-		if (!xdr_authsys_parms(xdrs, &objp->callback_sec_parms4_u.cbsp_sys_cred)) {
+		if (!xdr_authunix_parms(xdrs, &objp->callback_sec_parms4_u.cbsp_sys_cred)) {
 			return (FALSE);
 		}
 		break;
@@ -4799,7 +4799,7 @@ xdr_BACKCHANNEL_CTL4args(xdrs, objp)
 	XDR *xdrs;
 	BACKCHANNEL_CTL4args *objp;
 {
-	if (!xdr_uint(xdrs, &objp->bca_cb_program)) {
+	if (!xdr_u_int(xdrs, &objp->bca_cb_program)) {
 		return (FALSE);
 	}
 	if (!xdr_array(xdrs, (char **)&objp->bca_sec_parms.bca_sec_parms_val, (u_int *)&objp->bca_sec_parms.bca_sec_parms_len, ~0, sizeof(callback_sec_parms4), xdr_callback_sec_parms4)) {
@@ -4945,10 +4945,10 @@ xdr_ssv_sp_parms4(xdrs, objp)
 	if (!xdr_array(xdrs, (char **)&objp->ssp_encr_algs.ssp_encr_algs_val, (u_int *)&objp->ssp_encr_algs.ssp_encr_algs_len, ~0, sizeof(sec_oid4), xdr_sec_oid4)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->ssp_window)) {
+	if (!xdr_u_int(xdrs, &objp->ssp_window)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->ssp_num_gss_handles)) {
+	if (!xdr_u_int(xdrs, &objp->ssp_num_gss_handles)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -5009,7 +5009,7 @@ xdr_EXCHANGE_ID4args(xdrs, objp)
 	if (!xdr_client_owner4(xdrs, &objp->eia_clientowner)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->eia_flags)) {
+	if (!xdr_u_int(xdrs, &objp->eia_flags)) {
 		return (FALSE);
 	}
 	if (!xdr_state_protect4_a(xdrs, &objp->eia_state_protect)) {
@@ -5032,16 +5032,16 @@ xdr_ssv_prot_info4(xdrs, objp)
 	if (!xdr_state_protect_ops4(xdrs, &objp->spi_ops)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->spi_hash_alg)) {
+	if (!xdr_u_int(xdrs, &objp->spi_hash_alg)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->spi_encr_alg)) {
+	if (!xdr_u_int(xdrs, &objp->spi_encr_alg)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->spi_ssv_len)) {
+	if (!xdr_u_int(xdrs, &objp->spi_ssv_len)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->spi_window)) {
+	if (!xdr_u_int(xdrs, &objp->spi_window)) {
 		return (FALSE);
 	}
 	if (!xdr_array(xdrs, (char **)&objp->spi_handles.spi_handles_val, (u_int *)&objp->spi_handles.spi_handles_len, ~0, sizeof(gsshandle4_t), xdr_gsshandle4_t)) {
@@ -5094,7 +5094,7 @@ xdr_EXCHANGE_ID4resok(xdrs, objp)
 	if (!xdr_sequenceid4(xdrs, &objp->eir_sequenceid)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->eir_flags)) {
+	if (!xdr_u_int(xdrs, &objp->eir_flags)) {
 		return (FALSE);
 	}
 	if (!xdr_state_protect4_r(xdrs, &objp->eir_state_protect)) {
@@ -5159,7 +5159,7 @@ xdr_channel_attrs4(xdrs, objp)
 	if (!xdr_count4(xdrs, &objp->ca_maxrequests)) {
 		return (FALSE);
 	}
-	if (!xdr_array(xdrs, (char **)&objp->ca_rdma_ird.ca_rdma_ird_val, (u_int *)&objp->ca_rdma_ird.ca_rdma_ird_len, 1, sizeof(uint32_t), xdr_uint)) {
+	if (!xdr_array(xdrs, (char **)&objp->ca_rdma_ird.ca_rdma_ird_val, (u_int *)&objp->ca_rdma_ird.ca_rdma_ird_len, 1, sizeof(uint32_t), xdr_u_int)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -5179,7 +5179,7 @@ xdr_CREATE_SESSION4args(xdrs, objp)
 	if (!xdr_sequenceid4(xdrs, &objp->csa_sequence)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->csa_flags)) {
+	if (!xdr_u_int(xdrs, &objp->csa_flags)) {
 		return (FALSE);
 	}
 	if (!xdr_channel_attrs4(xdrs, &objp->csa_fore_chan_attrs)) {
@@ -5188,7 +5188,7 @@ xdr_CREATE_SESSION4args(xdrs, objp)
 	if (!xdr_channel_attrs4(xdrs, &objp->csa_back_chan_attrs)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->csa_cb_program)) {
+	if (!xdr_u_int(xdrs, &objp->csa_cb_program)) {
 		return (FALSE);
 	}
 	if (!xdr_array(xdrs, (char **)&objp->csa_sec_parms.csa_sec_parms_val, (u_int *)&objp->csa_sec_parms.csa_sec_parms_len, ~0, sizeof(callback_sec_parms4), xdr_callback_sec_parms4)) {
@@ -5211,7 +5211,7 @@ xdr_CREATE_SESSION4resok(xdrs, objp)
 	if (!xdr_sequenceid4(xdrs, &objp->csr_sequence)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->csr_flags)) {
+	if (!xdr_u_int(xdrs, &objp->csr_flags)) {
 		return (FALSE);
 	}
 	if (!xdr_channel_attrs4(xdrs, &objp->csr_fore_chan_attrs)) {
@@ -5945,7 +5945,7 @@ xdr_SEQUENCE4resok(xdrs, objp)
 	if (!xdr_slotid4(xdrs, &objp->sr_target_highest_slotid)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->sr_status_flags)) {
+	if (!xdr_u_int(xdrs, &objp->sr_status_flags)) {
 		return (FALSE);
 	}
 	return (TRUE);
@@ -6136,7 +6136,7 @@ xdr_WANT_DELEGATION4args(xdrs, objp)
 	XDR *xdrs;
 	WANT_DELEGATION4args *objp;
 {
-	if (!xdr_uint(xdrs, &objp->wda_want)) {
+	if (!xdr_u_int(xdrs, &objp->wda_want)) {
 		return (FALSE);
 	}
 	if (!xdr_deleg_claim4(xdrs, &objp->wda_claim)) {
@@ -6832,7 +6832,7 @@ xdr_COMPOUND4args(xdrs, objp)
 	if (!xdr_utf8str_cs(xdrs, &objp->tag)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->minorversion)) {
+	if (!xdr_u_int(xdrs, &objp->minorversion)) {
 		return (FALSE);
 	}
 	if (!xdr_array(xdrs, (char **)&objp->argarray.argarray_val, (u_int *)&objp->argarray.argarray_len, ~0, sizeof(nfs_argop4), xdr_nfs_argop4)) {
@@ -7308,7 +7308,7 @@ xdr_CB_RECALL_ANY4args(xdrs, objp)
 	XDR *xdrs;
 	CB_RECALL_ANY4args *objp;
 {
-	if (!xdr_uint(xdrs, &objp->craa_objects_to_keep)) {
+	if (!xdr_u_int(xdrs, &objp->craa_objects_to_keep)) {
 		return (FALSE);
 	}
 	if (!xdr_bitmap4(xdrs, &objp->craa_type_mask)) {
@@ -7828,10 +7828,10 @@ xdr_CB_COMPOUND4args(xdrs, objp)
 	if (!xdr_utf8str_cs(xdrs, &objp->tag)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->minorversion)) {
+	if (!xdr_u_int(xdrs, &objp->minorversion)) {
 		return (FALSE);
 	}
-	if (!xdr_uint(xdrs, &objp->callback_ident)) {
+	if (!xdr_u_int(xdrs, &objp->callback_ident)) {
 		return (FALSE);
 	}
 	if (!xdr_array(xdrs, (char **)&objp->argarray.argarray_val, (u_int *)&objp->argarray.argarray_len, ~0, sizeof(nfs_cb_argop4), xdr_nfs_cb_argop4)) {
