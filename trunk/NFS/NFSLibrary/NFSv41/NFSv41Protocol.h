@@ -1,5 +1,5 @@
-#ifndef __IncNFSV3Protocolh
-#define __IncNFSV3Protocolh
+#ifndef __IncNFSV41Protocolh
+#define __IncNFSV41Protocolh
 
 #pragma pack(1)
 
@@ -6361,6 +6361,6 @@ extern CB_COMPOUND4res *cb_compound_1();
 enum authparam
 {
 	RPCSEC_GSS = 6
-}
+};
 
 #endif
