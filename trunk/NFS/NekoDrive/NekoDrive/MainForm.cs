@@ -11,6 +11,7 @@ using System.Management;
 using NekoDrive.NFS.Wrappers;
 using Dokan;
 using NekoDrive.NFS;
+using System.Threading;
 
 namespace NekoDrive
 {
@@ -90,26 +91,24 @@ namespace NekoDrive
                 throw new ApplicationException("NFS object is null!");
 
             string strDev = (string)cboxRemoteDevices.SelectedItem;
-
-            if (mNFS.MountDevice(strDev) == NFSResult.NFS_SUCCESS)
+            char cDrive = ((string)cboxLocalDrive.SelectedItem).ToCharArray()[0];
+            if (MainForm.Instance.mNFS.MountDevice(strDev) == NFSResult.NFS_SUCCESS)
             {
-                DokanOptions dokanOptions = new DokanOptions();
-                dokanOptions.DebugMode = true;
-                dokanOptions.DriveLetter = ((string)cboxLocalDrive.SelectedItem).ToCharArray()[0];
-                dokanOptions.NetworkDrive = true;
-                dokanOptions.ThreadCount = 1;
-                dokanOptions.UseAltStream = false;
-                dokanOptions.UseKeepAlive = true;
-                dokanOptions.UseStdErr = false;
-                dokanOptions.VolumeLabel = "NekoDrive on " + ipAddressControl1.ToString();
-                Operations nfsOperations = new Operations();
-                if (DokanNet.DokanMain(dokanOptions, nfsOperations) == 0)
-                {
-                    cboxLocalDrive.Enabled = false;
-                    cboxRemoteDevices.Enabled = false;
-                    btnMount.Enabled = false;
-                    btnUnmount.Enabled = true;
-                }
+                cboxLocalDrive.Enabled = false;
+                cboxRemoteDevices.Enabled = false;
+                btnMount.Enabled = false;
+                btnUnmount.Enabled = true;
+                ThreadPool.QueueUserWorkItem(new WaitCallback(
+                    delegate
+                    {
+                        System.IO.Directory.SetCurrentDirectory(Application.StartupPath);
+                        DokanOptions dokanOptions = new DokanOptions();
+                        dokanOptions.DebugMode = true;
+                        dokanOptions.DriveLetter = cDrive;
+                        dokanOptions.ThreadCount = 5;
+                        Operations nfsOperations = new Operations();
+                        DokanNet.DokanMain(dokanOptions, nfsOperations);
+                    }));
             }
             else
                 throw new ApplicationException("Mount error (" + mNFS.GetLastError() + ")");
