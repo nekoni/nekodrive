@@ -31,23 +31,25 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.gbTargetConnection = new System.Windows.Forms.GroupBox();
+            this.tbGroupId = new System.Windows.Forms.TextBox();
+            this.tbUserId = new System.Windows.Forms.TextBox();
+            this.lblGroupId = new System.Windows.Forms.Label();
+            this.lblUserId = new System.Windows.Forms.Label();
+            this.ipAddressControl1 = new NekoDrive.Controls.IPAddressControl();
             this.lblTimeOut = new System.Windows.Forms.Label();
             this.nupTimeOut = new System.Windows.Forms.NumericUpDown();
             this.lblCurrentFile = new System.Windows.Forms.Label();
             this.cboxVer = new System.Windows.Forms.ComboBox();
-            this.lblUserId = new System.Windows.Forms.Label();
-            this.lblGroupId = new System.Windows.Forms.Label();
-            this.tbUserId = new System.Windows.Forms.TextBox();
-            this.tbGroupId = new System.Windows.Forms.TextBox();
+            this.btnDisconnect = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
             this.gboxMount = new System.Windows.Forms.GroupBox();
-            this.lblRemoteDevices = new System.Windows.Forms.Label();
-            this.cboxRemoteDevices = new System.Windows.Forms.ComboBox();
             this.lblLocalDrive = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.lblRemoteDevices = new System.Windows.Forms.Label();
+            this.cboxLocalDrive = new System.Windows.Forms.ComboBox();
+            this.cboxRemoteDevices = new System.Windows.Forms.ComboBox();
+            this.btnUnmount = new System.Windows.Forms.Button();
             this.btnMount = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.ipAddressControl1 = new NekoDrive.Controls.IPAddressControl();
             this.gbTargetConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).BeginInit();
             this.gboxMount.SuspendLayout();
@@ -66,6 +68,7 @@
             this.gbTargetConnection.Controls.Add(this.nupTimeOut);
             this.gbTargetConnection.Controls.Add(this.lblCurrentFile);
             this.gbTargetConnection.Controls.Add(this.cboxVer);
+            this.gbTargetConnection.Controls.Add(this.btnDisconnect);
             this.gbTargetConnection.Controls.Add(this.btnConnect);
             this.gbTargetConnection.Location = new System.Drawing.Point(12, 12);
             this.gbTargetConnection.Name = "gbTargetConnection";
@@ -73,6 +76,50 @@
             this.gbTargetConnection.TabIndex = 5;
             this.gbTargetConnection.TabStop = false;
             this.gbTargetConnection.Text = "Target Connection";
+            // 
+            // tbGroupId
+            // 
+            this.tbGroupId.Location = new System.Drawing.Point(176, 49);
+            this.tbGroupId.Name = "tbGroupId";
+            this.tbGroupId.Size = new System.Drawing.Size(61, 20);
+            this.tbGroupId.TabIndex = 12;
+            this.tbGroupId.Text = "0";
+            // 
+            // tbUserId
+            // 
+            this.tbUserId.Location = new System.Drawing.Point(50, 49);
+            this.tbUserId.Name = "tbUserId";
+            this.tbUserId.Size = new System.Drawing.Size(61, 20);
+            this.tbUserId.TabIndex = 12;
+            this.tbUserId.Text = "0";
+            // 
+            // lblGroupId
+            // 
+            this.lblGroupId.AutoSize = true;
+            this.lblGroupId.Location = new System.Drawing.Point(125, 52);
+            this.lblGroupId.Name = "lblGroupId";
+            this.lblGroupId.Size = new System.Drawing.Size(45, 13);
+            this.lblGroupId.TabIndex = 11;
+            this.lblGroupId.Text = "GroupId";
+            // 
+            // lblUserId
+            // 
+            this.lblUserId.AutoSize = true;
+            this.lblUserId.Location = new System.Drawing.Point(6, 52);
+            this.lblUserId.Name = "lblUserId";
+            this.lblUserId.Size = new System.Drawing.Size(38, 13);
+            this.lblUserId.TabIndex = 11;
+            this.lblUserId.Text = "UserId";
+            // 
+            // ipAddressControl1
+            // 
+            this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
+            this.ipAddressControl1.Location = new System.Drawing.Point(6, 21);
+            this.ipAddressControl1.MinimumSize = new System.Drawing.Size(112, 20);
+            this.ipAddressControl1.Name = "ipAddressControl1";
+            this.ipAddressControl1.ReadOnly = false;
+            this.ipAddressControl1.Size = new System.Drawing.Size(112, 20);
+            this.ipAddressControl1.TabIndex = 10;
             // 
             // lblTimeOut
             // 
@@ -126,39 +173,15 @@
             this.cboxVer.Size = new System.Drawing.Size(46, 21);
             this.cboxVer.TabIndex = 4;
             // 
-            // lblUserId
+            // btnDisconnect
             // 
-            this.lblUserId.AutoSize = true;
-            this.lblUserId.Location = new System.Drawing.Point(7, 60);
-            this.lblUserId.Name = "lblUserId";
-            this.lblUserId.Size = new System.Drawing.Size(38, 13);
-            this.lblUserId.TabIndex = 11;
-            this.lblUserId.Text = "UserId";
-            // 
-            // lblGroupId
-            // 
-            this.lblGroupId.AutoSize = true;
-            this.lblGroupId.Location = new System.Drawing.Point(177, 60);
-            this.lblGroupId.Name = "lblGroupId";
-            this.lblGroupId.Size = new System.Drawing.Size(45, 13);
-            this.lblGroupId.TabIndex = 11;
-            this.lblGroupId.Text = "GroupId";
-            // 
-            // tbUserId
-            // 
-            this.tbUserId.Location = new System.Drawing.Point(70, 57);
-            this.tbUserId.Name = "tbUserId";
-            this.tbUserId.Size = new System.Drawing.Size(100, 20);
-            this.tbUserId.TabIndex = 12;
-            this.tbUserId.Text = "0";
-            // 
-            // tbGroupId
-            // 
-            this.tbGroupId.Location = new System.Drawing.Point(233, 57);
-            this.tbGroupId.Name = "tbGroupId";
-            this.tbGroupId.Size = new System.Drawing.Size(100, 20);
-            this.tbGroupId.TabIndex = 12;
-            this.tbGroupId.Text = "0";
+            this.btnDisconnect.Location = new System.Drawing.Point(297, 47);
+            this.btnDisconnect.Name = "btnDisconnect";
+            this.btnDisconnect.Size = new System.Drawing.Size(75, 23);
+            this.btnDisconnect.TabIndex = 3;
+            this.btnDisconnect.Text = "Disconnect";
+            this.btnDisconnect.UseVisualStyleBackColor = true;
+            this.btnDisconnect.Click += new System.EventHandler(this.btnDisconnect_Click);
             // 
             // btnConnect
             // 
@@ -168,13 +191,15 @@
             this.btnConnect.TabIndex = 3;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
             // gboxMount
             // 
             this.gboxMount.Controls.Add(this.lblLocalDrive);
             this.gboxMount.Controls.Add(this.lblRemoteDevices);
-            this.gboxMount.Controls.Add(this.comboBox1);
+            this.gboxMount.Controls.Add(this.cboxLocalDrive);
             this.gboxMount.Controls.Add(this.cboxRemoteDevices);
+            this.gboxMount.Controls.Add(this.btnUnmount);
             this.gboxMount.Controls.Add(this.btnMount);
             this.gboxMount.Location = new System.Drawing.Point(12, 109);
             this.gboxMount.Name = "gboxMount";
@@ -182,24 +207,6 @@
             this.gboxMount.TabIndex = 6;
             this.gboxMount.TabStop = false;
             this.gboxMount.Text = "Mount";
-            // 
-            // lblRemoteDevices
-            // 
-            this.lblRemoteDevices.AutoSize = true;
-            this.lblRemoteDevices.Location = new System.Drawing.Point(14, 23);
-            this.lblRemoteDevices.Name = "lblRemoteDevices";
-            this.lblRemoteDevices.Size = new System.Drawing.Size(86, 13);
-            this.lblRemoteDevices.TabIndex = 2;
-            this.lblRemoteDevices.Text = "Remote Devices";
-            // 
-            // cboxRemoteDevices
-            // 
-            this.cboxRemoteDevices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboxRemoteDevices.FormattingEnabled = true;
-            this.cboxRemoteDevices.Location = new System.Drawing.Point(106, 19);
-            this.cboxRemoteDevices.Name = "cboxRemoteDevices";
-            this.cboxRemoteDevices.Size = new System.Drawing.Size(121, 21);
-            this.cboxRemoteDevices.TabIndex = 3;
             // 
             // lblLocalDrive
             // 
@@ -210,14 +217,42 @@
             this.lblLocalDrive.TabIndex = 2;
             this.lblLocalDrive.Text = "Local Drive";
             // 
-            // comboBox1
+            // lblRemoteDevices
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(106, 47);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(32, 21);
-            this.comboBox1.TabIndex = 3;
+            this.lblRemoteDevices.AutoSize = true;
+            this.lblRemoteDevices.Location = new System.Drawing.Point(14, 23);
+            this.lblRemoteDevices.Name = "lblRemoteDevices";
+            this.lblRemoteDevices.Size = new System.Drawing.Size(86, 13);
+            this.lblRemoteDevices.TabIndex = 2;
+            this.lblRemoteDevices.Text = "Remote Devices";
+            // 
+            // cboxLocalDrive
+            // 
+            this.cboxLocalDrive.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboxLocalDrive.FormattingEnabled = true;
+            this.cboxLocalDrive.Location = new System.Drawing.Point(106, 47);
+            this.cboxLocalDrive.Name = "cboxLocalDrive";
+            this.cboxLocalDrive.Size = new System.Drawing.Size(32, 21);
+            this.cboxLocalDrive.TabIndex = 3;
+            // 
+            // cboxRemoteDevices
+            // 
+            this.cboxRemoteDevices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboxRemoteDevices.FormattingEnabled = true;
+            this.cboxRemoteDevices.Location = new System.Drawing.Point(106, 19);
+            this.cboxRemoteDevices.Name = "cboxRemoteDevices";
+            this.cboxRemoteDevices.Size = new System.Drawing.Size(121, 21);
+            this.cboxRemoteDevices.TabIndex = 3;
+            // 
+            // btnUnmount
+            // 
+            this.btnUnmount.Location = new System.Drawing.Point(297, 48);
+            this.btnUnmount.Name = "btnUnmount";
+            this.btnUnmount.Size = new System.Drawing.Size(75, 23);
+            this.btnUnmount.TabIndex = 3;
+            this.btnUnmount.Text = "Unmount";
+            this.btnUnmount.UseVisualStyleBackColor = true;
+            this.btnUnmount.Click += new System.EventHandler(this.btnUnmount_Click);
             // 
             // btnMount
             // 
@@ -227,22 +262,13 @@
             this.btnMount.TabIndex = 3;
             this.btnMount.Text = "Mount";
             this.btnMount.UseVisualStyleBackColor = true;
+            this.btnMount.Click += new System.EventHandler(this.btnMount_Click);
             // 
             // notifyIcon
             // 
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "NekoDrive";
             this.notifyIcon.Visible = true;
-            // 
-            // ipAddressControl1
-            // 
-            this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
-            this.ipAddressControl1.Location = new System.Drawing.Point(6, 21);
-            this.ipAddressControl1.MinimumSize = new System.Drawing.Size(112, 20);
-            this.ipAddressControl1.Name = "ipAddressControl1";
-            this.ipAddressControl1.ReadOnly = false;
-            this.ipAddressControl1.Size = new System.Drawing.Size(112, 20);
-            this.ipAddressControl1.TabIndex = 10;
             // 
             // MainForm
             // 
@@ -256,6 +282,8 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "NekoDrive Settings";
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.gbTargetConnection.ResumeLayout(false);
             this.gbTargetConnection.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).EndInit();
@@ -281,10 +309,12 @@
         private System.Windows.Forms.GroupBox gboxMount;
         private System.Windows.Forms.Label lblLocalDrive;
         private System.Windows.Forms.Label lblRemoteDevices;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cboxLocalDrive;
         private System.Windows.Forms.ComboBox cboxRemoteDevices;
         private System.Windows.Forms.Button btnMount;
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.Button btnUnmount;
+        private System.Windows.Forms.Button btnDisconnect;
 
     }
 }
