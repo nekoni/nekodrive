@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Dokan;
 using NekoDrive.NFS.Wrappers;
+using System.Collections;
+using System.IO;
 
 namespace NekoDrive.NFS
 {
@@ -45,10 +47,10 @@ namespace NekoDrive.NFS
                 {
                     if (buffer != null)
                     {
-                        int mReadBytes = MainForm.Instance.mNFS.Read((ulong)offset, (uint) buffer.Length, ref buffer);
+                        int mReadBytes = MainForm.Instance.mNFS.Read((ulong)offset, (uint)buffer.Length, ref buffer);
                         if (mReadBytes != -1)
                         {
-                            readBytes = (uint) mReadBytes;
+                            readBytes = (uint)mReadBytes;
                             ret = 0;
                         }
                     }
@@ -70,10 +72,10 @@ namespace NekoDrive.NFS
                 {
                     if (buffer != null)
                     {
-                        int mWrittenBytes = MainForm.Instance.mNFS.Write((ulong)offset, (uint) buffer.Length, buffer);
+                        int mWrittenBytes = MainForm.Instance.mNFS.Write((ulong)offset, (uint)buffer.Length, buffer);
                         if (mWrittenBytes != -1)
                         {
-                            writtenBytes = (uint) mWrittenBytes;
+                            writtenBytes = (uint)mWrittenBytes;
                             ret = 0;
                         }
                     }
@@ -112,7 +114,26 @@ namespace NekoDrive.NFS
 
         public int FindFiles(string filename, System.Collections.ArrayList files, DokanFileInfo info)
         {
-            throw new NotImplementedException();
+            if (MainForm.Instance.mNFS.ChangeCurrentDirectory(filename) == NFSResult.NFS_SUCCESS)
+            {
+                foreach (string strItem in MainForm.Instance.mNFS.GetItemList())
+                {
+                    NFSAttributes nfsAttributes = MainForm.Instance.mNFS.GetItemAttributes(strItem);
+                    if (nfsAttributes != null)
+                    {
+                        FileInformation fi = new FileInformation();
+                        fi.Attributes = nfsAttributes.type == NFSType.NFDIR ? FileAttributes.Directory : FileAttributes.Normal;
+                        fi.CreationTime = nfsAttributes.dateTime;
+                        fi.LastAccessTime = nfsAttributes.dateTime;
+                        fi.LastWriteTime = nfsAttributes.dateTime;
+                        fi.Length = (long) nfsAttributes.size;
+                        fi.FileName = strItem;
+                        files.Add(fi);
+                    }
+                    return 0;
+                }
+            }
+            return -1;
         }
 
         public int SetFileAttributes(string filename, System.IO.FileAttributes attr, DokanFileInfo info)
@@ -162,12 +183,15 @@ namespace NekoDrive.NFS
 
         public int GetDiskFreeSpace(ref ulong freeBytesAvailable, ref ulong totalBytes, ref ulong totalFreeBytes, DokanFileInfo info)
         {
+            freeBytesAvailable = 1024ul * 1024 * 1024 * 10;
+            totalBytes = 1024ul * 1024 * 1024 * 20;
+            totalFreeBytes = 1024ul * 1024 * 1024 * 10;
             return 0;
         }
 
         public int Unmount(DokanFileInfo info)
         {
-            return 0;
+            return (int) MainForm.Instance.mNFS.UnMountDevice();
         }
 
         #endregion
