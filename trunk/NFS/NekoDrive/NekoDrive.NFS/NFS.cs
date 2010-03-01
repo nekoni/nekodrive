@@ -18,8 +18,11 @@ namespace NekoDrive.NFS
         }
 
         public event NFSDataEventHandler DataEvent;
-
+        
         private INFS nfsInterface = null;
+
+        public bool IsMounted = false;
+        public bool IsConnected = false;
 
         public NFS(NFSVersion Version)
         {
@@ -51,12 +54,18 @@ namespace NekoDrive.NFS
 
         public NFSResult Connect(IPAddress Address, Int32 UserId, Int32 GroupId, Int32 CommandTimeout)
         {
-            return nfsInterface.Connect(Address, UserId, GroupId, CommandTimeout);
+            NFSResult res = nfsInterface.Connect(Address, UserId, GroupId, CommandTimeout);
+            if (res == NFSResult.NFS_SUCCESS)
+                IsConnected = true;
+            return res;
         }
 
         public NFSResult Disconnect()
         {
-            return nfsInterface.Disconnect();
+            NFSResult res = nfsInterface.Disconnect();
+            if (res == NFSResult.NFS_SUCCESS)
+                IsConnected = false;
+            return res;
         }
 
         public List<String> GetExportedDevices()
@@ -77,12 +86,18 @@ namespace NekoDrive.NFS
 
         public NFSResult MountDevice(String DeviceName)
         {
-            return nfsInterface.MountDevice(DeviceName);
+            NFSResult res = nfsInterface.MountDevice(DeviceName);
+            if(res == NFSResult.NFS_SUCCESS)
+                IsMounted = true;
+            return res;
         }
 
         public NFSResult UnMountDevice()
         {
-            return nfsInterface.UnMountDevice();
+            NFSResult res = nfsInterface.UnMountDevice();
+            if (res == NFSResult.NFS_SUCCESS)
+                IsMounted = false;
+            return res;
         }
 
         public List<String> GetItemList()
