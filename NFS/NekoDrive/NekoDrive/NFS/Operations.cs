@@ -130,8 +130,8 @@ namespace NekoDrive.NFS
                         fi.FileName = strItem;
                         files.Add(fi);
                     }
-                    return 0;
                 }
+                return 0;
             }
             return -1;
         }
