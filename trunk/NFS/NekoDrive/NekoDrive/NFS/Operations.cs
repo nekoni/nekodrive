@@ -14,16 +14,27 @@ namespace NekoDrive.NFS
 
         public int CreateFile(string filename, System.IO.FileAccess access, System.IO.FileShare share, System.IO.FileMode mode, System.IO.FileOptions options, DokanFileInfo info)
         {
+            filename = filename.Replace("\\", "");
+            if (filename == string.Empty)
+                filename = ".";
+            if (access == FileAccess.Read)
+                return 0;
             return (int) MainForm.Instance.mNFS.CreateFile(filename);
         }
 
         public int OpenDirectory(string filename, DokanFileInfo info)
         {
+            filename = filename.Replace("\\", "");
+            if (filename == string.Empty)
+                filename = ".";
             return (int)MainForm.Instance.mNFS.ChangeCurrentDirectory(filename);
         }
 
         public int CreateDirectory(string filename, DokanFileInfo info)
         {
+            filename = filename.Replace("\\", "");
+            if (filename == string.Empty)
+                filename = ".";
             return (int)MainForm.Instance.mNFS.CreateDirectory(filename);
         }
 
@@ -40,6 +51,9 @@ namespace NekoDrive.NFS
 
         public int ReadFile(string filename, byte[] buffer, ref uint readBytes, long offset, DokanFileInfo info)
         {
+            filename = filename.Replace("\\", "");
+            if (filename == string.Empty)
+                filename = ".";
             int ret = -1;
             try
             {
@@ -47,7 +61,9 @@ namespace NekoDrive.NFS
                 {
                     if (buffer != null)
                     {
-                        int mReadBytes = MainForm.Instance.mNFS.Read((ulong)offset, (uint)buffer.Length, ref buffer);
+                        byte[] iBuffer = null;
+                        int mReadBytes = MainForm.Instance.mNFS.Read((ulong)offset, (uint)buffer.Length, ref iBuffer);
+                        Array.Copy(iBuffer, buffer, mReadBytes);
                         if (mReadBytes != -1)
                         {
                             readBytes = (uint)mReadBytes;
@@ -65,6 +81,9 @@ namespace NekoDrive.NFS
 
         public int WriteFile(string filename, byte[] buffer, ref uint writtenBytes, long offset, DokanFileInfo info)
         {
+            filename = filename.Replace("\\", "");
+            if (filename == string.Empty)
+                filename = ".";
             int ret = -1;
             try
             {
@@ -95,6 +114,9 @@ namespace NekoDrive.NFS
 
         public int GetFileInformation(string filename, FileInformation fileinfo, DokanFileInfo info)
         {
+            filename = filename.Replace("\\", "");
+            if (filename == string.Empty)
+                filename = ".";
             NFSAttributes nfsAttributes =  MainForm.Instance.mNFS.GetItemAttributes(filename);
             if (nfsAttributes == null)
                 return -1;
@@ -114,6 +136,9 @@ namespace NekoDrive.NFS
 
         public int FindFiles(string filename, System.Collections.ArrayList files, DokanFileInfo info)
         {
+            filename = filename.Replace("\\", "");
+            if (filename == string.Empty)
+                filename = ".";
             if (MainForm.Instance.mNFS.ChangeCurrentDirectory(filename) == NFSResult.NFS_SUCCESS)
             {
                 foreach (string strItem in MainForm.Instance.mNFS.GetItemList())
@@ -148,16 +173,25 @@ namespace NekoDrive.NFS
 
         public int DeleteFile(string filename, DokanFileInfo info)
         {
+            filename = filename.Replace("\\", "");
+            if (filename == string.Empty)
+                filename = ".";
             return (int) MainForm.Instance.mNFS.DeleteFile(filename);
         }
 
         public int DeleteDirectory(string filename, DokanFileInfo info)
         {
+            filename = filename.Replace("\\", "");
+            if (filename == string.Empty)
+                filename = ".";
             return (int)MainForm.Instance.mNFS.DeleteDirectory(filename);
         }
 
         public int MoveFile(string filename, string newname, bool replace, DokanFileInfo info)
         {
+            filename = filename.Replace("\\", "");
+            if (filename == string.Empty)
+                filename = ".";
             return (int)MainForm.Instance.mNFS.Rename(filename, newname);
         }
 
