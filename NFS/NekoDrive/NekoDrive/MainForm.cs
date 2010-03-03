@@ -73,13 +73,12 @@ namespace NekoDrive
 
             if (mNFS.UnMountDevice() == NFSResult.NFS_SUCCESS)
             {
-                if (DokanNet.DokanUnmount(((string)cboxLocalDrive.SelectedItem).ToCharArray()[0]) == 0)
-                {
-                    cboxLocalDrive.Enabled = true;
-                    cboxRemoteDevices.Enabled = true;
-                    btnMount.Enabled = true;
-                    btnUnmount.Enabled = false;
-                }
+                int res = DokanNet.DokanUnmount(((string)cboxLocalDrive.SelectedItem).ToCharArray()[0]);
+                cboxLocalDrive.Enabled = true;
+                cboxRemoteDevices.Enabled = true;
+                btnMount.Enabled = true;
+                btnUnmount.Enabled = false;
+                
             }
             else
                 throw new ApplicationException("Unmount error (" + mNFS.GetLastError() + ")");
@@ -105,7 +104,9 @@ namespace NekoDrive
                         DokanOptions dokanOptions = new DokanOptions();
                         dokanOptions.DebugMode = true;
                         dokanOptions.DriveLetter = cDrive;
-                        dokanOptions.ThreadCount = 5;
+                        dokanOptions.UseKeepAlive = true;
+                        dokanOptions.VolumeLabel = "NekoDrive";
+                        dokanOptions.ThreadCount = 1;
                         Operations nfsOperations = new Operations();
                         DokanNet.DokanMain(dokanOptions, nfsOperations);
                     }));
