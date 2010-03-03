@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "oncrpc", "..\ONCRPC\oncrpc_win32_release_2\oncrpc\win32\librpc\lib\oncrpc.vcproj", "{68393948-88CA-4A68-9DC9-E437401D63AD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NFSv2", "NFSv2\NFSv2.vcproj", "{D4C71D94-BA6C-4BB0-BE7A-CFB29AC91A50}"
+	ProjectSection(ProjectDependencies) = postProject
+		{68393948-88CA-4A68-9DC9-E437401D63AD} = {68393948-88CA-4A68-9DC9-E437401D63AD}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestV2", "TestV2\TestV2.vcproj", "{14C80CE5-B224-401E-939E-C317BA4EBFD6}"
 EndProject
@@ -14,6 +17,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFSClient", "NFSClient\NFSClient.csproj", "{A1EE0B2E-46DB-4475-8A2A-6AA1966ED7D7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NFSv3", "NFSv3\NFSv3.vcproj", "{0201ECD4-F2D5-4066-8A4E-484B8674DD34}"
+	ProjectSection(ProjectDependencies) = postProject
+		{68393948-88CA-4A68-9DC9-E437401D63AD} = {68393948-88CA-4A68-9DC9-E437401D63AD}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rpcgen", "rpcgen\rpcgen.vcproj", "{965F975F-D32D-4CCE-9A53-2C3F9E5D3015}"
 EndProject
