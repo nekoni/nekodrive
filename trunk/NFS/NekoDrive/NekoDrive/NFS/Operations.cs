@@ -24,6 +24,7 @@ namespace NekoDrive.NFS
 
         public int OpenDirectory(string filename, DokanFileInfo info)
         {
+            return 0;
             filename = filename.Replace("\\", "");
             if (filename == string.Empty)
                 filename = ".";
@@ -57,20 +58,21 @@ namespace NekoDrive.NFS
             int ret = -1;
             try
             {
-                if (MainForm.Instance.mNFS.Open(filename) == NekoDrive.NFS.Wrappers.NFSResult.NFS_SUCCESS)
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    if (buffer != null)
+                    if (MainForm.Instance.mNFS.Read(filename, ms) == NekoDrive.NFS.Wrappers.NFSResult.NFS_SUCCESS)
                     {
-                        byte[] iBuffer = null;
-                        int mReadBytes = MainForm.Instance.mNFS.Read((ulong)offset, (uint)buffer.Length, ref iBuffer);
-                        Array.Copy(iBuffer, buffer, mReadBytes);
-                        if (mReadBytes != -1)
+                        if (buffer != null)
                         {
-                            readBytes = (uint)mReadBytes;
+                            byte[] iBuffer = ms.GetBuffer();
+                            int len = buffer.Length;
+                            if (iBuffer.Length < len)
+                                len = iBuffer.Length;
+                            Array.Copy(iBuffer, offset, buffer, 0, len);
+                            readBytes = (uint)len;
                             ret = 0;
                         }
                     }
-                    MainForm.Instance.mNFS.CloseFile();
                 }
             }
             catch
@@ -87,18 +89,11 @@ namespace NekoDrive.NFS
             int ret = -1;
             try
             {
-                if (MainForm.Instance.mNFS.Open(filename) == NekoDrive.NFS.Wrappers.NFSResult.NFS_SUCCESS)
+
+                using (MemoryStream ms = new MemoryStream(buffer))
                 {
-                    if (buffer != null)
-                    {
-                        int mWrittenBytes = MainForm.Instance.mNFS.Write((ulong)offset, (uint)buffer.Length, buffer);
-                        if (mWrittenBytes != -1)
-                        {
-                            writtenBytes = (uint)mWrittenBytes;
-                            ret = 0;
-                        }
-                    }
-                    MainForm.Instance.mNFS.CloseFile();
+                    ret = (int)MainForm.Instance.mNFS.Write(filename, offset, ms);
+                    writtenBytes = (uint)ms.Length;
                 }
             }
             catch
