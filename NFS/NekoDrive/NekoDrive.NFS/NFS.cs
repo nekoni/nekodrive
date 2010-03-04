@@ -262,40 +262,50 @@ namespace NekoDrive.NFS
             return Result;
         }
 
-        public NFSResult Write(String FileName, Stream InputStream)
+        public NFSResult Write(String FileName, long InputOffset, Stream InputStream)
         {
             NFSResult Result = NFSResult.NFS_ERROR;
             if (InputStream != null)
             {
-                if (NFSResult.NFS_SUCCESS == CreateFile(FileName))
+                if (!FileExists(FileName))
                 {
-                    if (NFSResult.NFS_SUCCESS == Open(FileName))
-                    {
-                        NFSAttributes nfsAttributes = GetItemAttributes(FileName);
-                        UInt64 Offset = 0;
-                        UInt32 Count = 4096;
-                        Int32 Bytes = 0;
-                        Byte[] Buffer = new Byte[Count];
-                        while ((Bytes = InputStream.Read(Buffer, 0, (Int32)Count)) > 0)
-                        {
-                            Int32 Res = Write(Offset, (UInt32)Bytes, Buffer);
-                            if (Res != -1)
-                            {
-                                Offset += (UInt32)Bytes;
-                                Result = NFSResult.NFS_SUCCESS;
-                            }
-                            else
-                            {
-                                Result = NFSResult.NFS_ERROR;
-                                break;
-                            }
-                        }
-                        CloseFile();
-                    }
+                    if (CreateFile(FileName) != NFSResult.NFS_SUCCESS)
+                        return NFSResult.NFS_ERROR;
                 }
+                
+                if (NFSResult.NFS_SUCCESS == Open(FileName))
+                {
+                    NFSAttributes nfsAttributes = GetItemAttributes(FileName);
+                    UInt64 Offset = (UInt64) InputOffset;
+                    UInt32 Count = 4096;
+                    Int32 Bytes = 0;
+                    Byte[] Buffer = new Byte[Count];
+                    while ((Bytes = InputStream.Read(Buffer, 0, (Int32)Count)) > 0)
+                    {
+                        Int32 Res = Write(Offset, (UInt32)Bytes, Buffer);
+                        if (Res != -1)
+                        {
+                            Offset += (UInt32)Bytes;
+                            Result = NFSResult.NFS_SUCCESS;
+                        }
+                        else
+                        {
+                            Result = NFSResult.NFS_ERROR;
+                            break;
+                        }
+                    }
+                    CloseFile();
+                }
+                
             }
 
             return Result;
+
+        }
+
+        public NFSResult Write(String FileName, Stream InputStream)
+        {
+            return Write(FileName, 0, InputStream);   
         }
 
         public Int32 Write(UInt64 Offset, UInt32 Count, Byte[] Buffer)
