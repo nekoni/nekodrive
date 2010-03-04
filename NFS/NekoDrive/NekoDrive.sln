@@ -24,6 +24,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rpcgen", "rpcgen\rpcgen.vcproj", "{965F975F-D32D-4CCE-9A53-2C3F9E5D3015}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NFSv41", "NFSv41\NFSv41.vcproj", "{96437040-E753-4897-AC88-F4B38BCDE865}"
+	ProjectSection(ProjectDependencies) = postProject
+		{68393948-88CA-4A68-9DC9-E437401D63AD} = {68393948-88CA-4A68-9DC9-E437401D63AD}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NekoDrive", "NekoDrive\NekoDrive.csproj", "{CE2F86C0-ED84-4EF8-B632-41EB5E43E0B8}"
 EndProject
