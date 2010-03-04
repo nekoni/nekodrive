@@ -119,6 +119,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="..\..\ONCRPC\oncrpc_win32_release_2\oncrpc\win32\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;NFSV41_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -137,7 +138,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="oncrpc.lib Ws2_32.lib msvcrt.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\Build\x86\Release"
+				IgnoreDefaultLibraryNames=" LIBCMT.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
