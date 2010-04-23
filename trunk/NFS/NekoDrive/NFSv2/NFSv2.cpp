@@ -47,6 +47,7 @@ CNFSv2::CNFSv2()
 	sSrvAddr.sin_family = AF_INET;
 	memset(nfsCurrentFile, 0, sizeof(FHSIZE));
 	memset(nfsCurrentDirectory, 0, sizeof(FHSIZE));
+	memset(nfsRootDirectory, 0, sizeof(FHSIZE));	
 	authType = AUTH_UNIX;
 	uid = -2;
 	gid = -2;
@@ -176,6 +177,7 @@ int CNFSv2::MountDevice(char* pDevice)
 				if (pFhStatus->status == (u_int) NFS_OK ) 
 				{
 					memcpy(nfsCurrentDirectory, pFhStatus->fhstatus_u.directory, FHSIZE);
+					memcpy(nfsRootDirectory, pFhStatus->fhstatus_u.directory, FHSIZE);
 					strCurrentDevice = pDevice;
 					Ret = NFS_SUCCESS;
 				} 
@@ -348,12 +350,20 @@ int CNFSv2::ChangeCurrentDirectory(char *pName)
 	int Ret = NFS_ERROR;
 	if(pName != NULL)
 	{
-		NFSData* pNfsData = (NFSData*) GetItemAttributes(pName);
-		if(pNfsData != NULL)
+		if(strcmp(pName, ".") ==0)
 		{
-			memcpy(nfsCurrentDirectory, pNfsData->Handle, FHSIZE);
-			ReleaseBuffer(pNfsData);
+			memcpy(nfsCurrentDirectory, nfsRootDirectory, FHSIZE);
 			Ret = NFS_SUCCESS;
+		}
+		else
+		{
+			NFSData* pNfsData = (NFSData*) GetItemAttributes(pName);
+			if(pNfsData != NULL)
+			{
+				memcpy(nfsCurrentDirectory, pNfsData->Handle, FHSIZE);
+				ReleaseBuffer(pNfsData);
+				Ret = NFS_SUCCESS;
+			}
 		}
 	}
 	else
@@ -616,6 +626,51 @@ int CNFSv2::Rename(char* pOldName, char* pNewName)
         nfsstat *pNfsStat;
 		memcpy(dpArgRename.from.dir, nfsCurrentDirectory, FHSIZE);
 		memcpy(dpArgRename.to.dir, nfsCurrentDirectory, FHSIZE);
+        dpArgRename.from.name = pOldName;
+		dpArgRename.to.name = pNewName;
+        if( (pNfsStat = nfsproc_rename_2(&dpArgRename, clntV2)) == NULL ) 
+			strLastError = clnt_sperror(clntV2, "nfsproc_rename_2");
+		else
+		{
+			if (*pNfsStat == NFS_OK) 
+				Ret = NFS_SUCCESS;
+			else 
+			{
+				char  buffer[200];
+				sprintf_s(buffer, 200, "nfsproc_rename_2 %d", pNfsStat);
+				strLastError = buffer;
+			}
+			xdr_free((xdrproc_t)xdr_nfsstat,(char*) pNfsStat);
+		}
+	}
+	else
+		strLastError = "Client is NULL";
+	return Ret;
+}
+
+int CNFSv2::Move(char* pOldFolder, char* pOldName, char* pNewFolder, char* pNewName)
+{
+	int Ret = NFS_ERROR;
+	if(clntV2 != NULL)
+	{
+		renameargs dpArgRename;
+        nfsstat *pNfsStat;
+		char CurrentHandle[FHSIZE];
+		memcpy(CurrentHandle, nfsCurrentDirectory, FHSIZE);
+		memcpy(nfsCurrentDirectory, nfsRootDirectory, FHSIZE);
+		NFSData* pNfsOldFolder = (NFSData*) GetItemAttributes(pOldFolder);
+		if(pNfsOldFolder != NULL)
+		{
+			memcpy(dpArgRename.from.dir, pNfsOldFolder->Handle, FHSIZE);
+			ReleaseBuffer(pNfsOldFolder);
+		}
+		NFSData* pNfsNewFolder = (NFSData*) GetItemAttributes(pNewFolder);
+		if(pNfsNewFolder != NULL)
+		{
+			memcpy(dpArgRename.to.dir, pNfsOldFolder->Handle, FHSIZE);
+			ReleaseBuffer(pNfsNewFolder);
+		}
+		memcpy(nfsCurrentDirectory, CurrentHandle, FHSIZE);
         dpArgRename.from.name = pOldName;
 		dpArgRename.to.name = pNewName;
         if( (pNfsStat = nfsproc_rename_2(&dpArgRename, clntV2)) == NULL ) 
