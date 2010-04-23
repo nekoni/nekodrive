@@ -236,5 +236,15 @@ namespace NekoDrive.NFS.Wrappers
         {
             return __NFSv3_GetLastNfsError(_nfsv3);
         }
+
+        #region INFS Members
+
+
+        public NFSResult Move(string OldDirectory, string OldName, string NewDirectory, string NewName)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

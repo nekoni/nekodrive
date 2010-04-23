@@ -27,7 +27,7 @@ namespace NekoDrive
 
         #region Properties
 
-        public static MainForm Instance
+        public static MainForm In
         {
             get
             {
@@ -91,7 +91,7 @@ namespace NekoDrive
 
             string strDev = (string)cboxRemoteDevices.SelectedItem;
             char cDrive = ((string)cboxLocalDrive.SelectedItem).ToCharArray()[0];
-            if (MainForm.Instance.mNFS.MountDevice(strDev) == NFSResult.NFS_SUCCESS)
+            if (MainForm.In.mNFS.MountDevice(strDev) == NFSResult.NFS_SUCCESS)
             {
                 cboxLocalDrive.Enabled = false;
                 cboxRemoteDevices.Enabled = false;
@@ -104,7 +104,7 @@ namespace NekoDrive
                         DokanOptions dokanOptions = new DokanOptions();
                         dokanOptions.DebugMode = true;
                         dokanOptions.DriveLetter = cDrive;
-                        dokanOptions.NetworkDrive = false;
+                        dokanOptions.NetworkDrive = true;
                         dokanOptions.UseKeepAlive = true;
                         dokanOptions.VolumeLabel = "NekoDrive";
                         dokanOptions.ThreadCount = 1;
@@ -199,6 +199,7 @@ namespace NekoDrive
                 c++;
             }
 
+            ipAddressControl1.Text = "192.168.56.102";
             gboxMount.Enabled = false;
             btnDisconnect.Enabled = false;
             btnUnmount.Enabled = false;

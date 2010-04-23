@@ -5,6 +5,7 @@ using NekoDrive.NFS.Wrappers;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.IO;
+using System.Collections;
 
 namespace NekoDrive.NFS
 {
@@ -23,6 +24,7 @@ namespace NekoDrive.NFS
 
         public bool IsMounted = false;
         public bool IsConnected = false;
+        public string CurrentDirectory = string.Empty;
 
         public NFS(NFSVersion Version)
         {
@@ -127,6 +129,23 @@ namespace NekoDrive.NFS
                 return nfsAttributes;
             }
             return null;
+        }
+
+        public NFSResult OpenDirectory(String Path)
+        {
+            NFSResult res = NFSResult.NFS_SUCCESS;
+            String[] Dirs = Path.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            if (Dirs.Length == 0)
+                return NFSResult.NFS_ERROR;
+            foreach (String Dir in Dirs)
+            {
+                if (nfsInterface.ChangeCurrentDirectory(Dir) != NFSResult.NFS_SUCCESS)
+                {
+                    res = NFSResult.NFS_ERROR;
+                    break;
+                }
+            }
+            return res;
         }
 
         public NFSResult ChangeCurrentDirectory(String DirectoryName)
@@ -347,6 +366,11 @@ namespace NekoDrive.NFS
             return nfsInterface.Rename(OldName, NewName);
         }
 
+        public NFSResult Move(String OldDirectoryName, String OldFileName, String NewDirectoryName, String NewFileName)
+        {
+            return nfsInterface.Move(OldDirectoryName, OldFileName, NewDirectoryName, NewFileName);
+        }
+
         public Boolean FileExists(String FileName)
         {
             return (GetItemAttributes(FileName) != null);
@@ -355,6 +379,13 @@ namespace NekoDrive.NFS
         public String GetLastError()
         {
             return nfsInterface.GetLastNfsError();
+        }
+
+        public String ConvertPath(String Path)
+        {
+            Path = Path.Replace("\\", "/");
+            Path = "." + Path;
+            return Path;
         }
     }
 }
