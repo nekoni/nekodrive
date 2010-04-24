@@ -90,6 +90,8 @@ public:
 	int Read(u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
 	int Write(u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
 	int Rename(char* pOldName, char* pNewName);
+	int GetItemHandle(char* Path, char* Handle);
+	int IsDirectory(char* Path);
 	int Move(char* pOldFolder, char* pOldName, char* pNewFolder, char* pNewName);
 	const char* GetLastNfsError();
 	int ChangeMode(char* pName, int Mode);

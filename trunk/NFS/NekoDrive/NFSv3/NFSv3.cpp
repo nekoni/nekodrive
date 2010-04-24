@@ -662,6 +662,136 @@ int CNFSv3::Rename(char* pOldName, char* pNewName)
 	return Ret;
 }
 
+int CNFSv3::GetItemHandle(char* Path, char* Handle)
+{
+	int Ret = NFS_ERROR;
+	char *pName;
+	char currentItem[FHSIZE];
+
+	memcpy(currentItem, nfsRootDirectory, FHSIZE);
+	pName = strtok(Path, "\\");
+	while(pName != NULL)
+	{
+		LOOKUP3args dpLookUpArgs;
+		LOOKUP3res *pLookUpRes;
+		dpLookUpArgs.what.dir.data.data_val = currentItem;
+		dpLookUpArgs.what.dir.data.data_len = FHSIZE;
+		dpLookUpArgs.what.name = pName;
+		
+		if( (pLookUpRes = nfsproc3_lookup_3(&dpLookUpArgs, clntV3)) == NULL ) 
+			strLastError = clnt_sperror(clntV3,"nfsproc3_lookup_3");
+		else
+		{
+			if (pLookUpRes->status == NFS3_OK) 
+			{
+				memcpy(currentItem, pLookUpRes->LOOKUP3res_u.resok.obj.data.data_val, pLookUpRes->LOOKUP3res_u.resok.obj.data.data_len);
+				Ret = NFS_SUCCESS;
+			}
+			else
+			{
+				Ret = NFS_ERROR;
+			}
+			xdr_free((xdrproc_t)xdr_LOOKUP3res,(char*) pLookUpRes);
+		}
+
+		pName = strtok(NULL, "\\");
+
+		if(Ret == NFS_ERROR)
+			break;
+	}
+
+	if(Ret != NFS_ERROR)
+		memcpy(Handle, currentItem, FHSIZE);
+
+	return Ret;
+}
+
+int CNFSv3::IsDirectory(char* Path)
+{
+	int Ret = NFS_ERROR;
+	char *pName;
+	char currentItem[FHSIZE];
+
+	memcpy(currentItem, nfsRootDirectory, FHSIZE);
+	pName = strtok(Path, "\\");
+	while(pName != NULL)
+	{
+		LOOKUP3args dpLookUpArgs;
+		LOOKUP3res *pLookUpRes;
+		dpLookUpArgs.what.dir.data.data_val = currentItem;
+		dpLookUpArgs.what.dir.data.data_len = FHSIZE;
+		dpLookUpArgs.what.name = pName;
+		
+		if( (pLookUpRes = nfsproc3_lookup_3(&dpLookUpArgs, clntV3)) == NULL ) 
+			strLastError = clnt_sperror(clntV3,"nfsproc3_lookup_3");
+		else
+		{
+			if (pLookUpRes->status == NFS3_OK) 
+			{
+				memcpy(currentItem, pLookUpRes->LOOKUP3res_u.resok.obj.data.data_val, pLookUpRes->LOOKUP3res_u.resok.obj.data.data_len);
+				if(pLookUpRes->LOOKUP3res_u.resok.obj_attributes.post_op_attr_u.attributes.type == 2)
+					Ret = NFS_SUCCESS;
+				else
+					Ret = NFS_ERROR;
+			}
+			else
+			{
+				Ret = NFS_ERROR;
+			}
+			xdr_free((xdrproc_t)xdr_LOOKUP3res,(char*) pLookUpRes);
+		}
+
+		pName = strtok(NULL, "\\");
+
+		if(Ret == NFS_ERROR)
+			break;
+	}
+
+	return Ret;
+}
+
+
+int CNFSv3::Move(char* pOldFolder, char* pOldName, char* pNewFolder, char* pNewName)
+{
+	int Ret = NFS_ERROR;
+	if(clntV3 != NULL)
+	{
+		char OldPath[FHSIZE];
+		char NewPath[FHSIZE];
+
+		if(GetItemHandle(pOldFolder, OldPath) != NFS_SUCCESS ||
+		GetItemHandle(pNewFolder, NewPath) != NFS_SUCCESS)
+			return Ret;
+
+		RENAME3args dpRenameArgs;
+        RENAME3res *pRenameRes;
+		dpRenameArgs.from.dir.data.data_val = OldPath;
+		dpRenameArgs.from.dir.data.data_len = FHSIZE;
+		dpRenameArgs.to.dir.data.data_val = NewPath;
+		dpRenameArgs.to.dir.data.data_len = FHSIZE;
+        dpRenameArgs.from.name = pOldName;
+		dpRenameArgs.to.name = pNewName;
+        if( (pRenameRes = nfsproc3_rename_3(&dpRenameArgs, clntV3)) == NULL ) 
+			strLastError = clnt_sperror(clntV3, "nfsproc3_rename_3");
+		else
+		{
+			if (pRenameRes->status == NFS3_OK) 
+				Ret = NFS_SUCCESS;
+			else 
+			{
+				char  buffer[200];
+				sprintf_s(buffer, 200, "nfsproc3_rename_3: %d", pRenameRes->status);
+				strLastError = buffer;
+			}
+			xdr_free((xdrproc_t)xdr_RENAME3res,(char*) pRenameRes);
+		}
+	}
+	else
+		strLastError = "nfsproc3_rename_3: Client is NULL";
+
+	return Ret;
+}
+
 const char* CNFSv3::GetLastNfsError()
 {
 	return strLastError.c_str();

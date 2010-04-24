@@ -371,6 +371,11 @@ namespace NekoDrive.NFS
             return nfsInterface.Move(OldDirectoryName, OldFileName, NewDirectoryName, NewFileName);
         }
 
+        public NFSResult IsDirectory(String Path)
+        {
+            return nfsInterface.IsDirectory(Path);
+        }
+
         public Boolean FileExists(String FileName)
         {
             return (GetItemAttributes(FileName) != null);

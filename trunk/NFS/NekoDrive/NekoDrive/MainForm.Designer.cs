@@ -134,12 +134,12 @@
             // 
             this.nupTimeOut.Location = new System.Drawing.Point(233, 19);
             this.nupTimeOut.Maximum = new decimal(new int[] {
-            300,
+            600,
             0,
             0,
             0});
             this.nupTimeOut.Minimum = new decimal(new int[] {
-            60,
+            1,
             0,
             0,
             0});
@@ -147,7 +147,7 @@
             this.nupTimeOut.Size = new System.Drawing.Size(43, 20);
             this.nupTimeOut.TabIndex = 8;
             this.nupTimeOut.Value = new decimal(new int[] {
-            60,
+            20,
             0,
             0,
             0});
@@ -166,8 +166,7 @@
             this.cboxVer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboxVer.FormattingEnabled = true;
             this.cboxVer.Items.AddRange(new object[] {
-            "V2",
-            "V3"});
+            "V2"});
             this.cboxVer.Location = new System.Drawing.Point(124, 21);
             this.cboxVer.Name = "cboxVer";
             this.cboxVer.Size = new System.Drawing.Size(46, 21);

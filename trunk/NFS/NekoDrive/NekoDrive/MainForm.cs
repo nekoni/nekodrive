@@ -19,9 +19,15 @@ namespace NekoDrive
     {
         #region Fields
 
-        public NFS.NFS mNFS = null;
-        public DokanNet mDokanNet = null; 
         private static MainForm mInstance;
+
+        #endregion
+
+        #region Properites
+
+        public NFS.NFS mNFS = null;
+        public DokanNet mDokanNet = null;
+        public bool DebugMode = false;
 
         #endregion
 
@@ -102,10 +108,10 @@ namespace NekoDrive
                     {
                         System.IO.Directory.SetCurrentDirectory(Application.StartupPath);
                         DokanOptions dokanOptions = new DokanOptions();
-                        dokanOptions.DebugMode = true;
+                        dokanOptions.DebugMode = false;
                         dokanOptions.DriveLetter = cDrive;
-                        dokanOptions.NetworkDrive = true;
-                        dokanOptions.UseKeepAlive = true;
+                        dokanOptions.NetworkDrive = false;
+                        dokanOptions.UseKeepAlive = false;
                         dokanOptions.VolumeLabel = "NekoDrive";
                         dokanOptions.ThreadCount = 1;
                         Operations nfsOperations = new Operations();
@@ -199,7 +205,10 @@ namespace NekoDrive
                 c++;
             }
 
-            ipAddressControl1.Text = "192.168.56.102";
+            ipAddressControl1.Text = NekoDrive.Properties.Settings.Default.ServerAddress;
+            nupTimeOut.Value = (Decimal)NekoDrive.Properties.Settings.Default.Timeout;
+            cboxVer.SelectedIndex = NekoDrive.Properties.Settings.Default.DefaultProtocol;
+
             gboxMount.Enabled = false;
             btnDisconnect.Enabled = false;
             btnUnmount.Enabled = false;
@@ -284,6 +293,11 @@ namespace NekoDrive
                     if (mNFS.IsConnected)
                         Disconnect();
                 }
+
+                NekoDrive.Properties.Settings.Default.ServerAddress = ipAddressControl1.Text;
+                NekoDrive.Properties.Settings.Default.Timeout = (int)nupTimeOut.Value;
+                NekoDrive.Properties.Settings.Default.DefaultProtocol = cboxVer.SelectedIndex;
+                NekoDrive.Properties.Settings.Default.Save();
             }
             catch (Exception ex)
             {

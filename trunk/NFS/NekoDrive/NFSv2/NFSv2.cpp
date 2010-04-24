@@ -648,6 +648,85 @@ int CNFSv2::Rename(char* pOldName, char* pNewName)
 	return Ret;
 }
 
+int CNFSv2::GetItemHandle(char* Path, char* Handle)
+{
+	int Ret = NFS_ERROR;
+	char *pName;
+	nfshandle currentItem;
+
+	memcpy(currentItem, nfsRootDirectory, FHSIZE);
+	pName = strtok(Path, "\\");
+	while(pName != NULL)
+	{
+		diropargs dpDrArgs;
+		diropres *pDirOpRes;
+		memcpy(dpDrArgs.dir, currentItem, FHSIZE);
+		dpDrArgs.name = pName;
+		if( (pDirOpRes = nfsproc_lookup_2(&dpDrArgs, clntV2)) != NULL ) 
+		{
+			if (pDirOpRes->status == NFS_OK) 
+			{
+				memcpy(currentItem, pDirOpRes->diropres_u.ok.file, FHSIZE);
+				Ret = NFS_SUCCESS;
+			}
+			else
+				Ret = NFS_ERROR;
+
+			xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
+		}
+
+		pName = strtok(NULL, "\\");
+
+		if(Ret == NFS_ERROR)
+			break;
+	}
+
+	if(Ret != NFS_ERROR)
+		memcpy(Handle, currentItem, FHSIZE);
+
+	return Ret;
+}
+
+int CNFSv2::IsDirectory(char* Path)
+{
+	int Ret = NFS_ERROR;
+	char *pName;
+	nfshandle currentItem;
+
+	memcpy(currentItem, nfsRootDirectory, FHSIZE);
+	pName = strtok(Path, "\\");
+	while(pName != NULL)
+	{
+		diropargs dpDrArgs;
+		diropres *pDirOpRes;
+		memcpy(dpDrArgs.dir, currentItem, FHSIZE);
+		dpDrArgs.name = pName;
+		if( (pDirOpRes = nfsproc_lookup_2(&dpDrArgs, clntV2)) != NULL ) 
+		{
+			if (pDirOpRes->status == NFS_OK) 
+			{
+				memcpy(currentItem, pDirOpRes->diropres_u.ok.file, FHSIZE);
+				if(pDirOpRes->diropres_u.ok.attributes.type == 2)
+					Ret = NFS_SUCCESS;
+				else
+					Ret = NFS_ERROR;
+			}
+			else
+				Ret = NFS_ERROR;
+
+			xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
+		}
+
+		pName = strtok(NULL, "\\");
+
+		if(Ret == NFS_ERROR)
+			break;
+	}
+
+	return Ret;
+}
+
+
 int CNFSv2::Move(char* pOldFolder, char* pOldName, char* pNewFolder, char* pNewName)
 {
 	int Ret = NFS_ERROR;
@@ -655,24 +734,18 @@ int CNFSv2::Move(char* pOldFolder, char* pOldName, char* pNewFolder, char* pNewN
 	{
 		renameargs dpArgRename;
         nfsstat *pNfsStat;
-		char CurrentHandle[FHSIZE];
-		memcpy(CurrentHandle, nfsCurrentDirectory, FHSIZE);
-		memcpy(nfsCurrentDirectory, nfsRootDirectory, FHSIZE);
-		NFSData* pNfsOldFolder = (NFSData*) GetItemAttributes(pOldFolder);
-		if(pNfsOldFolder != NULL)
-		{
-			memcpy(dpArgRename.from.dir, pNfsOldFolder->Handle, FHSIZE);
-			ReleaseBuffer(pNfsOldFolder);
-		}
-		NFSData* pNfsNewFolder = (NFSData*) GetItemAttributes(pNewFolder);
-		if(pNfsNewFolder != NULL)
-		{
-			memcpy(dpArgRename.to.dir, pNfsOldFolder->Handle, FHSIZE);
-			ReleaseBuffer(pNfsNewFolder);
-		}
-		memcpy(nfsCurrentDirectory, CurrentHandle, FHSIZE);
+		nfshandle OldPath;
+		nfshandle NewPath;
+
+		if(GetItemHandle(pOldFolder, OldPath) != NFS_SUCCESS ||
+		GetItemHandle(pNewFolder, NewPath) != NFS_SUCCESS)
+			return Ret;
+		
+		memcpy(dpArgRename.from.dir, OldPath, FHSIZE);
         dpArgRename.from.name = pOldName;
-		dpArgRename.to.name = pNewName;
+		memcpy(dpArgRename.to.dir, NewPath, FHSIZE);
+		dpArgRename.to.name = pNewName;;
+
         if( (pNfsStat = nfsproc_rename_2(&dpArgRename, clntV2)) == NULL ) 
 			strLastError = clnt_sperror(clntV2, "nfsproc_rename_2");
 		else

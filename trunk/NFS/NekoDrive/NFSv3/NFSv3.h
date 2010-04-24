@@ -56,6 +56,7 @@ private:
 	struct timeval timeOut;
 	std::string strCurrentDevice;
 	std::string strLastError;
+	char nfsRootDirectory[FHSIZE];
 	char nfsCurrentDirectory[FHSIZE];
 	char nfsCurrentFile[FHSIZE];
 	int authType;
@@ -87,6 +88,9 @@ public:
 	int Read(unsigned __int64 Offset, u_long Count, char* pBuffer, u_int* pSize);
 	int Write(unsigned __int64 Offset, u_long Count, char* pBuffer, u_int* pSize);
 	int Rename(char* pOldName, char* pNewName);
+	int GetItemHandle(char* Path, char* Handle);
+	int IsDirectory(char* Path);
+	int Move(char* pOldFolder, char* pOldName, char* pNewFolder, char* pNewName);
 	const char* GetLastNfsError();
 	int ChangeMode(char* pName, int Mode);
 	int ChangeOwner(char* pName, int UID, int GUID);
