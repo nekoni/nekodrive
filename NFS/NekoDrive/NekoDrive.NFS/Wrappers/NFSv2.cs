@@ -99,6 +99,9 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv2.dll", EntryPoint = "?Move@CNFSv2@@QAEHPAD000@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_Move(IntPtr pThis, String pOldDirectoryName, String pOldName, String pNewDirectoryName, String pNewName);
 
+        [DllImport("NFSv2.dll", EntryPoint = "?IsDirectory@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern int __NFSv2_IsDirectory(IntPtr pThis, String Path);
+
         [DllImport("NFSv2.dll", EntryPoint = "?UnMountDevice@CNFSv2@@QAEHXZ", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_UnMountDevice(IntPtr pThis);
 
@@ -214,6 +217,11 @@ namespace NekoDrive.NFS.Wrappers
         public NFSResult Move(String OldDirectoryName, String OldName, String NewDirectoryName, String NewName)
         {
             return (NFSResult)__NFSv2_Move(_nfsv2, OldDirectoryName, OldName, NewDirectoryName, NewName);
+        }
+
+        public NFSResult IsDirectory(String Path)
+        {
+            return (NFSResult)__NFSv2_IsDirectory(_nfsv2, Path);
         }
 
         public NFSAttributes GetNfsAttribute(IntPtr pAttributes)

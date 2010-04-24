@@ -93,6 +93,12 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv3.dll", EntryPoint = "?Rename@CNFSv3@@QAEHPAD0@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv3_Rename(IntPtr pThis, String pOldName, String pNewName);
 
+        [DllImport("NFSv2.dll", EntryPoint = "?Move@CNFSv3@@QAEHPAD000@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern int __NFSv3_Move(IntPtr pThis, String pOldDirectoryName, String pOldName, String pNewDirectoryName, String pNewName);
+
+        [DllImport("NFSv2.dll", EntryPoint = "?IsDirectory@CNFSv3@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern int __NFSv3_IsDirectory(IntPtr pThis, String Path);
+
         [DllImport("NFSv3.dll", EntryPoint = "?UnMountDevice@CNFSv3@@QAEHXZ", CallingConvention = CallingConvention.ThisCall)]
         public static extern int __NFSv3_UnMountDevice(IntPtr pThis);
 
@@ -237,14 +243,16 @@ namespace NekoDrive.NFS.Wrappers
             return __NFSv3_GetLastNfsError(_nfsv3);
         }
 
-        #region INFS Members
-
-
-        public NFSResult Move(string OldDirectory, string OldName, string NewDirectory, string NewName)
+        public NFSResult Move(String OldDirectoryName, String OldName, String NewDirectoryName, String NewName)
         {
-            throw new NotImplementedException();
+            return (NFSResult)__NFSv3_Move(_nfsv3, OldDirectoryName, OldName, NewDirectoryName, NewName);
         }
 
-        #endregion
+        public NFSResult IsDirectory(String Path)
+        {
+            return (NFSResult)__NFSv3_IsDirectory(_nfsv3, Path);
+        }
+
+        
     }
 }

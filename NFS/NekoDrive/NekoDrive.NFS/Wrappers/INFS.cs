@@ -50,6 +50,8 @@ namespace NekoDrive.NFS.Wrappers
 
         NFSResult Move(String OldDirectory, String OldName, String NewDirectory, String NewName);
 
+        NFSResult IsDirectory(String Path);
+
         NFSAttributes GetNfsAttribute(IntPtr pAttributes);
 
         void ReleaseBuffer(IntPtr pBuffer);
