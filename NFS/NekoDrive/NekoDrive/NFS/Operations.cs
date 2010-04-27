@@ -152,10 +152,11 @@ namespace NekoDrive.NFS
                     {
                         if (buffer != null)
                         {
-                            byte[] iBuffer = ms.GetBuffer();
+                            byte[] iBuffer = new byte[ms.Length];
+                            Array.Copy(ms.GetBuffer(), iBuffer, iBuffer.Length);
                             int len = buffer.Length;
-                            if (iBuffer.Length < len)
-                                len = iBuffer.Length;
+                            if ((iBuffer.Length - offset) < len)
+                                len = iBuffer.Length - (int) offset;
                             Array.Copy(iBuffer, offset, buffer, 0, len);
                             readBytes = (uint)len;
                             ret = 0;
