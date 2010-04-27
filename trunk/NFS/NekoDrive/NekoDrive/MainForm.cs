@@ -108,7 +108,7 @@ namespace NekoDrive
                     {
                         System.IO.Directory.SetCurrentDirectory(Application.StartupPath);
                         DokanOptions dokanOptions = new DokanOptions();
-                        dokanOptions.DebugMode = false;
+                        dokanOptions.DebugMode = DebugMode;
                         dokanOptions.DriveLetter = cDrive;
                         dokanOptions.NetworkDrive = false;
                         dokanOptions.UseKeepAlive = false;
