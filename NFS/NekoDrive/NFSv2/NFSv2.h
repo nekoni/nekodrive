@@ -75,19 +75,27 @@ public:
 	int Disconnect();
 	char** GetExportedDevices(int* pnSize);
 	char** GetItemsList(int* pnSize);
+	char** GetItemsList(char* pDirectory, int* pnSize);
 	void ReleaseBuffers(void** pBuffers);
 	void ReleaseBuffer(void* pBuffer);
 	int MountDevice(char* pDevice);
 	int UnMountDevice();
 	void* GetItemAttributes(char* pName);
+	void* GetItemAttributes(char* pName, char* pDirectory);
 	int ChangeCurrentDirectory(char* pName);
 	int CreateDirectory(char* pName);
+	int CreateDirectory(char* pName, char* pDirectory);
 	int DeleteDirectory(char* pName);
+	int DeleteDirectory(char* pName, char* pDirectory);
 	int DeleteFile(char* pName);
+	int DeleteFile(char* pName, char* pDirectory);
 	int CreateFile(char* pName);
+	int CreateFile(char* pName, char* pDirectory);
 	int Open(char* pName);
 	void CloseFile();
+	int Read(char* pName, u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
 	int Read(u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
+	int Write(char* pName, u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
 	int Write(u_int Offset, u_int Count, char* pBuffer, u_long* pSize);
 	int Rename(char* pOldName, char* pNewName);
 	int GetItemHandle(char* Path, char* Handle);
@@ -95,7 +103,9 @@ public:
 	int Move(char* pOldFolder, char* pOldName, char* pNewFolder, char* pNewName);
 	const char* GetLastNfsError();
 	int ChangeMode(char* pName, int Mode);
+	int ChangeMode(char* pName, char* pDirectory, int Mode);
 	int ChangeOwner(char* pName, int UID, int GUID);
+	int ChangeOwner(char* pName, char* pDirectory, int UID, int GUID);
 };
 
 NFSV2_API CNFSv2* CreateCNFSv2();

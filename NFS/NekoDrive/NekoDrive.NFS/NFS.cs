@@ -102,6 +102,22 @@ namespace NekoDrive.NFS
             return res;
         }
 
+        public List<String> GetItemList(String Directory)
+        {
+            Int32 Size;
+            IntPtr pItems;
+            IntPtr pCurrentItem;
+            List<String> ItemsList = new List<String>();
+            pItems = nfsInterface.GetItemList(Directory, out Size);
+            for (Int32 i = 0; i < Size; i++)
+            {
+                pCurrentItem = Marshal.ReadIntPtr(new IntPtr(pItems.ToInt32() + IntPtr.Size * i));
+                ItemsList.Add(Marshal.PtrToStringAnsi(pCurrentItem));
+            }
+            nfsInterface.ReleaseBuffers(pItems);
+            return ItemsList;
+        }
+        
         public List<String> GetItemList()
         {
             Int32 Size;
@@ -116,6 +132,19 @@ namespace NekoDrive.NFS
             }
             nfsInterface.ReleaseBuffers(pItems);
             return ItemsList;
+        }
+
+        public NFSAttributes GetItemAttributes(String ItemName, String Directory)
+        {
+            IntPtr pAttributes;
+            pAttributes = nfsInterface.GetItemAttributes(ItemName, Directory);
+            if (pAttributes != IntPtr.Zero)
+            {
+                NFSAttributes nfsAttributes = nfsInterface.GetNfsAttribute(pAttributes);
+                nfsInterface.ReleaseBuffer(pAttributes);
+                return nfsAttributes;
+            }
+            return null;
         }
 
         public NFSAttributes GetItemAttributes(String ItemName)
@@ -153,9 +182,19 @@ namespace NekoDrive.NFS
             return nfsInterface.ChangeCurrentDirectory(DirectoryName);
         }
 
+        public NFSResult CreateDirectory(String DirectoryName, String Directory)
+        {
+            return nfsInterface.CreateDirectory(DirectoryName, Directory);
+        }
+
         public NFSResult CreateDirectory(String DirectoryName)
         {
             return nfsInterface.CreateDirectory(DirectoryName);
+        }
+
+        public NFSResult DeleteDirectory(String DirectoryName, String Directory)
+        {
+            return nfsInterface.DeleteDirectory(DirectoryName, Directory);
         }
 
         public NFSResult DeleteDirectory(String DirectoryName)
@@ -163,9 +202,19 @@ namespace NekoDrive.NFS
             return nfsInterface.DeleteDirectory(DirectoryName);
         }
 
+        public NFSResult DeleteFile(String FileName, String Directory)
+        {
+            return nfsInterface.DeleteFile(FileName, Directory);
+        }
+
         public NFSResult DeleteFile(String FileName)
         {
             return nfsInterface.DeleteFile(FileName);
+        }
+
+        public NFSResult CreateFile(String FileName, String Directory)
+        {
+            return nfsInterface.CreateFile(FileName, Directory);
         }
 
         public NFSResult CreateFile(String FileName)
@@ -269,6 +318,37 @@ namespace NekoDrive.NFS
             return Size;
         }
 
+        public Int32 Read(String FullFilePath, UInt64 Offset, UInt32 Count, ref Byte[] Buffer)
+        {
+            UInt64 TotalLenght = Count;
+            UInt32 BlockSize = 4096;
+            UInt32 CurrentPosition = 0;
+            do
+            {
+                UInt32 ChunkCount = BlockSize;
+                if ((TotalLenght - CurrentPosition) < BlockSize)
+                    ChunkCount = (UInt32)TotalLenght - CurrentPosition;
+
+                Int32 Size = -1;
+                IntPtr pBuffer = Marshal.AllocHGlobal((Int32)ChunkCount);
+                NFSResult Result = nfsInterface.Read(FullFilePath, Offset + CurrentPosition, ChunkCount, pBuffer, out Size);
+                if (Result == NFSResult.NFS_ERROR)
+                    return (Size = -1);
+                else
+                {
+                    if (Size == 0)
+                        return (int)CurrentPosition;
+
+                    Byte[] ChunkBuffer = new Byte[Size];
+                    Marshal.Copy(pBuffer, ChunkBuffer, 0, Size);
+                    Array.Copy(ChunkBuffer, 0, Buffer, CurrentPosition, Size);
+                    CurrentPosition += (UInt32)Size;
+                }
+                Marshal.FreeHGlobal(pBuffer);
+            } while (CurrentPosition != TotalLenght);
+            return (int)TotalLenght;
+        }
+
         public NFSResult Write(String FileName, String InputFileName)
         {
             NFSResult Result = NFSResult.NFS_ERROR;
@@ -294,7 +374,6 @@ namespace NekoDrive.NFS
                 
                 if (NFSResult.NFS_SUCCESS == Open(FileName))
                 {
-                    NFSAttributes nfsAttributes = GetItemAttributes(FileName);
                     UInt64 Offset = (UInt64) InputOffset;
                     UInt32 Count = 4096;
                     Int32 Bytes = 0;
@@ -351,9 +430,40 @@ namespace NekoDrive.NFS
             return Size;
         }
 
-        public NFSResult Open(String FileName)
+        public Int32 Write(String FullFilePath, UInt64 Offset, UInt32 Count, Byte[] Buffer)
         {
-            return nfsInterface.Open(FileName);
+            UInt64 TotalLenght = Count;
+            UInt32 BlockSize = 4096;
+            UInt32 CurrentPosition = 0;
+            if (Buffer != null)
+            {
+                do
+                {
+                    Int32 Size = -1;
+                    UInt32 ChunkCount = BlockSize;
+                    if ((TotalLenght - CurrentPosition) < BlockSize)
+                        ChunkCount = (UInt32)TotalLenght - CurrentPosition;
+
+                    IntPtr pBuffer = Marshal.AllocHGlobal((Int32)ChunkCount);
+                    Marshal.Copy(Buffer, (int) CurrentPosition, pBuffer, (Int32)ChunkCount);
+                    NFSResult Result = nfsInterface.Write(FullFilePath, Offset + CurrentPosition, ChunkCount, pBuffer, out Size);
+                    Marshal.FreeHGlobal(pBuffer);
+                    if (Result == NFSResult.NFS_ERROR)
+                        return (Size = -1);
+                    else
+                    {
+                        if (Size == 0)
+                            return (int)CurrentPosition;
+                        CurrentPosition += (UInt32)ChunkCount;
+                    }
+                } while (CurrentPosition != TotalLenght);
+            }
+            return (int)TotalLenght; ;
+        }
+
+        public NFSResult Open(String FullFilePath)
+        {
+            return nfsInterface.Open(FullFilePath);
         }
 
         public void CloseFile()
@@ -374,6 +484,11 @@ namespace NekoDrive.NFS
         public NFSResult IsDirectory(String Path)
         {
             return nfsInterface.IsDirectory(Path);
+        }
+
+        public Boolean FileExists(String FileName, String Directory)
+        {
+            return (GetItemAttributes(FileName, Directory) != null);
         }
 
         public Boolean FileExists(String FileName)

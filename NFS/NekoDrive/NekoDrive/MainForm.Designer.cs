@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.gbTargetConnection = new System.Windows.Forms.GroupBox();
+            this.chkAutoConnect = new System.Windows.Forms.CheckBox();
             this.tbGroupId = new System.Windows.Forms.TextBox();
             this.tbUserId = new System.Windows.Forms.TextBox();
             this.lblGroupId = new System.Windows.Forms.Label();
@@ -43,6 +44,7 @@
             this.btnDisconnect = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
             this.gboxMount = new System.Windows.Forms.GroupBox();
+            this.chkAutoMount = new System.Windows.Forms.CheckBox();
             this.lblLocalDrive = new System.Windows.Forms.Label();
             this.lblRemoteDevices = new System.Windows.Forms.Label();
             this.cboxLocalDrive = new System.Windows.Forms.ComboBox();
@@ -59,6 +61,7 @@
             // 
             this.gbTargetConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbTargetConnection.Controls.Add(this.chkAutoConnect);
             this.gbTargetConnection.Controls.Add(this.tbGroupId);
             this.gbTargetConnection.Controls.Add(this.tbUserId);
             this.gbTargetConnection.Controls.Add(this.lblGroupId);
@@ -77,11 +80,21 @@
             this.gbTargetConnection.TabStop = false;
             this.gbTargetConnection.Text = "Target Connection";
             // 
+            // chkAutoConnect
+            // 
+            this.chkAutoConnect.AutoSize = true;
+            this.chkAutoConnect.Location = new System.Drawing.Point(180, 53);
+            this.chkAutoConnect.Name = "chkAutoConnect";
+            this.chkAutoConnect.Size = new System.Drawing.Size(91, 17);
+            this.chkAutoConnect.TabIndex = 0;
+            this.chkAutoConnect.Text = "Auto Connect";
+            this.chkAutoConnect.UseVisualStyleBackColor = true;
+            // 
             // tbGroupId
             // 
-            this.tbGroupId.Location = new System.Drawing.Point(176, 49);
+            this.tbGroupId.Location = new System.Drawing.Point(132, 49);
             this.tbGroupId.Name = "tbGroupId";
-            this.tbGroupId.Size = new System.Drawing.Size(61, 20);
+            this.tbGroupId.Size = new System.Drawing.Size(25, 20);
             this.tbGroupId.TabIndex = 12;
             this.tbGroupId.Text = "0";
             // 
@@ -89,14 +102,14 @@
             // 
             this.tbUserId.Location = new System.Drawing.Point(50, 49);
             this.tbUserId.Name = "tbUserId";
-            this.tbUserId.Size = new System.Drawing.Size(61, 20);
+            this.tbUserId.Size = new System.Drawing.Size(25, 20);
             this.tbUserId.TabIndex = 12;
             this.tbUserId.Text = "0";
             // 
             // lblGroupId
             // 
             this.lblGroupId.AutoSize = true;
-            this.lblGroupId.Location = new System.Drawing.Point(125, 52);
+            this.lblGroupId.Location = new System.Drawing.Point(81, 54);
             this.lblGroupId.Name = "lblGroupId";
             this.lblGroupId.Size = new System.Drawing.Size(45, 13);
             this.lblGroupId.TabIndex = 11;
@@ -194,6 +207,7 @@
             // 
             // gboxMount
             // 
+            this.gboxMount.Controls.Add(this.chkAutoMount);
             this.gboxMount.Controls.Add(this.lblLocalDrive);
             this.gboxMount.Controls.Add(this.lblRemoteDevices);
             this.gboxMount.Controls.Add(this.cboxLocalDrive);
@@ -206,6 +220,16 @@
             this.gboxMount.TabIndex = 6;
             this.gboxMount.TabStop = false;
             this.gboxMount.Text = "Mount";
+            // 
+            // chkAutoMount
+            // 
+            this.chkAutoMount.AutoSize = true;
+            this.chkAutoMount.Location = new System.Drawing.Point(159, 50);
+            this.chkAutoMount.Name = "chkAutoMount";
+            this.chkAutoMount.Size = new System.Drawing.Size(81, 17);
+            this.chkAutoMount.TabIndex = 0;
+            this.chkAutoMount.Text = "Auto Mount";
+            this.chkAutoMount.UseVisualStyleBackColor = true;
             // 
             // lblLocalDrive
             // 
@@ -240,7 +264,7 @@
             this.cboxRemoteDevices.FormattingEnabled = true;
             this.cboxRemoteDevices.Location = new System.Drawing.Point(106, 19);
             this.cboxRemoteDevices.Name = "cboxRemoteDevices";
-            this.cboxRemoteDevices.Size = new System.Drawing.Size(121, 21);
+            this.cboxRemoteDevices.Size = new System.Drawing.Size(165, 21);
             this.cboxRemoteDevices.TabIndex = 3;
             // 
             // btnUnmount
@@ -268,12 +292,13 @@
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "NekoDrive";
             this.notifyIcon.Visible = true;
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(412, 205);
+            this.ClientSize = new System.Drawing.Size(412, 209);
             this.Controls.Add(this.gboxMount);
             this.Controls.Add(this.gbTargetConnection);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -283,6 +308,7 @@
             this.Text = "NekoDrive Settings";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.gbTargetConnection.ResumeLayout(false);
             this.gbTargetConnection.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).EndInit();
@@ -314,6 +340,8 @@
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.Button btnUnmount;
         private System.Windows.Forms.Button btnDisconnect;
+        private System.Windows.Forms.CheckBox chkAutoConnect;
+        private System.Windows.Forms.CheckBox chkAutoMount;
 
     }
 }
