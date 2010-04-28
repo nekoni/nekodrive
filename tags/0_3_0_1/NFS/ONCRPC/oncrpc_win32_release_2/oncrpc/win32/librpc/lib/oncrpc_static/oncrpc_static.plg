@@ -1,0 +1,63 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: oncrpc_static - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\opid11\LOCALS~1\Temp\RSP1D.tmp" with contents
+[
+/nologo /out:"Debug\oncrpc.lib" 
+.\Debug\xdr_stdi.obj
+.\Debug\Xdr_refe.obj
+.\Debug\Xdr_rec.obj
+.\Debug\xdr_mem.obj
+.\Debug\xdr_floa.obj
+.\Debug\Xdr_arra.obj
+.\Debug\Xdr.obj
+.\Debug\Svc_udp.obj
+.\Debug\Svc_tcp.obj
+.\Debug\Svc_simp.obj
+.\Debug\Svc_run.obj
+.\Debug\svc_raw.obj
+.\Debug\Svc_autu.obj
+.\Debug\svc_auth.obj
+.\Debug\Svc.obj
+.\Debug\rpc_prot.obj
+.\Debug\rpc_comm.obj
+.\Debug\rpc_call.obj
+.\Debug\portmap.obj
+.\Debug\Pmap_rmt.obj
+.\Debug\pmap_pro.obj
+.\Debug\pmap_pr.obj
+.\Debug\pmap_gma.obj
+.\Debug\pmap_get.obj
+.\Debug\Pmap_cln.obj
+.\Debug\nt.obj
+.\Debug\Getrpcpo.obj
+.\Debug\Getrpcen.obj
+.\Debug\Get_myad.obj
+.\Debug\Clnt_udp.obj
+.\Debug\Clnt_tcp.obj
+.\Debug\clnt_sim.obj
+.\Debug\clnt_raw.obj
+.\Debug\Clnt_per.obj
+.\Debug\clnt_gen.obj
+.\Debug\Bindresv.obj
+.\Debug\bcopy.obj
+.\Debug\authunix.obj
+.\Debug\Auth_uni.obj
+.\Debug\Auth_non.obj
+]
+Creating command line "link.exe -lib @C:\DOCUME~1\opid11\LOCALS~1\Temp\RSP1D.tmp"
+<h3>Output Window</h3>
+Creating library...
+
+
+
+<h3>Results</h3>
+oncrpc.lib - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
