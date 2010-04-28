@@ -12,6 +12,7 @@ using NekoDrive.NFS.Wrappers;
 using Dokan;
 using NekoDrive.NFS;
 using System.Threading;
+using System.Diagnostics;
 
 namespace NekoDrive
 {
@@ -103,6 +104,7 @@ namespace NekoDrive
                 cboxRemoteDevices.Enabled = false;
                 btnMount.Enabled = false;
                 btnUnmount.Enabled = true;
+                
                 ThreadPool.QueueUserWorkItem(new WaitCallback(
                     delegate
                     {
@@ -111,11 +113,18 @@ namespace NekoDrive
                         dokanOptions.DebugMode = DebugMode;
                         dokanOptions.DriveLetter = cDrive;
                         dokanOptions.NetworkDrive = false;
-                        dokanOptions.UseKeepAlive = false;
+                        dokanOptions.UseKeepAlive = true;
                         dokanOptions.VolumeLabel = "NekoDrive";
                         dokanOptions.ThreadCount = 1;
                         Operations nfsOperations = new Operations();
                         DokanNet.DokanMain(dokanOptions, nfsOperations);
+                    }));
+
+                ThreadPool.QueueUserWorkItem(new WaitCallback(
+                    delegate
+                    {
+                        Thread.Sleep(5000);
+                        Process.Start("explorer.exe", " " + cDrive.ToString() + ":");
                     }));
             }
             else
@@ -149,6 +158,17 @@ namespace NekoDrive
                     tbGroupId.Enabled = false;
                     tbUserId.Enabled = false;
                     nupTimeOut.Enabled = false;
+
+                    if (cboxLocalDrive.Items.Count > NekoDrive.Properties.Settings.Default.DriveLetter)
+                        cboxLocalDrive.SelectedIndex = NekoDrive.Properties.Settings.Default.DriveLetter;
+
+                    if (cboxRemoteDevices.Items.Count > NekoDrive.Properties.Settings.Default.RemoteDevice)
+                        cboxRemoteDevices.SelectedIndex = NekoDrive.Properties.Settings.Default.RemoteDevice;
+
+                    chkAutoMount.Checked = NekoDrive.Properties.Settings.Default.AutoMount;
+
+                    if (chkAutoMount.Checked)
+                        MountDrive();
 
                 }
                 else
@@ -208,12 +228,18 @@ namespace NekoDrive
             ipAddressControl1.Text = NekoDrive.Properties.Settings.Default.ServerAddress;
             nupTimeOut.Value = (Decimal)NekoDrive.Properties.Settings.Default.Timeout;
             cboxVer.SelectedIndex = NekoDrive.Properties.Settings.Default.DefaultProtocol;
+            tbUserId.Text = NekoDrive.Properties.Settings.Default.UserId.ToString();
+            tbGroupId.Text = NekoDrive.Properties.Settings.Default.GroupId.ToString();
+            chkAutoConnect.Checked = NekoDrive.Properties.Settings.Default.AutoConnect;
 
             gboxMount.Enabled = false;
             btnDisconnect.Enabled = false;
             btnUnmount.Enabled = false;
             cboxVer.SelectedIndex = 0;
             cboxLocalDrive.SelectedItem = 0;
+
+            if (chkAutoConnect.Checked)
+                Connect();
         }
 
         #endregion
@@ -297,6 +323,13 @@ namespace NekoDrive
                 NekoDrive.Properties.Settings.Default.ServerAddress = ipAddressControl1.Text;
                 NekoDrive.Properties.Settings.Default.Timeout = (int)nupTimeOut.Value;
                 NekoDrive.Properties.Settings.Default.DefaultProtocol = cboxVer.SelectedIndex;
+                NekoDrive.Properties.Settings.Default.UserId = int.Parse(tbUserId.Text);
+                NekoDrive.Properties.Settings.Default.GroupId = int.Parse(tbGroupId.Text);
+                NekoDrive.Properties.Settings.Default.AutoConnect = chkAutoConnect.Checked;
+                NekoDrive.Properties.Settings.Default.RemoteDevice = cboxRemoteDevices.SelectedIndex;
+                NekoDrive.Properties.Settings.Default.DriveLetter = cboxLocalDrive.SelectedIndex;
+                NekoDrive.Properties.Settings.Default.AutoMount = chkAutoMount.Checked;
+
                 NekoDrive.Properties.Settings.Default.Save();
             }
             catch (Exception ex)
@@ -308,6 +341,24 @@ namespace NekoDrive
         void mNFS_DataEvent(object sender, NekoDrive.NFS.Wrappers.NFSEventArgs e)
         {
             //
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if(this.WindowState == FormWindowState.Minimized)
+            {
+                this.WindowState = FormWindowState.Minimized;
+                this.ShowInTaskbar = false;
+            }
+        }
+
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.WindowState = FormWindowState.Normal;
+                this.ShowInTaskbar = true;
+            }
         }
 
         #endregion        

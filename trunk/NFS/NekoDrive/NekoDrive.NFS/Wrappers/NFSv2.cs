@@ -39,8 +39,14 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv2.dll", EntryPoint = "?ChangeCurrentDirectory@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_ChangeCurrentDirectory(IntPtr pThis, String pName);
 
+        [DllImport("NFSv2.dll", EntryPoint = "?ChangeMode@CNFSv2@@QAEHPAD0H@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern int __NFSv2_ChangeMode(IntPtr pThis, String pName, String pDirectory, Int32 Mode);
+
         [DllImport("NFSv2.dll", EntryPoint = "?ChangeMode@CNFSv2@@QAEHPADH@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_ChangeMode(IntPtr pThis, String pName, Int32 Mode);
+
+        [DllImport("NFSv2.dll", EntryPoint = "?ChangeOwner@CNFSv2@@QAEHPAD0HH@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern int __NFSv2_ChangeOwner(IntPtr pThis, String pName, String pDirectory, Int32 UID, Int32 GID);
 
         [DllImport("NFSv2.dll", EntryPoint = "?ChangeOwner@CNFSv2@@QAEHPADHH@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_ChangeOwner(IntPtr pThis, String pName, Int32 UID, Int32 GID);
@@ -51,14 +57,26 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv2.dll", EntryPoint = "?Connect@CNFSv2@@QAEHPBDHHJ@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_Connect(IntPtr pThis, String ServerAddress, Int32 UID, Int32 GID, Int32 CommandTimeout);
 
+        [DllImport("NFSv2.dll", EntryPoint = "?CreateDirectoryW@CNFSv2@@QAEHPAD0@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern int __NFSv2_CreateDirectory(IntPtr pThis, String pName, String pDirectory);
+
         [DllImport("NFSv2.dll", EntryPoint = "?CreateDirectoryW@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_CreateDirectory(IntPtr pThis, String pName);
+
+        [DllImport("NFSv2.dll", EntryPoint = "?CreateFileW@CNFSv2@@QAEHPAD0@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern int __NFSv2_CreateFile(IntPtr pThis, String pName, String pDirectory);
 
         [DllImport("NFSv2.dll", EntryPoint = "?CreateFileW@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_CreateFile(IntPtr pThis, String pName);
 
+        [DllImport("NFSv2.dll", EntryPoint = "?DeleteFileW@CNFSv2@@QAEHPAD0@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern int __NFSv2_DeleteFile(IntPtr pThis, String pName, String pDirectory);
+        
         [DllImport("NFSv2.dll", EntryPoint = "?DeleteFileW@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_DeleteFile(IntPtr pThis, String pName);
+
+        [DllImport("NFSv2.dll", EntryPoint = "?DeleteDirectory@CNFSv2@@QAEHPAD0@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern int __NFSv2_DeleteDirectory(IntPtr pThis, String pName, String pDirectory);
 
         [DllImport("NFSv2.dll", EntryPoint = "?DeleteDirectory@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_DeleteDirectory(IntPtr pThis, String pName);
@@ -69,8 +87,14 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv2.dll", EntryPoint = "?GetExportedDevices@CNFSv2@@QAEPAPADPAH@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern IntPtr __NFSv2_GetExportedDevices(IntPtr pThis, out Int32 pnSize);
 
+        [DllImport("NFSv2.dll", EntryPoint = "?GetItemAttributes@CNFSv2@@QAEPAXPAD0@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern IntPtr __NFSv2_GetItemAttributes(IntPtr pThis, String pItem, String pDirectory);
+
         [DllImport("NFSv2.dll", EntryPoint = "?GetItemAttributes@CNFSv2@@QAEPAXPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern IntPtr __NFSv2_GetItemAttributes(IntPtr pThis, String pItem);
+
+        [DllImport("NFSv2.dll", EntryPoint = "?GetItemsList@CNFSv2@@QAEPAPADPADPAH@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern IntPtr __NFSv2_GetItemsList(IntPtr pThis, String pDirectory, out Int32 pnSize);
 
         [DllImport("NFSv2.dll", EntryPoint = "?GetItemsList@CNFSv2@@QAEPAPADPAH@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern IntPtr __NFSv2_GetItemsList(IntPtr pThis, out Int32 pnSize);
@@ -83,6 +107,9 @@ namespace NekoDrive.NFS.Wrappers
 
         [DllImport("NFSv2.dll", EntryPoint = "?Open@CNFSv2@@QAEHPAD@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_Open(IntPtr pThis, String pName);
+
+        [DllImport("NFSv2.dll", EntryPoint = "?Read@CNFSv2@@QAEHPADII0PAK@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern int __NFSv2_Read(IntPtr pThis, String  pName, UInt32 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
 
         [DllImport("NFSv2.dll", EntryPoint = "?Read@CNFSv2@@QAEHIIPADPAK@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_Read(IntPtr pThis, UInt32 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
@@ -104,6 +131,9 @@ namespace NekoDrive.NFS.Wrappers
 
         [DllImport("NFSv2.dll", EntryPoint = "?UnMountDevice@CNFSv2@@QAEHXZ", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_UnMountDevice(IntPtr pThis);
+
+        [DllImport("NFSv2.dll", EntryPoint = "?Write@CNFSv2@@QAEHPADII0PAK@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern int __NFSv2_Write(IntPtr pThis, String pName, UInt32 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
 
         [DllImport("NFSv2.dll", EntryPoint = "?Write@CNFSv2@@QAEHIIPADPAK@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_Write(IntPtr pThis, UInt32 Offset, UInt32 Count, IntPtr pBuffer, out Int32 pSize);
@@ -150,11 +180,25 @@ namespace NekoDrive.NFS.Wrappers
             return (NFSResult)__NFSv2_UnMountDevice(_nfsv2);
         }
 
+        public IntPtr GetItemList(string Directory, out int Size)
+        {
+            IntPtr pItems;
+            pItems = __NFSv2_GetItemsList(_nfsv2, Directory, out Size);
+            return pItems;
+        }
+
         public IntPtr GetItemList(out Int32 Size)
         {
             IntPtr pItems;
             pItems = __NFSv2_GetItemsList(_nfsv2, out Size);
             return pItems;
+        }
+
+        public IntPtr GetItemAttributes(string ItemName, string Directory)
+        {
+            IntPtr pAttributes;
+            pAttributes = __NFSv2_GetItemAttributes(_nfsv2, ItemName, Directory);
+            return pAttributes;
         }
 
         public IntPtr GetItemAttributes(String ItemName)
@@ -169,9 +213,19 @@ namespace NekoDrive.NFS.Wrappers
             return (NFSResult)__NFSv2_ChangeCurrentDirectory(_nfsv2, DirectoryName);
         }
 
+        public NFSResult CreateDirectory(String DirectoryName, String Directory)
+        {
+            return (NFSResult)__NFSv2_CreateDirectory(_nfsv2, DirectoryName, Directory);
+        }
+
         public NFSResult CreateDirectory(String DirectoryName)
         {
             return (NFSResult)__NFSv2_CreateDirectory(_nfsv2, DirectoryName);
+        }
+
+        public NFSResult DeleteDirectory(String DirectoryName, String Directory)
+        {
+            return (NFSResult)__NFSv2_DeleteDirectory(_nfsv2, DirectoryName, Directory);
         }
 
         public NFSResult DeleteDirectory(String DirectoryName)
@@ -184,9 +238,24 @@ namespace NekoDrive.NFS.Wrappers
             return (NFSResult)__NFSv2_DeleteFile(_nfsv2, FileName);
         }
 
+        public NFSResult DeleteFile(String FileName, String Directory)
+        {
+            return (NFSResult)__NFSv2_DeleteFile(_nfsv2, FileName, Directory);
+        }
+
         public NFSResult CreateFile(String FileName)
         {
             return (NFSResult)__NFSv2_CreateFile(_nfsv2, FileName);
+        }
+
+        public NFSResult CreateFile(String FileName, String Directory)
+        {
+            return (NFSResult)__NFSv2_CreateFile(_nfsv2, FileName, Directory);
+        }
+
+        public NFSResult Read(string FullFilePath, ulong Offset, uint Count, IntPtr pBuffer, out int Size)
+        {
+            return (NFSResult)__NFSv2_Read(_nfsv2, FullFilePath, (UInt32)Offset, Count, pBuffer, out Size);
         }
 
         public NFSResult Read(UInt64 Offset, UInt32 Count, IntPtr pBuffer, out Int32 Size)
@@ -194,14 +263,19 @@ namespace NekoDrive.NFS.Wrappers
             return (NFSResult)__NFSv2_Read(_nfsv2, (UInt32) Offset, Count, pBuffer, out Size);
         }
 
+        public NFSResult Write(string FullFilePath, ulong Offset, uint Count, IntPtr pBuffer, out int Size)
+        {
+            return (NFSResult)__NFSv2_Write(_nfsv2, FullFilePath, (UInt32)Offset, Count, pBuffer, out Size);
+        }
+
         public NFSResult Write(UInt64 Offset, UInt32 Count, IntPtr pBuffer, out Int32 Size)
         {
             return (NFSResult)__NFSv2_Write(_nfsv2, (UInt32) Offset, Count, pBuffer, out Size);
         }
 
-        public NFSResult Open(String FileName)
+        public NFSResult Open(String FullFilePath)
         {
-            return (NFSResult) __NFSv2_Open(_nfsv2, FileName);
+            return (NFSResult)__NFSv2_Open(_nfsv2, FullFilePath);
         }
 
         public void CloseFile()

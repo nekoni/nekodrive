@@ -226,6 +226,14 @@ char** CNFSv2::GetExportedDevices(int* pnSize)
 	return Ret;
 }
 
+char** CNFSv2::GetItemsList(char *pDirectory, int *pnSize)
+{
+	char** Ret = NULL;
+	if(GetItemHandle(pDirectory, nfsCurrentDirectory) == NFS_SUCCESS)
+		Ret = GetItemsList(pnSize);
+	return Ret;
+}
+
 char** CNFSv2::GetItemsList(int* pnSize)
 {
 	char** Ret = NULL;
@@ -288,6 +296,14 @@ void CNFSv2::ReleaseBuffers(void** pBuffers)
 {
 	if(pBuffers != NULL)
 		delete[] pBuffers;
+}
+
+void * CNFSv2::GetItemAttributes(char* pName, char* pDirectory)
+{
+	void* Ret = NULL;
+	if(GetItemHandle(pDirectory, nfsCurrentDirectory) == NFS_SUCCESS)
+		Ret = GetItemAttributes(pName);
+	return Ret;
 }
 
 void* CNFSv2::GetItemAttributes(char* pName)
@@ -371,6 +387,14 @@ int CNFSv2::ChangeCurrentDirectory(char *pName)
 	return Ret;
 }
 
+int CNFSv2::CreateDirectory(char* pName, char* pDirectory)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = GetItemHandle(pDirectory, nfsCurrentDirectory)) == NFS_SUCCESS)
+		Ret = CreateDirectory(pName);
+	return Ret;
+}
+
 int CNFSv2::CreateDirectory(char* pName)
 {
 	int Ret = NFS_ERROR;
@@ -407,6 +431,14 @@ int CNFSv2::CreateDirectory(char* pName)
 	return Ret;
 }
 
+int CNFSv2::DeleteDirectory(char* pName, char* pDirectory)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = GetItemHandle(pDirectory, nfsCurrentDirectory)) == NFS_SUCCESS)
+		Ret = DeleteDirectory(pName);
+	return Ret;
+}
+
 int CNFSv2::DeleteDirectory(char* pName)
 {
 	int Ret = NFS_ERROR;
@@ -436,6 +468,14 @@ int CNFSv2::DeleteDirectory(char* pName)
 	return Ret;
 }
 
+int CNFSv2::DeleteFile(char* pName, char* pDirectory)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = GetItemHandle(pDirectory, nfsCurrentDirectory)) == NFS_SUCCESS)
+		Ret = DeleteFile(pName);
+	return Ret;
+}
+
 int CNFSv2::DeleteFile(char* pName)
 {
 	int Ret = NFS_ERROR;
@@ -462,6 +502,14 @@ int CNFSv2::DeleteFile(char* pName)
 	}
 	else
 		strLastError = "V2 Client is NULL";
+	return Ret;
+}
+
+int CNFSv2::CreateFile(char* pName, char* pDirectory)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = GetItemHandle(pDirectory, nfsCurrentDirectory)) == NFS_SUCCESS)
+		Ret = CreateFile(pName);
 	return Ret;
 }
 
@@ -506,15 +554,7 @@ int CNFSv2::Open(char* pName)
 {
 	int Ret = NFS_ERROR;
 	if(pName != NULL)
-	{
-		NFSData* pNfsData = (NFSData*) GetItemAttributes(pName);
-		if(pNfsData != NULL)
-		{
-			memcpy(nfsCurrentFile, pNfsData->Handle, FHSIZE);
-			ReleaseBuffer(pNfsData);
-			Ret = NFS_SUCCESS;
-		}
-	}
+		Ret = GetItemHandle(pName, nfsCurrentFile);
 	return Ret;
 }
 
@@ -537,6 +577,17 @@ int CNFSv2::CheckOpenHandle()
 		return 0;
 	else
 		return sum;
+}
+
+int CNFSv2::Read(char *pName, u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = Open(pName)) == NFS_SUCCESS)
+	{
+		Ret = Read(Offset, Count, pBuffer, pSize);
+		CloseFile();
+	}
+	return Ret;
 }
 
 int CNFSv2::Read(u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
@@ -575,6 +626,17 @@ int CNFSv2::Read(u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
 	}
 	else
 		strLastError = "V2 Client is NULL";
+	return Ret;
+}
+
+int CNFSv2::Write(char *pName, u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = Open(pName)) == NFS_SUCCESS)
+	{
+		Ret = Write(Offset, Count, pBuffer, pSize);
+		CloseFile();
+	}
 	return Ret;
 }
 
@@ -771,6 +833,14 @@ const char* CNFSv2::GetLastNfsError()
 	return strLastError.c_str();
 }
 
+int CNFSv2::ChangeMode(char* pName, char* pDirectory, int Mode)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = GetItemHandle(pDirectory, nfsCurrentDirectory)) == NFS_SUCCESS)
+		Ret = ChangeMode(pName, Mode);
+	return Ret;
+}
+
 int CNFSv2::ChangeMode(char* pName, int Mode)
 {
 	int Ret = NFS_ERROR;
@@ -814,6 +884,15 @@ int CNFSv2::ChangeMode(char* pName, int Mode)
 		strLastError = "Client is NULL";
 	return Ret;
 }
+
+int CNFSv2::ChangeOwner(char* pName, char* pDirectory, int UID, int GID)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = GetItemHandle(pDirectory, nfsCurrentDirectory)) == NFS_SUCCESS)
+		Ret = ChangeOwner(pName, UID, GID);
+	return Ret;
+}
+
 int CNFSv2::ChangeOwner(char* pName, int UID, int GID)
 {
 	int Ret = NFS_ERROR;

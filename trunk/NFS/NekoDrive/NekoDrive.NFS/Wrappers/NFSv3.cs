@@ -253,6 +253,51 @@ namespace NekoDrive.NFS.Wrappers
             return (NFSResult)__NFSv3_IsDirectory(_nfsv3, Path);
         }
 
-        
+
+
+        #region INFS Members
+
+
+        public IntPtr GetItemList(string Directory, out int Size)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IntPtr GetItemAttributes(string ItemName, string Directory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public NFSResult CreateDirectory(string DirectoryName, string Directory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public NFSResult DeleteDirectory(string DirectoryName, string Directory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public NFSResult DeleteFile(string FileName, string Directory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public NFSResult CreateFile(string FileName, string Directory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public NFSResult Read(string FullFilePath, ulong Offset, uint Count, IntPtr pBuffer, out int Size)
+        {
+            throw new NotImplementedException();
+        }
+
+        public NFSResult Write(string FullFilePath, ulong Offset, uint Count, IntPtr pBuffer, out int Size)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }
