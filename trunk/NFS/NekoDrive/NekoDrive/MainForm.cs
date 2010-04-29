@@ -30,10 +30,6 @@ namespace NekoDrive
         public DokanNet mDokanNet = null;
         public bool DebugMode = false;
 
-        #endregion
-
-        #region Properties
-
         public static MainForm In
         {
             get
@@ -235,8 +231,6 @@ namespace NekoDrive
             gboxMount.Enabled = false;
             btnDisconnect.Enabled = false;
             btnUnmount.Enabled = false;
-            cboxVer.SelectedIndex = 0;
-            cboxLocalDrive.SelectedItem = 0;
 
             if (chkAutoConnect.Checked)
                 Connect();

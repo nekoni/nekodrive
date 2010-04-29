@@ -44,6 +44,7 @@ CNFSv3::CNFSv3()
 	strCurrentDevice = "";
 	memset(nfsCurrentFile, 0, sizeof(FHSIZE));
 	memset(nfsCurrentDirectory, 0, sizeof(FHSIZE));
+	memset(nfsRootDirectory, 0, sizeof(FHSIZE));
 	timeOut.tv_sec = 60;
 	timeOut.tv_usec = 0;
 	sSrvAddr.sin_family = AF_INET;
@@ -181,6 +182,7 @@ int CNFSv3::MountDevice(char* pDevice)
 				if (pMountRes3->fhs_status == MNT3_OK ) 
 				{
 					memcpy(nfsCurrentDirectory, pMountRes3->mountres3_u.mountinfo.fhandle.data.data_val, pMountRes3->mountres3_u.mountinfo.fhandle.data.data_len);
+					memcpy(nfsRootDirectory, pMountRes3->mountres3_u.mountinfo.fhandle.data.data_val, pMountRes3->mountres3_u.mountinfo.fhandle.data.data_len);
 					strCurrentDevice = pDevice;
 					Ret = NFS_SUCCESS;
 				} 
@@ -229,6 +231,14 @@ char** CNFSv3::GetExportedDevices(int* pnSize)
 			*pnSize = nSize;
 		}
 	}
+	return Ret;
+}
+
+char** CNFSv3::GetItemsList(char* pDirectory, int* pnSize)
+{
+	char** Ret = NULL;
+	if(GetItemHandle(pDirectory, nfsCurrentDirectory) == NFS_SUCCESS)
+		Ret = GetItemsList(pnSize);
 	return Ret;
 }
 
@@ -299,6 +309,14 @@ void CNFSv3::ReleaseBuffers(void** pBuffers)
 		delete[] pBuffers;
 }
 
+void* CNFSv3::GetItemAttributes(char* pName, char* pDirectory)
+{
+	void* Ret = NULL;
+	if(GetItemHandle(pDirectory, nfsCurrentDirectory) == NFS_SUCCESS)
+		Ret = GetItemAttributes(pName);
+	return Ret;
+}
+
 void* CNFSv3::GetItemAttributes(char* pName)
 {
 	void* Ret = NULL;
@@ -356,16 +374,32 @@ int CNFSv3::ChangeCurrentDirectory(char *pName)
 	int Ret = NFS_ERROR;
 	if(pName != NULL)
 	{
-		NFSData* pNfsData = (NFSData*) GetItemAttributes(pName);
-		if(pNfsData != NULL)
+		if(strcmp(pName, ".") ==0)
 		{
-			memcpy(nfsCurrentDirectory, pNfsData->Handle, FHSIZE);
-			ReleaseBuffer(pNfsData);
+			memcpy(nfsCurrentDirectory, nfsRootDirectory, FHSIZE);
 			Ret = NFS_SUCCESS;
+		}
+		else
+		{
+			NFSData* pNfsData = (NFSData*) GetItemAttributes(pName);
+			if(pNfsData != NULL)
+			{
+				memcpy(nfsCurrentDirectory, pNfsData->Handle, FHSIZE);
+				ReleaseBuffer(pNfsData);
+				Ret = NFS_SUCCESS;
+			}
 		}
 	}
 	else
 		strLastError = "ChangeCurrentDirectory: Name is NULL";
+	return Ret;
+}
+
+int CNFSv3::CreateDirectory(char* pName, char* pDirectory)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = GetItemHandle(pDirectory, nfsCurrentDirectory)) == NFS_SUCCESS)
+		Ret = CreateDirectory(pName);
 	return Ret;
 }
 
@@ -408,6 +442,14 @@ int CNFSv3::CreateDirectory(char* pName)
 	return Ret;
 }
 
+int CNFSv3::DeleteDirectory(char* pName, char* pDirectory)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = GetItemHandle(pDirectory, nfsCurrentDirectory)) == NFS_SUCCESS)
+		Ret = DeleteDirectory(pName);
+	return Ret;
+}
+
 int CNFSv3::DeleteDirectory(char* pName)
 {
 	int Ret = NFS_ERROR;
@@ -438,6 +480,14 @@ int CNFSv3::DeleteDirectory(char* pName)
 	return Ret;
 }
 
+int CNFSv3::DeleteFile(char* pName, char* pDirectory)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = GetItemHandle(pDirectory, nfsCurrentDirectory)) == NFS_SUCCESS)
+		Ret = DeleteFile(pName);
+	return Ret;
+}
+
 int CNFSv3::DeleteFile(char* pName)
 {
 	int Ret = NFS_ERROR;
@@ -465,6 +515,14 @@ int CNFSv3::DeleteFile(char* pName)
 	}
 	else
 		strLastError = "nfsproc3_remove_3: Client is NULL";
+	return Ret;
+}
+
+int CNFSv3::CreateFile(char* pName, char* pDirectory)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = GetItemHandle(pDirectory, nfsCurrentDirectory)) == NFS_SUCCESS)
+		Ret = CreateFile(pName);
 	return Ret;
 }
 
@@ -513,15 +571,7 @@ int CNFSv3::Open(char* pName)
 {
 	int Ret = NFS_ERROR;
 	if(pName != NULL)
-	{
-		NFSData* pNfsData = (NFSData*) GetItemAttributes(pName);
-		if(pNfsData != NULL)
-		{
-			memcpy(nfsCurrentFile, pNfsData->Handle, FHSIZE);
-			ReleaseBuffer(pNfsData);
-			Ret = NFS_SUCCESS;
-		}
-	}
+		Ret = GetItemHandle(pName, nfsCurrentFile);
 	return Ret;
 }
 
@@ -544,6 +594,17 @@ int CNFSv3::CheckOpenHandle()
 		return 0;
 	else
 		return sum;
+}
+
+int CNFSv3::Read(char* pName, unsigned __int64 Offset, u_long Count, char* pBuffer, u_int* pSize)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = Open(pName)) == NFS_SUCCESS)
+	{
+		Ret = Read(Offset, Count, pBuffer, pSize);
+		CloseFile();
+	}
+	return Ret;
 }
 
 int CNFSv3::Read(unsigned __int64 Offset, u_long Count, char* pBuffer, u_int* pSize)
@@ -583,6 +644,17 @@ int CNFSv3::Read(unsigned __int64 Offset, u_long Count, char* pBuffer, u_int* pS
 	}
 	else
 		strLastError = "nfsproc3_read_3: Client is NULL";
+	return Ret;
+}
+
+int CNFSv3::Write(char* pName, uint64 Offset, uint32 Count, char* pBuffer, u_int* pSize)
+{
+	int Ret = NFS_ERROR;
+	if((Ret = Open(pName)) == NFS_SUCCESS)
+	{
+		Ret = Write(Offset, Count, pBuffer, pSize);
+		CloseFile();
+	}
 	return Ret;
 }
 
@@ -797,6 +869,11 @@ const char* CNFSv3::GetLastNfsError()
 	return strLastError.c_str();
 }
 
+int CNFSv3::ChangeMode(char* pName, char* pDirectory, int Mode)
+{
+	return NFS_ERROR;
+}
+
 int CNFSv3::ChangeMode(char* pName, int Mode)
 {
 	int Ret = NFS_ERROR;
@@ -840,6 +917,12 @@ int CNFSv3::ChangeMode(char* pName, int Mode)
 	//	strLastError = "Client is NULL";
 	return Ret;
 }
+
+int CNFSv3::ChangeOwner(char* pName, char* pDirectory, int UID, int GID)
+{
+	return NFS_ERROR;
+}
+
 int CNFSv3::ChangeOwner(char* pName, int UID, int GID)
 {
 	int Ret = NFS_ERROR;
