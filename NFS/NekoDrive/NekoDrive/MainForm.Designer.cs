@@ -179,7 +179,8 @@
             this.cboxVer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboxVer.FormattingEnabled = true;
             this.cboxVer.Items.AddRange(new object[] {
-            "V2"});
+            "V2",
+            "V3"});
             this.cboxVer.Location = new System.Drawing.Point(124, 21);
             this.cboxVer.Name = "cboxVer";
             this.cboxVer.Size = new System.Drawing.Size(46, 21);

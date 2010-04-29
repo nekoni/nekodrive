@@ -298,7 +298,7 @@ void CNFSv2::ReleaseBuffers(void** pBuffers)
 		delete[] pBuffers;
 }
 
-void * CNFSv2::GetItemAttributes(char* pName, char* pDirectory)
+void* CNFSv2::GetItemAttributes(char* pName, char* pDirectory)
 {
 	void* Ret = NULL;
 	if(GetItemHandle(pDirectory, nfsCurrentDirectory) == NFS_SUCCESS)
