@@ -27,8 +27,8 @@ namespace NekoDrive.NFS
 
             int ret = -DokanNet.ERROR_FILE_NOT_FOUND;
             filename = MainForm.In.mNFS.ConvertPath(filename);
-            string Directory = Path.GetDirectoryName(filename);
-            string FileName = Path.GetFileName(filename);
+            string Directory = MainForm.In.mNFS.ConvertPath(Path.GetDirectoryName(filename));
+            string FileName = MainForm.In.mNFS.ConvertPath(Path.GetFileName(filename));
 
             switch (mode)
             {
@@ -109,9 +109,9 @@ namespace NekoDrive.NFS
         {
             Debug("CreateDirectory {0}", filename);
             filename = MainForm.In.mNFS.ConvertPath(filename);
-            string Directory = Path.GetDirectoryName(filename);
-            string DirectoryName = Path.GetFileName(filename);
-            return (int)MainForm.In.mNFS.CreateDirectory(DirectoryName, Directory);
+            string Directory = MainForm.In.mNFS.ConvertPath(Path.GetDirectoryName(filename));
+            string FileName = MainForm.In.mNFS.ConvertPath(Path.GetFileName(filename));
+            return (int)MainForm.In.mNFS.CreateDirectory(FileName, Directory);
         }
 
         public int Cleanup(string filename, DokanFileInfo info)
@@ -132,8 +132,8 @@ namespace NekoDrive.NFS
             int ret = 0;
             Debug("ReadFile {0}", filename);
             filename = MainForm.In.mNFS.ConvertPath(filename);
-            string Directory = Path.GetDirectoryName(filename);
-            string FileName = Path.GetFileName(filename);
+            string Directory = MainForm.In.mNFS.ConvertPath(Path.GetDirectoryName(filename));
+            string FileName = MainForm.In.mNFS.ConvertPath(Path.GetFileName(filename));
             try
             {
                 Debug("ReadFile {0} {1} {2} {3}", Directory, FileName, offset, buffer.Length);
@@ -158,8 +158,9 @@ namespace NekoDrive.NFS
         {
             Debug("WriteFile {0}", filename);
             filename = MainForm.In.mNFS.ConvertPath(filename);
-            string Directory = Path.GetDirectoryName(filename);
-            string FileName = Path.GetFileName(filename);
+            string Directory = MainForm.In.mNFS.ConvertPath(Path.GetDirectoryName(filename));
+            string FileName = MainForm.In.mNFS.ConvertPath(Path.GetFileName(filename));
+
             if (OpenDirectory(Directory, null) != 0)
                 return -1;
             int ret = -1;
@@ -192,8 +193,8 @@ namespace NekoDrive.NFS
         {
             Debug("GetFileInformation {0}", filename);
             filename = MainForm.In.mNFS.ConvertPath(filename);
-            string Directory = Path.GetDirectoryName(filename);
-            string FileName = Path.GetFileName(filename);
+            string Directory = MainForm.In.mNFS.ConvertPath(Path.GetDirectoryName(filename));
+            string FileName = MainForm.In.mNFS.ConvertPath(Path.GetFileName(filename));
 
             NFSAttributes nfsAttributes = MainForm.In.mNFS.GetItemAttributes(FileName, Directory);
             if (nfsAttributes == null)
@@ -215,10 +216,9 @@ namespace NekoDrive.NFS
         public int FindFiles(string filename, System.Collections.ArrayList files, DokanFileInfo info)
         {
             Debug("FindFiles {0}", filename);
-
             filename = MainForm.In.mNFS.ConvertPath(filename);
-            string Directory = Path.GetDirectoryName(filename);
-            string FileName = Path.GetFileName(filename);
+            string Directory = MainForm.In.mNFS.ConvertPath(Path.GetDirectoryName(filename));
+            string FileName = MainForm.In.mNFS.ConvertPath(Path.GetFileName(filename));
 
             foreach (string strItem in MainForm.In.mNFS.GetItemList(Path.Combine(Directory, FileName)))
             {
@@ -254,8 +254,9 @@ namespace NekoDrive.NFS
         {
             Debug("DeleteFile {0}", filename);
             filename = MainForm.In.mNFS.ConvertPath(filename);
-            string Directory = Path.GetDirectoryName(filename);
-            string FileName = Path.GetFileName(filename);
+            string Directory = MainForm.In.mNFS.ConvertPath(Path.GetDirectoryName(filename));
+            string FileName = MainForm.In.mNFS.ConvertPath(Path.GetFileName(filename));
+
             if (MainForm.In.mNFS.FileExists(FileName, Directory))
                 return (int) MainForm.In.mNFS.DeleteFile(FileName, Directory);
 
@@ -266,8 +267,9 @@ namespace NekoDrive.NFS
         {
             Debug("DeleteDirectory {0}", filename);
             filename = MainForm.In.mNFS.ConvertPath(filename);
-            string Directory = Path.GetDirectoryName(filename);
-            string FileName = Path.GetFileName(filename);
+            string Directory = MainForm.In.mNFS.ConvertPath(Path.GetDirectoryName(filename));
+            string FileName = MainForm.In.mNFS.ConvertPath(Path.GetFileName(filename));
+
             return (int)MainForm.In.mNFS.DeleteDirectory(FileName, Directory);
         }
 

@@ -595,33 +595,28 @@ int CNFSv2::Read(u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
 	int Ret = NFS_ERROR;
 	if(clntV2 != NULL)
 	{
-		if(CheckOpenHandle() == NULL)
-			strLastError = "handle closed";
+		readargs dpArgRead;
+		readres *pReadRes;
+		memcpy(dpArgRead.file, nfsCurrentFile, FHSIZE);
+		dpArgRead.offset = Offset;
+		dpArgRead.count = Count;
+		if( (pReadRes = nfsproc_read_2(&dpArgRead, clntV2)) == NULL ) 
+			strLastError = clnt_sperror(clntV2, "nfsproc_read_2");
 		else
 		{
-			readargs dpArgRead;
-			readres *pReadRes;
-			memcpy(dpArgRead.file, nfsCurrentFile, FHSIZE);
-			dpArgRead.offset = Offset;
-			dpArgRead.count = Count;
-			if( (pReadRes = nfsproc_read_2(&dpArgRead, clntV2)) == NULL ) 
-				strLastError = clnt_sperror(clntV2, "nfsproc_read_2");
-			else
+			if (pReadRes->status == NFS_OK) 
 			{
-				if (pReadRes->status == NFS_OK) 
-				{
-					*pSize = pReadRes->readres_u.ok.data.data_len;
-					memcpy(pBuffer, pReadRes->readres_u.ok.data.data_val, pReadRes->readres_u.ok.data.data_len);
-					Ret = NFS_SUCCESS;
-				} 
-				else 
-				{
-					char  buffer[200];
-					sprintf_s(buffer, 200, "nfsproc_read_2 %d", pReadRes->status);
-					strLastError = buffer;
-				}
-				xdr_free((xdrproc_t)xdr_readres,(char*) pReadRes);
+				*pSize = pReadRes->readres_u.ok.data.data_len;
+				memcpy(pBuffer, pReadRes->readres_u.ok.data.data_val, pReadRes->readres_u.ok.data.data_len);
+				Ret = NFS_SUCCESS;
+			} 
+			else 
+			{
+				char  buffer[200];
+				sprintf_s(buffer, 200, "nfsproc_read_2 %d", pReadRes->status);
+				strLastError = buffer;
 			}
+			xdr_free((xdrproc_t)xdr_readres,(char*) pReadRes);
 		}
 	}
 	else
@@ -644,34 +639,29 @@ int CNFSv2::Write(u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
 {
 	int Ret = NFS_ERROR;
 	if(clntV2 != NULL)
-	{
-		if(CheckOpenHandle() == NULL)
-			strLastError = "handle closed";
+	{	
+		writeargs dpArgWrite;
+		attrstat *pAttrStat;
+		memcpy(dpArgWrite.file, nfsCurrentFile, FHSIZE);
+		dpArgWrite.offset = Offset;
+		dpArgWrite.data.data_len = Count;
+		dpArgWrite.data.data_val = pBuffer;
+		if( (pAttrStat = nfsproc_write_2(&dpArgWrite, clntV2)) == NULL )
+			strLastError = clnt_sperror(clntV2, "nfsproc_write_2");
 		else
 		{
-			writeargs dpArgWrite;
-			attrstat *pAttrStat;
-			memcpy(dpArgWrite.file, nfsCurrentFile, FHSIZE);
-			dpArgWrite.offset = Offset;
-			dpArgWrite.data.data_len = Count;
-			dpArgWrite.data.data_val = pBuffer;
-			if( (pAttrStat = nfsproc_write_2(&dpArgWrite, clntV2)) == NULL )
-				strLastError = clnt_sperror(clntV2, "nfsproc_write_2");
-			else
+			if (pAttrStat->status == NFS_OK) 
 			{
-				if (pAttrStat->status == NFS_OK) 
-				{
-					*pSize = pAttrStat->attrstat_u.attributes.size;
-					Ret = NFS_SUCCESS;
-				} 
-				else 
-				{
-					char  buffer[200];
-					sprintf_s(buffer, 200, "nfsproc_write_2 %d", pAttrStat->status);
-					strLastError = buffer;
-				}
-				xdr_free((xdrproc_t)xdr_attrstat,(char*) pAttrStat);
+				*pSize = pAttrStat->attrstat_u.attributes.size;
+				Ret = NFS_SUCCESS;
+			} 
+			else 
+			{
+				char  buffer[200];
+				sprintf_s(buffer, 200, "nfsproc_write_2 %d", pAttrStat->status);
+				strLastError = buffer;
 			}
+			xdr_free((xdrproc_t)xdr_attrstat,(char*) pAttrStat);
 		}
 	}
 	else
@@ -716,31 +706,21 @@ int CNFSv2::GetItemHandle(char* Path, char* Handle)
 	char *pName;
 	nfshandle currentItem;
 
-	memcpy(currentItem, nfsRootDirectory, FHSIZE);
-	pName = strtok(Path, "\\");
-	while(pName != NULL)
+	diropargs dpDrArgs;
+	diropres *pDirOpRes;
+	memcpy(dpDrArgs.dir, nfsRootDirectory, FHSIZE);
+	dpDrArgs.name = Path;
+	if( (pDirOpRes = nfsproc_lookup_2(&dpDrArgs, clntV2)) != NULL ) 
 	{
-		diropargs dpDrArgs;
-		diropres *pDirOpRes;
-		memcpy(dpDrArgs.dir, currentItem, FHSIZE);
-		dpDrArgs.name = pName;
-		if( (pDirOpRes = nfsproc_lookup_2(&dpDrArgs, clntV2)) != NULL ) 
+		if (pDirOpRes->status == NFS_OK) 
 		{
-			if (pDirOpRes->status == NFS_OK) 
-			{
-				memcpy(currentItem, pDirOpRes->diropres_u.ok.file, FHSIZE);
-				Ret = NFS_SUCCESS;
-			}
-			else
-				Ret = NFS_ERROR;
-
-			xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
+			memcpy(currentItem, pDirOpRes->diropres_u.ok.file, FHSIZE);
+			Ret = NFS_SUCCESS;
 		}
+		else
+			Ret = NFS_ERROR;
 
-		pName = strtok(NULL, "\\");
-
-		if(Ret == NFS_ERROR)
-			break;
+		xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
 	}
 
 	if(Ret != NFS_ERROR)

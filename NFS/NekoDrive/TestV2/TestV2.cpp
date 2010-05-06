@@ -97,12 +97,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::vector<std::string> strD;
 		std::vector<std::string> strI;
 		CNFSv2* nfs = new CNFSv2();
-		unsigned long ServerAddress = inet_addr("192.168.56.3");
-		nfs->Connect(ServerAddress, 0, 0);
+		nfs->Connect("161.55.189.110", 0, 0, 20);
 		
 		int iDevices = 0;
 		char** pDevices  = nfs->GetExportedDevices(&iDevices);
 		int i = 0;
+		char* ItemName = "P0/IDS00101";
+		void* attrib = nfs->GetItemAttributes(ItemName);
 		for(char** iList = pDevices; i < iDevices; ++iList, i++)
 		{
 			strD.push_back(*iList);
@@ -110,7 +111,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		nfs->ReleaseBuffers((void**)pDevices);
 		nfs->MountDevice((char*)strD[0].c_str());
 		int iItems = 0;
-		nfs->ChangeCurrentDirectory("test");
+		//nfs->ChangeCurrentDirectory("test");
 		char** pItems = nfs->GetItemsList(&iItems);
 		i = 0;
 		for(char** iList = pItems; i < iItems; ++iList, i++)
