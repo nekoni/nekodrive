@@ -21,6 +21,7 @@ namespace NekoDrive.NFS
         public event NFSDataEventHandler DataEvent;
         
         private INFS nfsInterface = null;
+        private const int blockSize = 4096 + 2048 + 1024 + 512 + 256;
 
         public bool IsMounted = false;
         public bool IsConnected = false;
@@ -163,17 +164,10 @@ namespace NekoDrive.NFS
         public NFSResult OpenDirectory(String Path)
         {
             NFSResult res = NFSResult.NFS_SUCCESS;
-            String[] Dirs = Path.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            if (Dirs.Length == 0)
-                return NFSResult.NFS_ERROR;
-            foreach (String Dir in Dirs)
-            {
-                if (nfsInterface.ChangeCurrentDirectory(Dir) != NFSResult.NFS_SUCCESS)
-                {
-                    res = NFSResult.NFS_ERROR;
-                    break;
-                }
-            }
+
+            if (nfsInterface.ChangeCurrentDirectory(Path) != NFSResult.NFS_SUCCESS)
+                res = NFSResult.NFS_ERROR;
+                
             return res;
         }
 
@@ -267,7 +261,7 @@ namespace NekoDrive.NFS
                 if (NFSResult.NFS_SUCCESS == Open(FileName))
                 {
                     UInt64 TotalLenght = nfsAttributes.size;
-                    UInt32 BlockSize = 4096;
+                    UInt32 BlockSize = blockSize;
                     UInt32 CuttentPosition = 0;
                     do
                     {
@@ -321,7 +315,7 @@ namespace NekoDrive.NFS
         public Int32 Read(String FullFilePath, UInt64 Offset, UInt32 Count, ref Byte[] Buffer)
         {
             UInt64 TotalLenght = Count;
-            UInt32 BlockSize = 4096;
+            UInt32 BlockSize = blockSize;
             UInt32 CurrentPosition = 0;
             do
             {
@@ -375,7 +369,7 @@ namespace NekoDrive.NFS
                 if (NFSResult.NFS_SUCCESS == Open(FileName))
                 {
                     UInt64 Offset = (UInt64) InputOffset;
-                    UInt32 Count = 4096;
+                    UInt32 Count = blockSize;
                     Int32 Bytes = 0;
                     Byte[] Buffer = new Byte[Count];
                     while ((Bytes = InputStream.Read(Buffer, 0, (Int32)Count)) > 0)
@@ -433,7 +427,7 @@ namespace NekoDrive.NFS
         public Int32 Write(String FullFilePath, UInt64 Offset, UInt32 Count, Byte[] Buffer)
         {
             UInt64 TotalLenght = Count;
-            UInt32 BlockSize = 4096;
+            UInt32 BlockSize = blockSize;
             UInt32 CurrentPosition = 0;
             if (Buffer != null)
             {
@@ -504,7 +498,10 @@ namespace NekoDrive.NFS
         public String ConvertPath(String Path)
         {
             Path = Path.Replace("\\", "/");
-            Path = "." + Path;
+            if (Path == "/")
+                Path = ".";
+            if (Path.Length > 1)
+                Path.Remove(0, 1);
             return Path;
         }
     }
