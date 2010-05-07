@@ -41,8 +41,8 @@ CNFSv2::CNFSv2()
 	clntMountV2 = NULL;
 	clntV2 = NULL;
 	sSocket = RPC_ANYSOCK;
-	strCurrentDevice = "";
 	strCurrentFileName = "";
+	strCurrentDevice = "";
 	timeOut.tv_sec = 60;
 	timeOut.tv_usec = 0;
 	sSrvAddr.sin_family = AF_INET;
@@ -559,18 +559,18 @@ int CNFSv2::Open(char* pName)
 		if(strCurrentFileName.compare(pName) != 0)
 		{
 			strCurrentFileName = pName;
-			Ret = GetItemHandle(pName, nfsCurrentFile);
+			Ret = GetItemHandle(pName, nfsCurrentFile);	
 		}
 		else
-			Ret = NFS_SUCCESS;
+			return NFS_SUCCESS;
 	}
 	return Ret;
 }
 
 void CNFSv2::CloseFile()
 {
-	memset(nfsCurrentFile, 0, sizeof(FHSIZE));
 	strCurrentFileName = "";
+	memset(nfsCurrentFile, 0, sizeof(FHSIZE));
 }
 
 int CNFSv2::CheckOpenHandle()
@@ -643,7 +643,7 @@ int CNFSv2::Write(u_int Offset, u_int Count, char* pBuffer, u_long* pSize)
 {
 	int Ret = NFS_ERROR;
 	if(clntV2 != NULL)
-	{	
+	{
 		writeargs dpArgWrite;
 		attrstat *pAttrStat;
 		memcpy(dpArgWrite.file, nfsCurrentFile, FHSIZE);
@@ -707,23 +707,34 @@ int CNFSv2::Rename(char* pOldName, char* pNewName)
 int CNFSv2::GetItemHandle(char* Path, char* Handle)
 {
 	int Ret = NFS_ERROR;
+	char *pName;
 	nfshandle currentItem;
 
-	diropargs dpDrArgs;
-	diropres *pDirOpRes;
-	memcpy(dpDrArgs.dir, nfsRootDirectory, FHSIZE);
-	dpDrArgs.name = Path;
-	if( (pDirOpRes = nfsproc_lookup_2(&dpDrArgs, clntV2)) != NULL ) 
+	memcpy(currentItem, nfsRootDirectory, FHSIZE);
+	pName = strtok(Path, "/");
+	while(pName != NULL)
 	{
-		if (pDirOpRes->status == NFS_OK) 
+		diropargs dpDrArgs;
+		diropres *pDirOpRes;
+		memcpy(dpDrArgs.dir, currentItem, FHSIZE);
+		dpDrArgs.name = pName;
+		if( (pDirOpRes = nfsproc_lookup_2(&dpDrArgs, clntV2)) != NULL ) 
 		{
-			memcpy(currentItem, pDirOpRes->diropres_u.ok.file, FHSIZE);
-			Ret = NFS_SUCCESS;
-		}
-		else
-			Ret = NFS_ERROR;
+			if (pDirOpRes->status == NFS_OK) 
+			{
+				memcpy(currentItem, pDirOpRes->diropres_u.ok.file, FHSIZE);
+				Ret = NFS_SUCCESS;
+			}
+			else
+				Ret = NFS_ERROR;
 
-		xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
+			xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
+		}
+
+		pName = strtok(NULL, "/");
+
+		if(Ret == NFS_ERROR)
+			break;
 	}
 
 	if(Ret != NFS_ERROR)
@@ -735,26 +746,37 @@ int CNFSv2::GetItemHandle(char* Path, char* Handle)
 int CNFSv2::IsDirectory(char* Path)
 {
 	int Ret = NFS_ERROR;
+	char *pName;
 	nfshandle currentItem;
 
-	diropargs dpDrArgs;
-	diropres *pDirOpRes;
-	memcpy(dpDrArgs.dir, nfsRootDirectory, FHSIZE);
-	dpDrArgs.name = Path;
-	if( (pDirOpRes = nfsproc_lookup_2(&dpDrArgs, clntV2)) != NULL ) 
+	memcpy(currentItem, nfsRootDirectory, FHSIZE);
+	pName = strtok(Path, "/");
+	while(pName != NULL)
 	{
-		if (pDirOpRes->status == NFS_OK) 
+		diropargs dpDrArgs;
+		diropres *pDirOpRes;
+		memcpy(dpDrArgs.dir, currentItem, FHSIZE);
+		dpDrArgs.name = pName;
+		if( (pDirOpRes = nfsproc_lookup_2(&dpDrArgs, clntV2)) != NULL ) 
 		{
-			memcpy(currentItem, pDirOpRes->diropres_u.ok.file, FHSIZE);
-			if(pDirOpRes->diropres_u.ok.attributes.type == 2)
-				Ret = NFS_SUCCESS;
+			if (pDirOpRes->status == NFS_OK) 
+			{
+				memcpy(currentItem, pDirOpRes->diropres_u.ok.file, FHSIZE);
+				if(pDirOpRes->diropres_u.ok.attributes.type == 2)
+					Ret = NFS_SUCCESS;
+				else
+					Ret = NFS_ERROR;
+			}
 			else
 				Ret = NFS_ERROR;
-		}
-		else
-			Ret = NFS_ERROR;
 
-		xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
+			xdr_free((xdrproc_t)xdr_diropres,(char*) pDirOpRes);
+		}
+
+		pName = strtok(NULL, "/");
+
+		if(Ret == NFS_ERROR)
+			break;
 	}
 
 	return Ret;
