@@ -54,6 +54,7 @@ private:
 	SOCKET sSocket;
 	struct sockaddr_in sSrvAddr;
 	struct timeval timeOut;
+	std::string strCurrentFileName;
 	std::string strCurrentDevice;
 	std::string strLastError;
 	char nfsRootDirectory[FHSIZE];
