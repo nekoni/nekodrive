@@ -130,5 +130,17 @@ namespace NekoDrive.Properties {
                 this["AutoMount"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NekoDrive")]
+        public string DriveLabel {
+            get {
+                return ((string)(this["DriveLabel"]));
+            }
+            set {
+                this["DriveLabel"] = value;
+            }
+        }
     }
 }

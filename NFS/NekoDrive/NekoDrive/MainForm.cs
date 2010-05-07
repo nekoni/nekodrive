@@ -81,6 +81,7 @@ namespace NekoDrive
                 cboxRemoteDevices.Enabled = true;
                 btnMount.Enabled = true;
                 btnUnmount.Enabled = false;
+                tbDriveLabel.Enabled = true;
                 
             }
             else
@@ -94,12 +95,14 @@ namespace NekoDrive
 
             string strDev = (string)cboxRemoteDevices.SelectedItem;
             char cDrive = ((string)cboxLocalDrive.SelectedItem).ToCharArray()[0];
+            string strDriveLabel = tbDriveLabel.Text;
             if (MainForm.In.mNFS.MountDevice(strDev) == NFSResult.NFS_SUCCESS)
             {
                 cboxLocalDrive.Enabled = false;
                 cboxRemoteDevices.Enabled = false;
                 btnMount.Enabled = false;
                 btnUnmount.Enabled = true;
+                tbDriveLabel.Enabled = false;
                 
                 ThreadPool.QueueUserWorkItem(new WaitCallback(
                     delegate
@@ -111,7 +114,7 @@ namespace NekoDrive
                         dokanOptions.NetworkDrive = false;
                         dokanOptions.UseKeepAlive = true;
                         dokanOptions.UseAltStream = true;
-                        dokanOptions.VolumeLabel = "NekoDrive";
+                        dokanOptions.VolumeLabel = strDriveLabel;
                         dokanOptions.ThreadCount = 1;
                         Operations nfsOperations = new Operations();
                         DokanNet.DokanMain(dokanOptions, nfsOperations);
@@ -163,6 +166,7 @@ namespace NekoDrive
                         cboxRemoteDevices.SelectedIndex = NekoDrive.Properties.Settings.Default.RemoteDevice;
 
                     chkAutoMount.Checked = NekoDrive.Properties.Settings.Default.AutoMount;
+                    tbDriveLabel.Text = NekoDrive.Properties.Settings.Default.DriveLabel;
 
                     if (chkAutoMount.Checked)
                         MountDrive();
@@ -324,6 +328,7 @@ namespace NekoDrive
                 NekoDrive.Properties.Settings.Default.RemoteDevice = cboxRemoteDevices.SelectedIndex;
                 NekoDrive.Properties.Settings.Default.DriveLetter = cboxLocalDrive.SelectedIndex;
                 NekoDrive.Properties.Settings.Default.AutoMount = chkAutoMount.Checked;
+                NekoDrive.Properties.Settings.Default.DriveLabel = tbDriveLabel.Text;
 
                 NekoDrive.Properties.Settings.Default.Save();
             }
