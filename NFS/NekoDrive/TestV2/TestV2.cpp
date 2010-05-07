@@ -97,12 +97,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::vector<std::string> strD;
 		std::vector<std::string> strI;
 		CNFSv2* nfs = new CNFSv2();
-		nfs->Connect("161.55.189.110", 0, 0, 20);
+		//nfs->Connect("161.55.189.110", 0, 0, 20);
+		nfs->Connect("192.168.56.102", 0, 0, 20);
 		
 		int iDevices = 0;
 		char** pDevices  = nfs->GetExportedDevices(&iDevices);
 		int i = 0;
-		char* ItemName = "P0/IDS00101";
+		char* ItemName = "Recycled/adsmsext.dll";
 		void* attrib = nfs->GetItemAttributes(ItemName);
 		for(char** iList = pDevices; i < iDevices; ++iList, i++)
 		{

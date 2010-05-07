@@ -495,14 +495,32 @@ namespace NekoDrive.NFS
             return nfsInterface.GetLastNfsError();
         }
 
-        public String ConvertPath(String Path)
+        public string GetFileName(String path)
         {
-            Path = Path.Replace("\\", "/");
-            if (Path == "/")
-                Path = ".";
-            if (Path.Length > 1)
-                Path.Remove(0, 1);
-            return Path;
+            String str = Path.GetFileName(path);
+            if(str == string.Empty)
+                str = ".";
+            return str;
+        }
+
+        public string GetDirectoryName(String path)
+        {
+            String str = Path.GetDirectoryName(path);
+            if (str == null)
+                return ".";
+            str = str.Replace("\\", "/");
+            if (str == "/")
+                str = ".";
+            if (str.Length > 1)
+                str = str.Remove(0, 1);
+            return str;
+        }
+
+        public string Combine(String FileName, String DirectoryName)
+        {
+            if (DirectoryName == ".")
+                return FileName;
+            return DirectoryName + "/" + FileName;
         }
     }
 }

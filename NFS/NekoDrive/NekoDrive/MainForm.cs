@@ -110,6 +110,7 @@ namespace NekoDrive
                         dokanOptions.DriveLetter = cDrive;
                         dokanOptions.NetworkDrive = false;
                         dokanOptions.UseKeepAlive = true;
+                        dokanOptions.UseAltStream = true;
                         dokanOptions.VolumeLabel = "NekoDrive";
                         dokanOptions.ThreadCount = 1;
                         Operations nfsOperations = new Operations();

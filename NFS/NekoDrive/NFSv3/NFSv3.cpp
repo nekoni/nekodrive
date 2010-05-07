@@ -42,6 +42,7 @@ CNFSv3::CNFSv3()
 	clntV3 = NULL;
 	sSocket = RPC_ANYSOCK;
 	strCurrentDevice = "";
+	strCurrentFileName = "";
 	memset(nfsCurrentFile, 0, sizeof(FHSIZE));
 	memset(nfsCurrentDirectory, 0, sizeof(FHSIZE));
 	memset(nfsRootDirectory, 0, sizeof(FHSIZE));
@@ -571,12 +572,21 @@ int CNFSv3::Open(char* pName)
 {
 	int Ret = NFS_ERROR;
 	if(pName != NULL)
-		Ret = GetItemHandle(pName, nfsCurrentFile);
+	{
+		if(strCurrentFileName.compare(pName) != 0)
+		{
+			strCurrentFileName = pName;
+			Ret = GetItemHandle(pName, nfsCurrentFile);
+		}
+		else
+			Ret = NFS_SUCCESS;
+	}
 	return Ret;
 }
 
 void CNFSv3::CloseFile()
 {
+	strCurrentFileName = "";
 	memset(nfsCurrentFile, 0, sizeof(FHSIZE));
 }
 
@@ -600,10 +610,7 @@ int CNFSv3::Read(char* pName, unsigned __int64 Offset, u_long Count, char* pBuff
 {
 	int Ret = NFS_ERROR;
 	if((Ret = Open(pName)) == NFS_SUCCESS)
-	{
 		Ret = Read(Offset, Count, pBuffer, pSize);
-		CloseFile();
-	}
 	return Ret;
 }
 
@@ -646,10 +653,7 @@ int CNFSv3::Write(char* pName, uint64 Offset, uint32 Count, char* pBuffer, u_int
 {
 	int Ret = NFS_ERROR;
 	if((Ret = Open(pName)) == NFS_SUCCESS)
-	{
 		Ret = Write(Offset, Count, pBuffer, pSize);
-		CloseFile();
-	}
 	return Ret;
 }
 
@@ -760,42 +764,31 @@ int CNFSv3::GetItemHandle(char* Path, char* Handle)
 int CNFSv3::IsDirectory(char* Path)
 {
 	int Ret = NFS_ERROR;
-	char *pName;
 	char currentItem[FHSIZE];
 
-	memcpy(currentItem, nfsRootDirectory, FHSIZE);
-	pName = strtok(Path, "\\");
-	while(pName != NULL)
+	LOOKUP3args dpLookUpArgs;
+	LOOKUP3res *pLookUpRes;
+	dpLookUpArgs.what.dir.data.data_val = nfsRootDirectory;
+	dpLookUpArgs.what.dir.data.data_len = FHSIZE;
+	dpLookUpArgs.what.name = Path;
+	
+	if( (pLookUpRes = nfsproc3_lookup_3(&dpLookUpArgs, clntV3)) == NULL ) 
+		strLastError = clnt_sperror(clntV3,"nfsproc3_lookup_3");
+	else
 	{
-		LOOKUP3args dpLookUpArgs;
-		LOOKUP3res *pLookUpRes;
-		dpLookUpArgs.what.dir.data.data_val = currentItem;
-		dpLookUpArgs.what.dir.data.data_len = FHSIZE;
-		dpLookUpArgs.what.name = pName;
-		
-		if( (pLookUpRes = nfsproc3_lookup_3(&dpLookUpArgs, clntV3)) == NULL ) 
-			strLastError = clnt_sperror(clntV3,"nfsproc3_lookup_3");
+		if (pLookUpRes->status == NFS3_OK) 
+		{
+			memcpy(currentItem, pLookUpRes->LOOKUP3res_u.resok.obj.data.data_val, pLookUpRes->LOOKUP3res_u.resok.obj.data.data_len);
+			if(pLookUpRes->LOOKUP3res_u.resok.obj_attributes.post_op_attr_u.attributes.type == 2)
+				Ret = NFS_SUCCESS;
+			else
+				Ret = NFS_ERROR;
+		}
 		else
 		{
-			if (pLookUpRes->status == NFS3_OK) 
-			{
-				memcpy(currentItem, pLookUpRes->LOOKUP3res_u.resok.obj.data.data_val, pLookUpRes->LOOKUP3res_u.resok.obj.data.data_len);
-				if(pLookUpRes->LOOKUP3res_u.resok.obj_attributes.post_op_attr_u.attributes.type == 2)
-					Ret = NFS_SUCCESS;
-				else
-					Ret = NFS_ERROR;
-			}
-			else
-			{
-				Ret = NFS_ERROR;
-			}
-			xdr_free((xdrproc_t)xdr_LOOKUP3res,(char*) pLookUpRes);
+			Ret = NFS_ERROR;
 		}
-
-		pName = strtok(NULL, "\\");
-
-		if(Ret == NFS_ERROR)
-			break;
+		xdr_free((xdrproc_t)xdr_LOOKUP3res,(char*) pLookUpRes);
 	}
 
 	return Ret;
