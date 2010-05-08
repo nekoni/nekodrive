@@ -2,6 +2,6 @@ NekoDrive Usage
 
 It's extremely simple:
 
-1) download NekoDrive and extract the zip in a folder
-2) download and install dokan 0.5.2 http://dokan-dev.net/en/
-3) execute NekoDrive.exe
+ # download NekoDrive and extract the zip in a folder
+ # download and install dokan 0.5.2 http://dokan-dev.net/en/
+ # execute NekoDrive.exe
