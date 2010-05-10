@@ -522,5 +522,10 @@ namespace NekoDrive.NFS
                 return FileName;
             return DirectoryName + "/" + FileName;
         }
+
+        public NFSResult SetFileSize(String FileName, String DirectoryName, UInt64 Size)
+        {
+            return nfsInterface.SetFileSize(FileName, DirectoryName, Size);
+        }
     }
 }

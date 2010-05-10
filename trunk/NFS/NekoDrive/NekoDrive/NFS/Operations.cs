@@ -53,7 +53,10 @@ namespace NekoDrive.NFS
                 case FileMode.Create:
                     {
                         Debug("Create");
-                        ret = (int) MainForm.In.mNFS.CreateFile(FileName, Directory);
+                        if (MainForm.In.mNFS.FileExists(FileName, Directory))
+                            ret = -DokanNet.ERROR_ALREADY_EXISTS;
+                        else
+                            ret = (int) MainForm.In.mNFS.CreateFile(FileName, Directory);
                         break;
                     }
                 case FileMode.OpenOrCreate:
@@ -80,7 +83,7 @@ namespace NekoDrive.NFS
                         if (MainForm.In.mNFS.FileExists(FileName, Directory))
                             ret = 0;
                         else
-                            ret = (int)MainForm.In.mNFS.CreateFile(FileName, Directory);
+                            ret = -DokanNet.ERROR_FILE_NOT_FOUND;
                         break;
                     }
                 default:
@@ -295,13 +298,22 @@ namespace NekoDrive.NFS
 
         public int SetEndOfFile(string filename, long length, DokanFileInfo info)
         {
-            Debug("SetEndOfFile {0}", filename);
-            return 0;
+            string Directory = MainForm.In.mNFS.GetDirectoryName(filename);
+            string FileName = MainForm.In.mNFS.GetFileName(filename);
+
+            return (int)MainForm.In.mNFS.SetFileSize(FileName, Directory, (UInt64) length);
         }
 
         public int SetAllocationSize(string filename, long length, DokanFileInfo info)
         {
-            Debug("SetAllocationSize {0}", filename);
+            string Directory = MainForm.In.mNFS.GetDirectoryName(filename);
+            string FileName = MainForm.In.mNFS.GetFileName(filename);
+
+            NFSAttributes attr = MainForm.In.mNFS.GetItemAttributes(FileName, Directory);
+            if (attr.size < (ulong) length)
+            {
+                return (int)MainForm.In.mNFS.SetFileSize(FileName, Directory, (UInt64)length);
+            }
             return 0;
         }
 

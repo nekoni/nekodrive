@@ -44,7 +44,9 @@
             this.btnDisconnect = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
             this.gboxMount = new System.Windows.Forms.GroupBox();
+            this.tbDriveLabel = new System.Windows.Forms.TextBox();
             this.chkAutoMount = new System.Windows.Forms.CheckBox();
+            this.lblDriveLabel = new System.Windows.Forms.Label();
             this.lblLocalDrive = new System.Windows.Forms.Label();
             this.lblRemoteDevices = new System.Windows.Forms.Label();
             this.cboxLocalDrive = new System.Windows.Forms.ComboBox();
@@ -52,8 +54,6 @@
             this.btnUnmount = new System.Windows.Forms.Button();
             this.btnMount = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.lblDriveLabel = new System.Windows.Forms.Label();
-            this.tbDriveLabel = new System.Windows.Forms.TextBox();
             this.gbTargetConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).BeginInit();
             this.gboxMount.SuspendLayout();
@@ -226,6 +226,14 @@
             this.gboxMount.TabStop = false;
             this.gboxMount.Text = "Mount";
             // 
+            // tbDriveLabel
+            // 
+            this.tbDriveLabel.Location = new System.Drawing.Point(106, 78);
+            this.tbDriveLabel.MaxLength = 10;
+            this.tbDriveLabel.Name = "tbDriveLabel";
+            this.tbDriveLabel.Size = new System.Drawing.Size(94, 20);
+            this.tbDriveLabel.TabIndex = 4;
+            // 
             // chkAutoMount
             // 
             this.chkAutoMount.AutoSize = true;
@@ -235,6 +243,15 @@
             this.chkAutoMount.TabIndex = 0;
             this.chkAutoMount.Text = "Auto Mount";
             this.chkAutoMount.UseVisualStyleBackColor = true;
+            // 
+            // lblDriveLabel
+            // 
+            this.lblDriveLabel.AutoSize = true;
+            this.lblDriveLabel.Location = new System.Drawing.Point(14, 81);
+            this.lblDriveLabel.Name = "lblDriveLabel";
+            this.lblDriveLabel.Size = new System.Drawing.Size(71, 13);
+            this.lblDriveLabel.TabIndex = 2;
+            this.lblDriveLabel.Text = "Volume Label";
             // 
             // lblLocalDrive
             // 
@@ -299,23 +316,6 @@
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
-            // lblDriveLabel
-            // 
-            this.lblDriveLabel.AutoSize = true;
-            this.lblDriveLabel.Location = new System.Drawing.Point(14, 81);
-            this.lblDriveLabel.Name = "lblDriveLabel";
-            this.lblDriveLabel.Size = new System.Drawing.Size(71, 13);
-            this.lblDriveLabel.TabIndex = 2;
-            this.lblDriveLabel.Text = "Volume Label";
-            // 
-            // tbDriveLabel
-            // 
-            this.tbDriveLabel.Location = new System.Drawing.Point(106, 78);
-            this.tbDriveLabel.MaxLength = 10;
-            this.tbDriveLabel.Name = "tbDriveLabel";
-            this.tbDriveLabel.Size = new System.Drawing.Size(94, 20);
-            this.tbDriveLabel.TabIndex = 4;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -327,7 +327,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "NekoDrive 0.4.0.1";
+            this.Text = "NekoDrive";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Resize += new System.EventHandler(this.MainForm_Resize);

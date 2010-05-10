@@ -169,7 +169,10 @@ namespace NekoDrive
                     tbDriveLabel.Text = NekoDrive.Properties.Settings.Default.DriveLabel;
 
                     if (chkAutoMount.Checked)
+                    {
+                        this.WindowState = FormWindowState.Minimized;
                         MountDrive();
+                    }
 
                 }
                 else
@@ -216,6 +219,8 @@ namespace NekoDrive
 
         private void InitializeForm()
         {
+            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            this.Text += " " + version.Major + "." + version.Minor + "." + version.Revision;
             cboxLocalDrive.Items.Clear();
             List<string> DriveLetters = GetDriveLetters();
             char c = 'D';

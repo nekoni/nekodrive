@@ -105,6 +105,7 @@ public:
 	int ChangeMode(char* pName, int Mode);
 	int ChangeOwner(char* pName, char* pDirectory, int UID, int GUID);
 	int ChangeOwner(char* pName, int UID, int GUID);
+	int SetFileSize(char* pName, char* pDirectory, __int64 Size);
 };
 
 NFSV3_API CNFSv3* CreateCNFSv3();
