@@ -123,6 +123,9 @@ namespace NekoDrive.NFS.Wrappers
         [DllImport("NFSv2.dll", EntryPoint = "?Rename@CNFSv2@@QAEHPAD0@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_Rename(IntPtr pThis, String pOldName, String pNewName);
 
+        [DllImport("NFSv2.dll", EntryPoint = "?SetFileSize@CNFSv2@@QAEHPAD0J@Z", CallingConvention = CallingConvention.ThisCall)]
+        private static extern int __NFSv2_SetFileSize(IntPtr pThis, String pName, String pDirectory, UInt32 Size);
+
         [DllImport("NFSv2.dll", EntryPoint = "?Move@CNFSv2@@QAEHPAD000@Z", CallingConvention = CallingConvention.ThisCall)]
         private static extern int __NFSv2_Move(IntPtr pThis, String pOldDirectoryName, String pOldName, String pNewDirectoryName, String pNewName);
 
@@ -286,6 +289,11 @@ namespace NekoDrive.NFS.Wrappers
         public NFSResult Rename(String OldName, String NewName)
         {
             return (NFSResult)__NFSv2_Rename(_nfsv2, OldName, NewName);
+        }
+
+        public NFSResult SetFileSize(String FileName, String Directory, UInt64 Size)
+        {
+            return (NFSResult)__NFSv2_SetFileSize(_nfsv2, FileName, Directory, (UInt32)Size);
         }
 
         public NFSResult Move(String OldDirectoryName, String OldName, String NewDirectoryName, String NewName)

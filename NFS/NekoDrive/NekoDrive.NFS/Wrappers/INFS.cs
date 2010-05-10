@@ -54,6 +54,8 @@ namespace NekoDrive.NFS.Wrappers
         
         NFSResult Read(UInt64 Offset, UInt32 Count, IntPtr pBuffer, out Int32 Size);
 
+        NFSResult SetFileSize(String FileName, String Directory, UInt64 Size);
+
         NFSResult Write(String FullFilePath, UInt64 Offset, UInt32 Count, IntPtr pBuffer, out Int32 Size);
 
         NFSResult Write(UInt64 Offset, UInt32 Count, IntPtr pBuffer, out Int32 Size);

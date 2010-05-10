@@ -983,3 +983,49 @@ int CNFSv3::CreateAuthentication()
 	}
 	return Ret;
 }
+
+int CNFSv3::SetFileSize(char* pName, char* pDirectory, __int64 Size)
+{
+	int Ret = NFS_ERROR;
+	if(clntV3 != NULL)
+	{
+		if((Ret = GetItemHandle(pDirectory, nfsCurrentDirectory)) == NFS_SUCCESS)
+		{
+			SETATTR3args args;
+			SETATTR3res *res;
+
+			NFSData *pNfsData = (NFSData*)GetItemAttributes(pName);
+			if(pNfsData != NULL)
+			{
+				args.obj.data.data_val = pNfsData->Handle; 
+				args.obj.data.data_len = FHSIZE;
+				args.new_attributes.atime.set_it = DONT_CHANGE;
+				args.new_attributes.gid.set_it = FALSE;
+				args.new_attributes.mode.set_it = FALSE;
+				args.new_attributes.mtime.set_it = DONT_CHANGE;
+				args.new_attributes.uid.set_it = FALSE;
+				args.new_attributes.size.set_it = TRUE;
+				args.new_attributes.size.set_size3_u.size = Size;
+				args.guard.check = FALSE;
+				if( (res = nfsproc3_setattr_3(&args, clntV3)) == NULL)
+					strLastError = clnt_sperror(clntV3, "nfsproc3_setattr_3");
+				else
+				{
+					if(res->status == NFS3_OK)
+						Ret = NFS_SUCCESS;
+					else
+					{
+						char  buffer[200];
+						sprintf_s(buffer, 200, "nfsproc3_setattr_3 %d", res->status);
+						strLastError = buffer;
+					}
+					xdr_free((xdrproc_t)xdr_SETATTR3res,(char*) res);
+				}
+				ReleaseBuffer(pNfsData);
+			}
+		}
+	}
+	else
+		strLastError = "Client is NULL";
+	return Ret;
+}

@@ -857,7 +857,7 @@ int CNFSv2::ChangeMode(char* pName, int Mode)
 			dpArgSAttr.attributes.mtime.useconds = -1;
 			dpArgSAttr.attributes.size = -1;
 			dpArgSAttr.attributes.uid = -1;
-			if( (pAttrStat = nfsproc_setattr_2(dpArgSAttr, clntV2)) == NULL)
+			if( (pAttrStat = nfsproc_setattr_2(&dpArgSAttr, clntV2)) == NULL)
 				strLastError = clnt_sperror(clntV2, "nfsproc_setattr_2");
 			else
 			{
@@ -909,7 +909,7 @@ int CNFSv2::ChangeOwner(char* pName, int UID, int GID)
 			dpArgSAttr.attributes.mtime.useconds = -1;
 			dpArgSAttr.attributes.size = -1;
 			dpArgSAttr.attributes.uid = UID;
-			if( (pAttrStat = nfsproc_setattr_2(dpArgSAttr, clntV2)) == NULL)
+			if( (pAttrStat = nfsproc_setattr_2(&dpArgSAttr, clntV2)) == NULL)
 				strLastError = clnt_sperror(clntV2, "nfsproc_setattr_2");
 			else
 			{
@@ -952,5 +952,52 @@ int CNFSv2::CreateAuthentication()
 			}
 		}
 	}
+	return Ret;
+}
+
+int CNFSv2::SetFileSize(char* pName, char* pDirectory, long Size)
+{
+	int Ret = NFS_ERROR;
+	if(clntV2 != NULL)
+	{
+		if((Ret = GetItemHandle(pDirectory, nfsCurrentDirectory)) == NFS_SUCCESS)
+		{
+			sattrargs dpArgSAttr;
+			diropargs dpArgs;
+			attrstat *pAttrStat;
+			dpArgs.name = pName;
+			memcpy(dpArgs.dir, nfsCurrentDirectory, FHSIZE);
+			NFSData *pNfsData = (NFSData*)GetItemAttributes(pName);
+			if(pNfsData != NULL)
+			{
+				memcpy(dpArgSAttr.file, pNfsData->Handle, FHSIZE);
+				dpArgSAttr.attributes.atime.seconds = -1;
+				dpArgSAttr.attributes.atime.useconds = -1;
+				dpArgSAttr.attributes.gid = -1;
+				dpArgSAttr.attributes.mode = -1;
+				dpArgSAttr.attributes.mtime.seconds = -1;
+				dpArgSAttr.attributes.mtime.useconds = -1;
+				dpArgSAttr.attributes.size = (u_int) Size;
+				dpArgSAttr.attributes.uid = -1;
+				if( (pAttrStat = nfsproc_setattr_2(&dpArgSAttr, clntV2)) == NULL)
+					strLastError = clnt_sperror(clntV2, "nfsproc_setattr_2");
+				else
+				{
+					if(pAttrStat->status == NFS_OK)
+						Ret = NFS_SUCCESS;
+					else
+					{
+						char  buffer[200];
+						sprintf_s(buffer, 200, "nfsproc_setattr_2 %d", pAttrStat->status);
+						strLastError = buffer;
+					}
+					xdr_free((xdrproc_t)xdr_attrstat,(char*) pAttrStat);
+				}
+				ReleaseBuffer(pNfsData);
+			}
+		}
+	}
+	else
+		strLastError = "Client is NULL";
 	return Ret;
 }
