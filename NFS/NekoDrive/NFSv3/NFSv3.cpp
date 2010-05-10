@@ -337,7 +337,9 @@ void* CNFSv3::GetItemAttributes(char* pName)
 				NFSData* pNfsData = new NFSData;
 				InitStructure(pNfsData);
 				memcpy(pNfsData->Handle, pLookUpRes->LOOKUP3res_u.resok.obj.data.data_val, pLookUpRes->LOOKUP3res_u.resok.obj.data.data_len);
-				pNfsData->DateTime = pLookUpRes->LOOKUP3res_u.resok.obj_attributes.post_op_attr_u.attributes.ctime.seconds;
+				pNfsData->CDateTime = pLookUpRes->LOOKUP3res_u.resok.obj_attributes.post_op_attr_u.attributes.ctime.seconds;
+				pNfsData->ADateTime = pLookUpRes->LOOKUP3res_u.resok.obj_attributes.post_op_attr_u.attributes.atime.seconds;
+				pNfsData->MDateTime = pLookUpRes->LOOKUP3res_u.resok.obj_attributes.post_op_attr_u.attributes.mtime.seconds;
 				pNfsData->Type = pLookUpRes->LOOKUP3res_u.resok.obj_attributes.post_op_attr_u.attributes.type;
 				pNfsData->Size = pLookUpRes->LOOKUP3res_u.resok.obj_attributes.post_op_attr_u.attributes.size;
 				Ret = pNfsData;	
@@ -365,7 +367,9 @@ void CNFSv3::ReleaseBuffer(void* pBuffer)
 void CNFSv3::InitStructure(NFSData* pNfsData)
 {
 	memset(pNfsData->Handle, 0, FHSIZE);
-	pNfsData->DateTime = 0;
+	pNfsData->ADateTime = 0;
+	pNfsData->CDateTime = 0;
+	pNfsData->MDateTime = 0;
 	pNfsData->Type = 0;
 }
 

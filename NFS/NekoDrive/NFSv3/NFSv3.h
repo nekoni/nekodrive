@@ -32,7 +32,9 @@
 
 struct NFSData
 {
-	unsigned long DateTime;
+	unsigned long CDateTime;
+	unsigned long ADateTime;
+	unsigned long MDateTime;
 	unsigned int Type;
 	unsigned __int64 Size;
 	char Handle[FHSIZE];

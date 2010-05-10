@@ -32,7 +32,8 @@
 
 struct NFSData
 {
-	unsigned long DateTime;
+	unsigned long CDateTime;
+	unsigned long ADateTime;
 	unsigned int Type;
 	unsigned int Size;
 	unsigned int Blocks;

@@ -22,15 +22,19 @@ namespace NekoDrive.NFS.Wrappers
 
     public class NFSAttributes
     {
-        public NFSAttributes(UInt32 dateTime, UInt32 type, UInt64 size, byte[] handle)
+        public NFSAttributes(UInt32 cdateTime, UInt32 adateTime, UInt32 mdateTime, UInt32 type, UInt64 size, byte[] handle)
         {
-            this.dateTime = new System.DateTime(1970, 1, 1).AddSeconds(dateTime);
+            this.cdateTime = new System.DateTime(1970, 1, 1).AddSeconds(cdateTime);
+            this.adateTime = new System.DateTime(1970, 1, 1).AddSeconds(adateTime);
+            this.mdateTime = new System.DateTime(1970, 1, 1).AddSeconds(mdateTime);
             this.type = (NFSType)type;
             this.size = size;
             this.handle = (byte[])handle.Clone();
         }
 
-        public DateTime dateTime;
+        public DateTime cdateTime;
+        public DateTime adateTime;
+        public DateTime mdateTime;
         public NFSType type;
         public UInt64 size;
         public byte[] handle;
@@ -41,7 +45,9 @@ namespace NekoDrive.NFS.Wrappers
             foreach (byte b in handle)
                 Handle += b.ToString("X");
 
-            return "DateTime: " + dateTime.ToString() + " " +
+            return "CDateTime: " + cdateTime.ToString() + " " +
+                "ADateTime: " + adateTime.ToString() + " " +
+                "MDateTime: " + mdateTime.ToString() + " " +
                 "Type: " + type.ToString() + " " +
                 "Size: " + size + " " +
                 "Handle: " + Handle;
