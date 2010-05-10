@@ -325,7 +325,8 @@ void* CNFSv2::GetItemAttributes(char* pName)
 				NFSData* pNfsData = new NFSData;
 				InitStructure(pNfsData);
 				memcpy(pNfsData->Handle, pDirOpRes->diropres_u.ok.file, FHSIZE);
-				pNfsData->DateTime = pDirOpRes->diropres_u.ok.attributes.ctime.seconds;
+				pNfsData->CDateTime = pDirOpRes->diropres_u.ok.attributes.ctime.seconds;
+				pNfsData->ADateTime = pDirOpRes->diropres_u.ok.attributes.atime.seconds;
 				pNfsData->Type = pDirOpRes->diropres_u.ok.attributes.type;
 				pNfsData->Size = pDirOpRes->diropres_u.ok.attributes.size;
 				pNfsData->Blocks = pDirOpRes->diropres_u.ok.attributes.blocks;
@@ -355,10 +356,10 @@ void CNFSv2::ReleaseBuffer(void* pBuffer)
 void CNFSv2::InitStructure(NFSData* pNfsData)
 {
 	memset(pNfsData->Handle, 0, FHSIZE);
-	pNfsData->DateTime = 0;
+	pNfsData->CDateTime = 0;
+	pNfsData->ADateTime = 0;
 	pNfsData->Type = 0;
 	pNfsData->Blocks = 0;
-	pNfsData->DateTime = 0;
 	pNfsData->BlockSize = 0;
 }
 

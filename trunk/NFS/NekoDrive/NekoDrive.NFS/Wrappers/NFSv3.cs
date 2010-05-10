@@ -12,7 +12,9 @@ namespace NekoDrive.NFS.Wrappers
         [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
         private struct NFSv3Data
         {
-            public UInt32 DateTime;
+            public UInt32 CDateTime;
+            public UInt32 ADateTime;
+            public UInt32 MDateTime;
             public UInt32 Type;
             public UInt64 Size;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)]
@@ -293,7 +295,7 @@ namespace NekoDrive.NFS.Wrappers
             if (pAttributes != IntPtr.Zero)
             {
                 NFSv3Data nfsData = (NFSv3Data)Marshal.PtrToStructure(pAttributes, typeof(NFSv3Data));
-                NFSAttributes nfsAttributes = new NFSAttributes(nfsData.DateTime, nfsData.Type, nfsData.Size, nfsData.Handle);
+                NFSAttributes nfsAttributes = new NFSAttributes(nfsData.CDateTime, nfsData.ADateTime, nfsData.MDateTime, nfsData.Type, nfsData.Size, nfsData.Handle);
                 return nfsAttributes;
             }
             return null;
