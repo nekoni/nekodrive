@@ -4,7 +4,7 @@
 NekoDrive uses a Library written in C# on .NET 2.0. that wraps the C++ NFS implementation. 
 In order to use this library in your project download NekoDrive and copy in your project NekoDrive.NFS.dll, NFSv2.dll and NFSv3.dll. Add a reference in your project to NekoDrive.NFS.dll. Don't forget to include NFSv2.dll and NFSv3.dll as a content to deploy.
 
-= Example 1 - Connect to NFS server and get the exported devices =
+== Example 1 - Connect to NFS server and get the exported devices ==
 
 {{{
 using System;
@@ -32,7 +32,7 @@ namespace Example1
 }
 }}}
 
-= Example 2 - Connect to NFS server, mount the first exported device and get the file list =
+== Example 2 - Connect to NFS server, mount the first exported device and get the file list ==
 
 {{{
 namespace Example2
@@ -65,7 +65,7 @@ namespace Example2
 }
 }}}
 
-= Example 3 - Connect to NFS server, mount the first exported device and download a file =
+== Example 3 - Connect to NFS server, mount the first exported device and download a file ==
 
 {{{
 
@@ -97,7 +97,7 @@ namespace Example3
 }}}
 
 
-= Example 4 - Connect to NFS server, mount the first exported device and upload a file =
+== Example 4 - Connect to NFS server, mount the first exported device and upload a file ==
 
 {{{
 namespace Example4
