@@ -32,8 +32,9 @@ namespace Example1
 }
 }}}
 
-= Example 2 - Connect to NFS server, mount the first exported device and get the file list
+= Example 2 - Connect to NFS server, mount the first exported device and get the file list =
 
+{{{
 namespace Example2
 {
     class Program
@@ -62,9 +63,11 @@ namespace Example2
         }
     }
 }
+}}}
 
+= Example 3 - Connect to NFS server, mount the first exported device and download a file =
 
-= Example 3 - Connect to NFS server, mount the first exported device and download a file
+{{{
 
 namespace Example3
 {
@@ -91,9 +94,12 @@ namespace Example3
         }
     }
 }
+}}}
 
-= Example 4 - Connect to NFS server, mount the first exported device and upload a file
 
+= Example 4 - Connect to NFS server, mount the first exported device and upload a file =
+
+{{{
 namespace Example4
 {
     class Program
@@ -119,3 +125,4 @@ namespace Example4
         }
     }
 }
+}}}
