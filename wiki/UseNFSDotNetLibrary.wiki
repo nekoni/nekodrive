@@ -1,0 +1,119 @@
+#labels Featured
+= How to use the NFS c# Library =
+
+NekoDrive uses a Library written in C# on .NET 2.0. that wraps the C++ NFS implementation. 
+In order to use this library in your project download NekoDrive and copy in your project NekoDrive.NFS.dll, NFSv2.dll and NFSv3.dll. Add a reference in your project to NekoDrive.NFS.dll. Don't forget to include NFSv2.dll and NFSv3.dll as a content to deploy.
+
+= Example 1 - Connect to NFS server and get the exported devices =
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using NekoDrive.NFS;
+
+namespace Example1
+{
+   class Program
+    {
+        static void Main(string[] args)
+        {
+            using(NFS nfs = new NFS(NFS.NFSVersion.v2))
+            {
+                if (nfs.Connect(IPAddress.Parse("161.55.201.250")) == NFSResult.NFS_SUCCESS)
+                {
+                    foreach(string device in nfs.GetExportedDevices())
+                        Console.WriteLine(device);
+                    nfs.Disconnect();
+                }
+            }
+        }
+     }
+}
+ 
+= Example 2 - Connect to NFS server, mount the first exported device and get the file list
+
+namespace Example2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            using(NFS nfs = new NFS(NFS.NFSVersion.v2))
+            {
+                if (nfs.Connect(IPAddress.Parse("161.55.201.250")) == NFSResult.NFS_SUCCESS)
+                {
+                    List<string> devices = nfs.GetExportedDevices();
+                    if(devices.Count > 0)
+                    {
+                        if(nfs.MountDevice(devices[0]) == NFSResult.NFS_SUCCESS)
+                        {
+                            foreach(string item in nfs.GetItemList())
+                            {
+                                NFSAttributes attrib = nfs.GetItemAttributes(item);
+                                Console.WriteLine(item + " " + attrib.cdateTime.ToString() + " " + attrib.size);
+                            }
+                            nfs.UnMountDevice();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+= Example 3 - Connect to NFS server, mount the first exported device and download a file
+
+namespace Example3
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            using(NFS nfs = new NFS(NFS.NFSVersion.v2))
+            {
+                if (nfs.Connect(IPAddress.Parse("161.55.201.250")) == NFSResult.NFS_SUCCESS)
+                {
+                    List<string> devices = nfs.GetExportedDevices();
+                    if(devices.Count > 0)
+                    {
+                        if(nfs.MountDevice(devices[0]) == NFSResult.NFS_SUCCESS)
+                        {
+                            if(nfs.Read("test.txt", @"c:\test.txt") != NFSResult.NFS_SUCCESS)
+                                Console.WriteLine(nfs.GetLastError());
+                            nfs.UnMountDevice();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+= Example 4 - Connect to NFS server, mount the first exported device and upload a file
+
+namespace Example4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            using(NFS nfs = new NFS(NFS.NFSVersion.v2))
+            {
+                if (nfs.Connect(IPAddress.Parse("161.55.201.250")) == NFSResult.NFS_SUCCESS)
+                {
+                    List<string> devices = nfs.GetExportedDevices();
+                    if(devices.Count > 0)
+                    {
+                        if(nfs.MountDevice(devices[0]) == NFSResult.NFS_SUCCESS)
+                        {
+                            if(nfs.Write("test.txt", @"c:\test.txt") != NFSResult.NFS_SUCCESS)
+                                Console.WriteLine(nfs.GetLastError());
+                            nfs.UnMountDevice();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
