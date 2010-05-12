@@ -501,6 +501,9 @@ namespace NekoDrive.NFS
                     return (Size = -1);
                 else
                 {
+                    if (DataEvent != null)
+                        DataEvent(this, new NFSEventArgs(ChunkCount));
+
                     if (Size == 0)
                         return (int)CurrentPosition;
 
@@ -575,6 +578,7 @@ namespace NekoDrive.NFS
                         Int32 Res = Write(Combine(DestinationFileName, DestinationFolderPath), Offset, (UInt32)Bytes, Buffer);
                         if (Res != -1)
                         {
+                            
                             Offset += (UInt32)Bytes;
                             Result = NFSResult.NFS_SUCCESS;
                         }
@@ -623,6 +627,8 @@ namespace NekoDrive.NFS
                         return (Size = -1);
                     else
                     {
+                        if (DataEvent != null)
+                            DataEvent(this, new NFSEventArgs(ChunkCount));
                         if (Size == 0)
                             return (int)CurrentPosition;
                         CurrentPosition += (UInt32)ChunkCount;
