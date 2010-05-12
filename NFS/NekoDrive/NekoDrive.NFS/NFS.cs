@@ -216,30 +216,30 @@ namespace NekoDrive.NFS
             return nfsInterface.CreateFile(FileName);
         }
 
-        public NFSResult Read(List<String> FileNames, String OutputFolder)
+        public NFSResult Read(List<String> SourceFileNames, String SourceFolderPath, String DestinationFolderPath)
         {
             NFSResult result = NFSResult.NFS_ERROR;
-            if (Directory.Exists(OutputFolder))
+            if (Directory.Exists(DestinationFolderPath))
             {
-                foreach (String FileName in FileNames)
+                foreach (String FileName in SourceFileNames)
                 {
-                    if((result = Read(FileName, Path.Combine(OutputFolder, FileName))) != NFSResult.NFS_SUCCESS) 
+                    if ((result = Read(FileName, SourceFolderPath, Path.Combine(DestinationFolderPath, FileName))) != NFSResult.NFS_SUCCESS) 
                         break;
                 }
             }
             return result;
         }
 
-        public NFSResult Read(String FileName, String OutputFileName)
+        public NFSResult Read(String SourceFileName, String SourceFolderPath, String DestinationFullFilePath)
         {
             FileStream fs = null;
             try
             {
                 NFSResult Result = NFSResult.NFS_ERROR;
-                if (File.Exists(OutputFileName))
-                    File.Delete(OutputFileName);
-                fs = new FileStream(OutputFileName, FileMode.CreateNew);
-                Result = Read(FileName, fs);
+                if (File.Exists(DestinationFullFilePath))
+                    File.Delete(DestinationFullFilePath);
+                fs = new FileStream(DestinationFullFilePath, FileMode.CreateNew);
+                Result = Read(SourceFileName, SourceFolderPath, fs);
                 return Result;
             }
             finally
@@ -252,13 +252,15 @@ namespace NekoDrive.NFS
             }
         }
 
-        public NFSResult Read(String FileName, Stream OutputStream)
+        public NFSResult Read(String SourceFileName, String SourceFolderPath, Stream OutputStream)
         {
             NFSResult Result = NFSResult.NFS_ERROR;
             if (OutputStream != null)
             {
-                NFSAttributes nfsAttributes = GetItemAttributes(FileName);
-                if (NFSResult.NFS_SUCCESS == Open(FileName))
+                if (!FileExists(SourceFileName, SourceFolderPath))
+                    throw new FileNotFoundException();
+                NFSAttributes nfsAttributes = GetItemAttributes(SourceFileName, SourceFolderPath);
+                if (NFSResult.NFS_SUCCESS == Open(Combine(SourceFileName, SourceFolderPath)))
                 {
                     UInt64 TotalLenght = nfsAttributes.size;
                     UInt32 BlockSize = blockSize;
@@ -271,7 +273,7 @@ namespace NekoDrive.NFS
 
                         Byte[] Data = null;
                         int pSize = -1;
-                        if ((pSize = Read(CuttentPosition, Count, ref Data)) != -1)
+                        if ((pSize = Read(Combine(SourceFileName, SourceFolderPath), CuttentPosition, Count, ref Data)) != -1)
                         {
                             OutputStream.Write(Data, 0, pSize);
                             OutputStream.Flush();
@@ -290,29 +292,7 @@ namespace NekoDrive.NFS
             return Result;
         }
 
-        public Int32 Read(UInt64 Offset, UInt32 Count, ref Byte[] Buffer)
-        {
-            Int32 Size = -1;
-            IntPtr pBuffer = Marshal.AllocHGlobal((Int32)Count);
-            NFSResult Result = nfsInterface.Read(Offset, Count, pBuffer, out Size);
-            if (Result == NFSResult.NFS_ERROR)
-                Size = -1;
-            else
-            {
-                Buffer = new Byte[Size];
-                Marshal.Copy(pBuffer, Buffer, 0, Size);
-                if (DataEvent != null)
-                {
-                    NFSEventArgs e = new NFSEventArgs();
-                    e.Bytes = (UInt32)Size;
-                    DataEvent(this, e);
-                }
-            }
-            Marshal.FreeHGlobal(pBuffer);
-            return Size;
-        }
-
-        public Int32 Read(String FullFilePath, UInt64 Offset, UInt32 Count, ref Byte[] Buffer)
+        public Int32 Read(String FullSourceFilePath, UInt64 Offset, UInt32 Count, ref Byte[] Buffer)
         {
             UInt64 TotalLenght = Count;
             UInt32 BlockSize = blockSize;
@@ -325,7 +305,7 @@ namespace NekoDrive.NFS
 
                 Int32 Size = -1;
                 IntPtr pBuffer = Marshal.AllocHGlobal((Int32)ChunkCount);
-                NFSResult Result = nfsInterface.Read(FullFilePath, Offset + CurrentPosition, ChunkCount, pBuffer, out Size);
+                NFSResult Result = nfsInterface.Read(FullSourceFilePath, Offset + CurrentPosition, ChunkCount, pBuffer, out Size);
                 if (Result == NFSResult.NFS_ERROR)
                     return (Size = -1);
                 else
@@ -343,30 +323,35 @@ namespace NekoDrive.NFS
             return (int)TotalLenght;
         }
 
-        public NFSResult Write(String FileName, String InputFileName)
+        public NFSResult Write(String DestinationFileName, String DestinationFolderPath, String SourceFileFullPath)
         {
             NFSResult Result = NFSResult.NFS_ERROR;
-            if (File.Exists(InputFileName))
+            if (File.Exists(SourceFileFullPath))
             {
-                FileStream wfs = new FileStream(InputFileName, FileMode.Open, FileAccess.Read);
-                Result = Write(FileName, wfs);
+                FileStream wfs = new FileStream(SourceFileFullPath, FileMode.Open, FileAccess.Read);
+                Result = Write(DestinationFileName, DestinationFolderPath, wfs);
                 wfs.Close();
             }
             return Result;
         }
 
-        public NFSResult Write(String FileName, long InputOffset, Stream InputStream)
+        public NFSResult Write(String DestinationFileName, String DestinationFolderPath, Stream InputStream)
+        {
+            return Write(DestinationFileName, DestinationFolderPath, 0, InputStream);
+        }
+
+        public NFSResult Write(String DestinationFileName, String DestinationFolderPath, long InputOffset, Stream InputStream)
         {
             NFSResult Result = NFSResult.NFS_ERROR;
             if (InputStream != null)
             {
-                if (!FileExists(FileName))
+                if (!FileExists(DestinationFileName, DestinationFolderPath))
                 {
-                    if (CreateFile(FileName) != NFSResult.NFS_SUCCESS)
+                    if (CreateFile(DestinationFileName, DestinationFolderPath) != NFSResult.NFS_SUCCESS)
                         return NFSResult.NFS_ERROR;
                 }
                 
-                if (NFSResult.NFS_SUCCESS == Open(FileName))
+                if (NFSResult.NFS_SUCCESS == Open(Combine(DestinationFileName, DestinationFolderPath)))
                 {
                     UInt64 Offset = (UInt64) InputOffset;
                     UInt32 Count = blockSize;
@@ -374,7 +359,7 @@ namespace NekoDrive.NFS
                     Byte[] Buffer = new Byte[Count];
                     while ((Bytes = InputStream.Read(Buffer, 0, (Int32)Count)) > 0)
                     {
-                        Int32 Res = Write(Offset, (UInt32)Bytes, Buffer);
+                        Int32 Res = Write(Combine(DestinationFileName, DestinationFolderPath), Offset, (UInt32)Bytes, Buffer);
                         if (Res != -1)
                         {
                             Offset += (UInt32)Bytes;
@@ -393,35 +378,6 @@ namespace NekoDrive.NFS
 
             return Result;
 
-        }
-
-        public NFSResult Write(String FileName, Stream InputStream)
-        {
-            return Write(FileName, 0, InputStream);   
-        }
-
-        public Int32 Write(UInt64 Offset, UInt32 Count, Byte[] Buffer)
-        {
-            Int32 Size = -1;
-            if (Buffer != null)
-            {
-                IntPtr pBuffer = Marshal.AllocHGlobal((Int32)Count);
-                Marshal.Copy(Buffer, 0, pBuffer, (Int32)Count);
-                NFSResult Result = nfsInterface.Write(Offset, Count, pBuffer, out Size);
-                Marshal.FreeHGlobal(pBuffer);
-                if (Result == NFSResult.NFS_ERROR)
-                    Size = -1;
-                else
-                {
-                    if (DataEvent != null)
-                    {
-                        NFSEventArgs e = new NFSEventArgs();
-                        e.Bytes = (UInt32)Count;
-                        DataEvent(this, e);
-                    }
-                }
-            }
-            return Size;
         }
 
         public Int32 Write(String FullFilePath, UInt64 Offset, UInt32 Count, Byte[] Buffer)
