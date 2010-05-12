@@ -72,6 +72,8 @@ namespace NekoDrive.NFS
 
         #endregion
 
+        #region Constructor
+
         /// <summary>
         /// NFS Client Constructor
         /// </summary>
@@ -93,6 +95,10 @@ namespace NekoDrive.NFS
             }
             nfsInterface.Create();
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Destroy the interface
@@ -763,5 +769,7 @@ namespace NekoDrive.NFS
         {
             return nfsInterface.SetFileSize(FileName, DirectoryName, Size);
         }
+
+        #endregion
     }
 }
