@@ -58,6 +58,11 @@ namespace NekoDrive.NFS.Wrappers
 
     public class NFSEventArgs : EventArgs
     {
+        public NFSEventArgs(UInt32 Bytes)
+        {
+            this.Bytes = Bytes;
+        }
+
         public UInt32 Bytes;
     }
 }
