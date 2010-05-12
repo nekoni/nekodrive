@@ -66,7 +66,7 @@ namespace Example2
 }
 }}}
 
-== Example 3 - Connect to NFS server, mount the first exported device and download a file ==
+== Example 3 - Connect to NFS server, mount the first exported device and download a file in the root folder (.)==
 
 {{{
 
@@ -85,7 +85,7 @@ namespace Example3
                     {
                         if(nfs.MountDevice(devices[0]) == NFSResult.NFS_SUCCESS)
                         {
-                            if(nfs.Read("test.txt", @"c:\test.txt") != NFSResult.NFS_SUCCESS)
+                            if(nfs.Read("test.txt", ".", @"c:\test.txt") != NFSResult.NFS_SUCCESS)
                                 Console.WriteLine(nfs.GetLastError());
                             nfs.UnMountDevice();
                         }
@@ -99,7 +99,7 @@ namespace Example3
 }}}
 
 
-== Example 4 - Connect to NFS server, mount the first exported device and upload a file ==
+== Example 4 - Connect to NFS server, mount the first exported device and upload a file in the "test/sub" subfolder ==
 
 {{{
 namespace Example4
@@ -117,7 +117,7 @@ namespace Example4
                     {
                         if(nfs.MountDevice(devices[0]) == NFSResult.NFS_SUCCESS)
                         {
-                            if(nfs.Write("test.txt", @"c:\test.txt") != NFSResult.NFS_SUCCESS)
+                            if(nfs.Write("test.txt", "test/sub", @"c:\test.txt") != NFSResult.NFS_SUCCESS)
                                 Console.WriteLine(nfs.GetLastError());
                             nfs.UnMountDevice();
                         }
