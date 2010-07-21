@@ -10,7 +10,10 @@ In order to use this library in your project download NekoDrive and copy in your
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Net;
 using NekoDrive.NFS;
+using NekoDrive.NFS.Wrappers;
+
 
 namespace Example1
 {
