@@ -4,4 +4,6 @@ It's extremely simple:
 
  # download NekoDrive and extract the zip in a folder
  # download and install dokan 0.5.2 http://dokan-dev.net/en/
+ # download and install Microsoft Visual C++ 2008 Redistributable Package
+ # download and install .NET Framework 2.0
  # execute NekoDrive.exe
