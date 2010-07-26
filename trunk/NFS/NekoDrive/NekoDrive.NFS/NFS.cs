@@ -454,7 +454,7 @@ namespace NekoDrive.NFS
                         if ((TotalLenght - CuttentPosition) < BlockSize)
                             Count = (UInt32)TotalLenght - CuttentPosition;
 
-                        Byte[] Data = null;
+                        Byte[] Data = new byte[Count];
                         int pSize = -1;
                         if ((pSize = Read(Combine(SourceFileName, SourceFolderPath), CuttentPosition, Count, ref Data)) != -1)
                         {
