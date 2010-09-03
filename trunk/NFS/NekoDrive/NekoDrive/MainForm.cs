@@ -8,11 +8,11 @@ using System.Windows.Forms;
 using System.Net.NetworkInformation;
 using System.Net;
 using System.Management;
-using NekoDrive.NFS.Wrappers;
 using Dokan;
-using NekoDrive.NFS;
 using System.Threading;
 using System.Diagnostics;
+using NFSLibrary;
+using NekoDrive.NFS;
 
 namespace NekoDrive
 {
@@ -26,7 +26,7 @@ namespace NekoDrive
 
         #region Properites
 
-        public NFS.NFS mNFS = null;
+        public NFSClient mNFS = null;
         public DokanNet mDokanNet = null;
         public bool DebugMode = false;
 
@@ -74,18 +74,14 @@ namespace NekoDrive
             if (mNFS == null)
                 throw new ApplicationException("NFS object is null!");
 
-            if (mNFS.UnMountDevice() == NFSResult.NFS_SUCCESS)
-            {
-                int res = DokanNet.DokanUnmount(((string)cboxLocalDrive.SelectedItem).ToCharArray()[0]);
-                cboxLocalDrive.Enabled = true;
-                cboxRemoteDevices.Enabled = true;
-                btnMount.Enabled = true;
-                btnUnmount.Enabled = false;
-                tbDriveLabel.Enabled = true;
+            mNFS.UnMountDevice();
+            int res = DokanNet.DokanUnmount(((string)cboxLocalDrive.SelectedItem).ToCharArray()[0]);
+            cboxLocalDrive.Enabled = true;
+            cboxRemoteDevices.Enabled = true;
+            btnMount.Enabled = true;
+            btnUnmount.Enabled = false;
+            tbDriveLabel.Enabled = true;
                 
-            }
-            else
-                throw new ApplicationException("Unmount error (" + mNFS.GetLastError() + ")");
         }
 
         private void MountDrive()
@@ -96,39 +92,35 @@ namespace NekoDrive
             string strDev = (string)cboxRemoteDevices.SelectedItem;
             char cDrive = ((string)cboxLocalDrive.SelectedItem).ToCharArray()[0];
             string strDriveLabel = tbDriveLabel.Text;
-            if (MainForm.In.mNFS.MountDevice(strDev) == NFSResult.NFS_SUCCESS)
-            {
-                cboxLocalDrive.Enabled = false;
-                cboxRemoteDevices.Enabled = false;
-                btnMount.Enabled = false;
-                btnUnmount.Enabled = true;
-                tbDriveLabel.Enabled = false;
-                
-                ThreadPool.QueueUserWorkItem(new WaitCallback(
-                    delegate
-                    {
-                        System.IO.Directory.SetCurrentDirectory(Application.StartupPath);
-                        DokanOptions dokanOptions = new DokanOptions();
-                        dokanOptions.DebugMode = DebugMode;
-                        dokanOptions.DriveLetter = cDrive;
-                        dokanOptions.NetworkDrive = false;
-                        dokanOptions.UseKeepAlive = true;
-                        dokanOptions.UseAltStream = true;
-                        dokanOptions.VolumeLabel = strDriveLabel;
-                        dokanOptions.ThreadCount = 1;
-                        Operations nfsOperations = new Operations();
-                        DokanNet.DokanMain(dokanOptions, nfsOperations);
-                    }));
+            MainForm.In.mNFS.MountDevice(strDev);
+            cboxLocalDrive.Enabled = false;
+            cboxRemoteDevices.Enabled = false;
+            btnMount.Enabled = false;
+            btnUnmount.Enabled = true;
+            tbDriveLabel.Enabled = false;
+            
+            ThreadPool.QueueUserWorkItem(new WaitCallback(
+                delegate
+                {
+                    System.IO.Directory.SetCurrentDirectory(Application.StartupPath);
+                    DokanOptions dokanOptions = new DokanOptions();
+                    dokanOptions.DebugMode = DebugMode;
+                    dokanOptions.DriveLetter = cDrive;
+                    dokanOptions.NetworkDrive = false;
+                    dokanOptions.UseKeepAlive = true;
+                    dokanOptions.UseAltStream = true;
+                    dokanOptions.VolumeLabel = strDriveLabel;
+                    dokanOptions.ThreadCount = 1;
+                    Operations nfsOperations = new Operations();
+                    DokanNet.DokanMain(dokanOptions, nfsOperations);
+                }));
 
-                ThreadPool.QueueUserWorkItem(new WaitCallback(
-                    delegate
-                    {
-                        Thread.Sleep(5000);
-                        Process.Start("explorer.exe", " " + cDrive.ToString() + ":");
-                    }));
-            }
-            else
-                throw new ApplicationException("Mount error (" + mNFS.GetLastError() + ")");
+            ThreadPool.QueueUserWorkItem(new WaitCallback(
+                delegate
+                {
+                    Thread.Sleep(5000);
+                    Process.Start("explorer.exe", " " + cDrive.ToString() + ":");
+                }));
         }
 
         private void Connect()
@@ -136,47 +128,42 @@ namespace NekoDrive
             IPAddress ipAddress = new IPAddress(ipAddressControl1.GetAddressBytes());
             if (PingServer(ipAddress))
             {
-                NFS.NFS.NFSVersion ver = NekoDrive.NFS.NFS.NFSVersion.v2;
+                NFSClient.NFSVersion ver = NFSClient.NFSVersion.v2;
                 if (cboxVer.SelectedItem.ToString() == "V3")
-                    ver = NFS.NFS.NFSVersion.v3;
+                    ver = NFSClient.NFSVersion.v3;
 
-                mNFS = new NFS.NFS(ver);
-                mNFS.DataEvent += new NekoDrive.NFS.Wrappers.NFSDataEventHandler(mNFS_DataEvent);
+                mNFS = new NFSClient(ver);
+                mNFS.DataEvent += new NFSDataEventHandler(mNFS_DataEvent);
                 int UserId = int.Parse(tbUserId.Text);
                 int GroupId = int.Parse(tbGroupId.Text);
-                if (mNFS.Connect(ipAddress, UserId, GroupId, (int)nupTimeOut.Value) == NFSResult.NFS_SUCCESS)
+                mNFS.Connect(ipAddress, UserId, GroupId, (int)nupTimeOut.Value);
+                cboxRemoteDevices.Items.Clear();
+                foreach (string strDev in mNFS.GetExportedDevices())
+                    cboxRemoteDevices.Items.Add(strDev);
+                if (cboxRemoteDevices.Items.Count > 0)
+                    gboxMount.Enabled = true;
+                btnConnect.Enabled = false;
+                btnDisconnect.Enabled = true;
+                ipAddressControl1.Enabled = false;
+                cboxVer.Enabled = false;
+                tbGroupId.Enabled = false;
+                tbUserId.Enabled = false;
+                nupTimeOut.Enabled = false;
+
+                if (cboxLocalDrive.Items.Count > NekoDrive.Properties.Settings.Default.DriveLetter)
+                    cboxLocalDrive.SelectedIndex = NekoDrive.Properties.Settings.Default.DriveLetter;
+
+                if (cboxRemoteDevices.Items.Count > NekoDrive.Properties.Settings.Default.RemoteDevice)
+                    cboxRemoteDevices.SelectedIndex = NekoDrive.Properties.Settings.Default.RemoteDevice;
+
+                chkAutoMount.Checked = NekoDrive.Properties.Settings.Default.AutoMount;
+                tbDriveLabel.Text = NekoDrive.Properties.Settings.Default.DriveLabel;
+
+                if (chkAutoMount.Checked)
                 {
-                    cboxRemoteDevices.Items.Clear();
-                    foreach (string strDev in mNFS.GetExportedDevices())
-                        cboxRemoteDevices.Items.Add(strDev);
-                    if (cboxRemoteDevices.Items.Count > 0)
-                        gboxMount.Enabled = true;
-                    btnConnect.Enabled = false;
-                    btnDisconnect.Enabled = true;
-                    ipAddressControl1.Enabled = false;
-                    cboxVer.Enabled = false;
-                    tbGroupId.Enabled = false;
-                    tbUserId.Enabled = false;
-                    nupTimeOut.Enabled = false;
-
-                    if (cboxLocalDrive.Items.Count > NekoDrive.Properties.Settings.Default.DriveLetter)
-                        cboxLocalDrive.SelectedIndex = NekoDrive.Properties.Settings.Default.DriveLetter;
-
-                    if (cboxRemoteDevices.Items.Count > NekoDrive.Properties.Settings.Default.RemoteDevice)
-                        cboxRemoteDevices.SelectedIndex = NekoDrive.Properties.Settings.Default.RemoteDevice;
-
-                    chkAutoMount.Checked = NekoDrive.Properties.Settings.Default.AutoMount;
-                    tbDriveLabel.Text = NekoDrive.Properties.Settings.Default.DriveLabel;
-
-                    if (chkAutoMount.Checked)
-                    {
-                        this.WindowState = FormWindowState.Minimized;
-                        MountDrive();
-                    }
-
+                    this.WindowState = FormWindowState.Minimized;
+                    MountDrive();
                 }
-                else
-                    throw new ApplicationException("Connection error (" + mNFS.GetLastError() + ")");
             }
             else
                 throw new ApplicationException("Server not found!");
@@ -190,19 +177,15 @@ namespace NekoDrive
             if (mNFS.IsMounted)
                 UnmountDrive();
 
-            if (mNFS.Disconnect() == NFSResult.NFS_SUCCESS)
-            {
-                gboxMount.Enabled = false;
-                btnConnect.Enabled = true;
-                btnDisconnect.Enabled = false;
-                ipAddressControl1.Enabled = true;
-                cboxVer.Enabled = true;
-                tbGroupId.Enabled = true;
-                tbUserId.Enabled = true;
-                nupTimeOut.Enabled = true;
-            }
-            else
-                throw new ApplicationException("Disconnection error (" + mNFS.GetLastError() + ")");
+            mNFS.Disconnect();
+            gboxMount.Enabled = false;
+            btnConnect.Enabled = true;
+            btnDisconnect.Enabled = false;
+            ipAddressControl1.Enabled = true;
+            cboxVer.Enabled = true;
+            tbGroupId.Enabled = true;
+            tbUserId.Enabled = true;
+            nupTimeOut.Enabled = true;
         }
 
         List<string> GetDriveLetters()
@@ -343,7 +326,7 @@ namespace NekoDrive
             }
         }
 
-        void mNFS_DataEvent(object sender, NekoDrive.NFS.Wrappers.NFSEventArgs e)
+        void mNFS_DataEvent(object sender, NFSEventArgs e)
         {
             //
         }
