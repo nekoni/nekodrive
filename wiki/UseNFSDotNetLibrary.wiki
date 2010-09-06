@@ -1,8 +1,7 @@
 #labels Featured
 = How to use the NFS c# Library =
 
-NekoDrive uses a Library written in C# on .NET 2.0. that wraps the C++ NFS implementation. 
-In order to use this library in your project download NekoDrive and copy in your project NekoDrive.NFS.dll, NFSv2.dll and NFSv3.dll. Add a reference in your project to NekoDrive.NFS.dll. Don't forget to include NFSv2.dll and NFSv3.dll as a content to deploy.
+NekoDrive uses a Library written in C# on .NET 2.0. This library uses RemoteTea.Net ONC/RPC pure c# implementation.
 
 == Example 1 - Connect to NFS server and get the exported devices ==
 
@@ -11,9 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
-using NekoDrive.NFS;
-using NekoDrive.NFS.Wrappers;
-
+using NFSLibrary;
 
 namespace Example1
 {
@@ -21,15 +18,13 @@ namespace Example1
     {
         static void Main(string[] args)
         {
-            using(NFS nfs = new NFS(NFS.NFSVersion.v2))
-            {
-                if (nfs.Connect(IPAddress.Parse("161.55.201.250")) == NFSResult.NFS_SUCCESS)
-                {
-                    foreach(string device in nfs.GetExportedDevices())
-                        Console.WriteLine(device);
-                    nfs.Disconnect();
-                }
-            }
+            NFSClient nfs = new NFSClient(NFSClient.NFSVersion.v2);
+            
+            nfs.Connect(IPAddress.Parse("161.55.201.250");
+
+            foreach(string device in nfs.GetExportedDevices("."))
+               Console.WriteLine(device);
+            nfs.Disconnect();
         }
     }
 }
@@ -44,26 +39,22 @@ namespace Example2
     {
         static void Main(string[] args)
         {
-            using(NFS nfs = new NFS(NFS.NFSVersion.v2))
+            NFSClient nfs = new NFSClient(NFSClient.NFSVersion.v2);
+            nfs.Connect(IPAddress.Parse("161.55.201.250"));
+
+            List<string> devices = nfs.GetExportedDevices();
+            if(devices.Count > 0)
             {
-                if (nfs.Connect(IPAddress.Parse("161.55.201.250")) == NFSResult.NFS_SUCCESS)
-                {
-                    List<string> devices = nfs.GetExportedDevices();
-                    if(devices.Count > 0)
-                    {
-                        if(nfs.MountDevice(devices[0]) == NFSResult.NFS_SUCCESS)
-                        {
-                            foreach(string item in nfs.GetItemList())
-                            {
-                                NFSAttributes attrib = nfs.GetItemAttributes(item);
-                                Console.WriteLine(item + " " + attrib.cdateTime.ToString() + " " + attrib.size);
-                            }
-                            nfs.UnMountDevice();
-                        }
-                    }
-                    nfs.Disconnect();
-                }
+               nfs.MountDevice(devices[0]);
+
+               foreach(string item in nfs.GetItemList("."))
+               {
+                    NFSAttributes attrib = nfs.GetItemAttributes(item);
+                    Console.WriteLine(item + " " + attrib.cdateTime.ToString() + " " + attrib.size);
+               }
+               nfs.UnMountDevice();
             }
+            nfs.Disconnect();
         }
     }
 }
@@ -79,22 +70,16 @@ namespace Example3
     {
         static void Main(string[] args)
         {
-            using(NFS nfs = new NFS(NFS.NFSVersion.v2))
+            NFSClient nfs = new NFSClient(NFSClient.NFSVersion.v2);
+            nfs.Connect(IPAddress.Parse("161.55.201.250"));
+
+            List<string> devices = nfs.GetExportedDevices();
+            if(devices.Count > 0)
             {
-                if (nfs.Connect(IPAddress.Parse("161.55.201.250")) == NFSResult.NFS_SUCCESS)
-                {
-                    List<string> devices = nfs.GetExportedDevices();
-                    if(devices.Count > 0)
-                    {
-                        if(nfs.MountDevice(devices[0]) == NFSResult.NFS_SUCCESS)
-                        {
-                            if(nfs.Read("test.txt", ".", @"c:\test.txt") != NFSResult.NFS_SUCCESS)
-                                Console.WriteLine(nfs.GetLastError());
-                            nfs.UnMountDevice();
-                        }
-                    }
-                    nfs.Disconnect();
-                }
+               nfs.MountDevice(devices[0]);
+               nfs.Read("test.txt", @"c:\test.txt");
+               nfs.UnMountDevice();
+               nfs.Disconnect();
             }
         }
     }
@@ -111,22 +96,16 @@ namespace Example4
     {
         static void Main(string[] args)
         {
-            using(NFS nfs = new NFS(NFS.NFSVersion.v2))
+            NFSClient nfs = new NFSClient(NFSClient.NFSVersion.v2);
+            nfs.Connect(IPAddress.Parse("161.55.201.250"));
+
+            List<string> devices = nfs.GetExportedDevices();
+            if(devices.Count > 0)
             {
-                if (nfs.Connect(IPAddress.Parse("161.55.201.250")) == NFSResult.NFS_SUCCESS)
-                {
-                    List<string> devices = nfs.GetExportedDevices();
-                    if(devices.Count > 0)
-                    {
-                        if(nfs.MountDevice(devices[0]) == NFSResult.NFS_SUCCESS)
-                        {
-                            if(nfs.Write("test.txt", "test/sub", @"c:\test.txt") != NFSResult.NFS_SUCCESS)
-                                Console.WriteLine(nfs.GetLastError());
-                            nfs.UnMountDevice();
-                        }
-                    }
-                    nfs.Disconnect();
-                }
+               nfs.MountDevice(devices[0]);
+               nfs.Write("test/sub/test.txt", @"c:\test.txt");
+               nfs.UnMountDevice();
+               nfs.Disconnect();
             }
         }
     }
