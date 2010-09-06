@@ -192,6 +192,9 @@ namespace NFSLibrary.Protocols.V3
                         }
                         else
                         {
+                            if (pLookUpRes.status == nfsstat3.NFS3ERR_NOENT)
+                                return null;
+
                             throw new ApplicationException("NFSPROC3_LOOKUP_3: errorcode " + pLookUpRes.status);
                         }
                     }
