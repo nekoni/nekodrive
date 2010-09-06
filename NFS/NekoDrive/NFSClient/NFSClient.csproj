@@ -161,9 +161,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NekoDrive.NFS\NekoDrive.NFS.csproj">
-      <Project>{C4BFB2C9-D2F9-4607-BD12-A4CB1D371D48}</Project>
-      <Name>NekoDrive.NFS</Name>
+    <ProjectReference Include="..\NFSLibrary\NFSLibrary.csproj">
+      <Project>{3BAE52C4-75A4-427A-A751-D03459920F79}</Project>
+      <Name>NFSLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

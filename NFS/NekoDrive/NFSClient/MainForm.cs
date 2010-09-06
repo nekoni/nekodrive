@@ -6,11 +6,10 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using NekoDrive.NFS.Wrappers;
-using NekoDrive.NFS;
 using System.Net;
 using System.Threading;
 using System.Net.NetworkInformation;
+using NFSLibrary;
 
 namespace NFSClient
 {
@@ -29,7 +28,7 @@ namespace NFSClient
 
         #region Properties
 
-        NFS nfsClient;
+        NFSLibrary.NFSClient nfsClient;
         List<string> nfsDevs = null;
         DragDropEffects CurrentEffect;
         List<ListViewItem> lvDragItem = new List<ListViewItem>();
@@ -43,6 +42,8 @@ namespace NFSClient
         Thread downloadThread;
         Thread uploadThread;
         string LocalFolder = string.Empty;
+        string RemoteFolder = ".";
+
         #endregion
 
         #region Constructor
@@ -140,21 +141,21 @@ namespace NFSClient
         void RefreshRemote()
         {
             listViewRemote.Items.Clear();
-            foreach (string Item in nfsClient.GetItemList())
+            foreach (string Item in nfsClient.GetItemList(RemoteFolder))
             {
-                NFSAttributes nfsAttribute = nfsClient.GetItemAttributes(Item);
+                NFSAttributes nfsAttribute = nfsClient.GetItemAttributes(nfsClient.Combine(Item, RemoteFolder));
                 if (nfsAttribute != null)
                 {
                     if (nfsAttribute.type == NFSType.NFDIR)
                     {
-                        ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.size.ToString(), nfsAttribute.dateTime.ToString() });
+                        ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.size.ToString(), nfsAttribute.cdateTime.ToString() });
                         lvi.ImageIndex = 1;
                         listViewRemote.Items.Add(lvi);
                     }
                     else
                         if (nfsAttribute.type == NFSType.NFREG)
                         {
-                            ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.size.ToString(), nfsAttribute.dateTime.ToString() });
+                            ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.size.ToString(), nfsAttribute.cdateTime.ToString() });
                             lvi.ImageIndex = 0;
                             listViewRemote.Items.Add(lvi);
                         }
@@ -221,24 +222,21 @@ namespace NFSClient
                 IPAddress ipAddress = new IPAddress(ipAddressControl1.GetAddressBytes());
                 if (PingServer(ipAddress))
                 {
-                    NFS.NFSVersion ver = NFS.NFSVersion.v2;
+                    NFSLibrary.NFSClient.NFSVersion ver = NFSLibrary.NFSClient.NFSVersion.v2;
                     if (cboxVer.SelectedItem.ToString() == "V3")
-                        ver = NFS.NFSVersion.v3;
+                        ver = NFSLibrary.NFSClient.NFSVersion.v2;
 
-                    nfsClient = new NFS(ver);
+                    nfsClient = new NFSLibrary.NFSClient(ver);
                     nfsClient.DataEvent += new NFSDataEventHandler(nfsClient_DataEvent);
-                    if (nfsClient.Connect(ipAddress, 0, 0, (int) nupTimeOut.Value) == NFSResult.NFS_SUCCESS)
-                    {
-                        nfsDevs = nfsClient.GetExportedDevices();
-                        cboxRemoteDevices.Items.Clear();
-                        foreach (string nfsdev in nfsDevs)
-                            cboxRemoteDevices.Items.Add(nfsdev);
-                        RefreshLocal(Environment.CurrentDirectory);
-                        listViewRemote.Items.Clear();
-                        pnlMain.Enabled = true;
-                    }
-                    else
-                        throw new ApplicationException("Connection error");
+                    nfsClient.Connect(ipAddress, 0, 0, (int) nupTimeOut.Value);
+                    nfsDevs = nfsClient.GetExportedDevices();
+                    cboxRemoteDevices.Items.Clear();
+                    foreach (string nfsdev in nfsDevs)
+                        cboxRemoteDevices.Items.Add(nfsdev);
+                    RefreshLocal(Environment.CurrentDirectory);
+                    listViewRemote.Items.Clear();
+                    pnlMain.Enabled = true;
+                    
                 }
                 else
                     throw new Exception("Server not found!");
@@ -304,11 +302,7 @@ namespace NFSClient
                     }
                     CurrentItem = lvItem.Text;
                     CurrentSize = ulong.Parse(lvItem.SubItems[1].Text);
-                    if (nfsClient.Read(CurrentItem, OutputFile) != NFSResult.NFS_SUCCESS)
-                    {
-                        MessageBox.Show("An error has occurred while downloading " + CurrentItem + " (" + nfsClient.GetLastError() + ")");
-                        continue;
-                    }
+                    nfsClient.Read(nfsClient.Combine(CurrentItem, RemoteFolder), OutputFile);
                 }
             }
             catch (Exception ex)
@@ -329,27 +323,20 @@ namespace NFSClient
                 ShowProgress(true);
                 foreach (ListViewItem lvItem in lvDragItem)
                 {
-                    if (nfsClient.FileExists(lvItem.Text))
+                    if (nfsClient.FileExists(nfsClient.Combine(lvItem.Text, RemoteFolder)))
                     {
                         if (MessageBox.Show("Do you want to overwrite " + lvItem.Text + "?", "NFSClient", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
-                            if (nfsClient.DeleteFile(lvItem.Text) != NFSResult.NFS_SUCCESS)
-                            {
-                                MessageBox.Show("An error has occurred deleting the file (" + nfsClient.GetLastError() + ")", "NFS Client", MessageBoxButtons.OK);
-                                continue;
-                            }
+                            nfsClient.DeleteFile(nfsClient.Combine(lvItem.Text, RemoteFolder));
                         }
                         else
                             continue;
                     }
                     CurrentItem = lvItem.Text;
                     CurrentSize = ulong.Parse(lvItem.SubItems[1].Text);
-                    string OutpuFileName = Path.Combine(LocalFolder, CurrentItem);
-                    if (nfsClient.Write(CurrentItem, OutpuFileName) != NFSResult.NFS_SUCCESS)
-                    {
-                        MessageBox.Show("An error has occurred while uploading " + CurrentItem + " (" + nfsClient.GetLastError() + ")");
-                        continue;
-                    }
+                    string SourceName = Path.Combine(LocalFolder, CurrentItem);
+                    nfsClient.CreateFile(nfsClient.Combine(CurrentItem, RemoteFolder));
+                    nfsClient.Write(nfsClient.Combine(CurrentItem, RemoteFolder), SourceName);
                 }
             }
             catch (Exception ex)
@@ -428,16 +415,10 @@ namespace NFSClient
                             {
                                 if (lvi.ImageIndex == 0)
                                 {
-                                    if (nfsClient.DeleteFile(lvi.Text) != NFSResult.NFS_SUCCESS)
-                                    {
-                                        MessageBox.Show("An error has occurred deleting the file (" + nfsClient.GetLastError() + ")", "NFS Client", MessageBoxButtons.OK);
-                                    }
+                                    nfsClient.DeleteFile(nfsClient.Combine(lvi.Text, RemoteFolder));
                                 }
                                 else
-                                    if (nfsClient.DeleteDirectory(lvi.Text) != NFSResult.NFS_SUCCESS)
-                                    {
-                                        MessageBox.Show("An error has occurred deleting the directory (" + nfsClient.GetLastError() + ")", "NFS Client", MessageBoxButtons.OK);
-                                    }
+                                    nfsClient.DeleteDirectory(nfsClient.Combine(lvi.Text, RemoteFolder));
                             }
                         }
                         RefreshRemote();
@@ -456,7 +437,6 @@ namespace NFSClient
             {
                 nfsClient.UnMountDevice();
                 nfsClient.Disconnect();
-                nfsClient.Dispose();
             }
         }
 
@@ -502,12 +482,8 @@ namespace NFSClient
                 NewFolder nf = new NewFolder();
                 if (nf.ShowDialog() == DialogResult.OK)
                 {
-                    if (nfsClient.CreateDirectory(nf.NewFolderName) == NFSResult.NFS_SUCCESS)
-                    {
-                        RefreshRemote();
-                    }
-                    else
-                        MessageBox.Show("An error has occurred creting the directory (" + nfsClient.GetLastError() + ")", "NFS Client", MessageBoxButtons.OK);
+                    nfsClient.CreateDirectory(nfsClient.Combine(nf.NewFolderName, RemoteFolder));
+                    RefreshRemote();
                 }
             }
             catch (Exception ex)
@@ -522,11 +498,7 @@ namespace NFSClient
             {
                 string NewLabel = e.Label;
                 ListViewItem lvi = listViewRemote.Items[e.Item];
-                if (nfsClient.Rename(lvi.Text, NewLabel) != NFSResult.NFS_SUCCESS)
-                {
-                    MessageBox.Show("An error has occurred renaming the item (" + nfsClient.GetLastError() + ")", "NFS Client", MessageBoxButtons.OK);
-                    e.CancelEdit = true;
-                }
+                nfsClient.Move(RemoteFolder, lvi.Text, RemoteFolder, NewLabel);
             }
             catch (Exception ex)
             {
@@ -543,8 +515,13 @@ namespace NFSClient
                     ListViewItem lvi = listViewRemote.SelectedItems[0];
                     if (lvi.ImageIndex == 1)
                     {
-                        if (nfsClient.ChangeCurrentDirectory(lvi.Text) == NFSResult.NFS_SUCCESS)
+                        if (lvi.Text == ".")
                             RefreshRemote();
+                        if (lvi.Text == "..")
+                            RemoteFolder = nfsClient.GetDirectoryName(RemoteFolder);
+                        else
+                            RemoteFolder = nfsClient.Combine(lvi.Text, RemoteFolder);
+                        RefreshRemote();
                     }
                 }
             }
