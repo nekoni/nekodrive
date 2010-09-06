@@ -192,6 +192,9 @@ namespace NFSLibrary.Protocols.V2
                         }
                         else
                         {
+                            if (pDirOpRes.status == nfsstat.NFSERR_NOENT)
+                                return null;
+
                             throw new ApplicationException("NFSPROC_LOOKUP_2: errorcode " + pDirOpRes.status);
                         }
                     }
