@@ -127,12 +127,14 @@ namespace NFSLibrary.Protocols.V3
                 READDIR3res pReadDirRes = new READDIR3res();
                 dpRdArgs.cookie  = new cookie3(new uint64(0));
                 dpRdArgs.count = new count3(new uint32(4096));
+                dpRdArgs.cookieverf = new cookieverf3(new byte[NFSv3Protocol.NFS3_COOKIEVERFSIZE]);
                 byte[] itemHandle = null;
                 entry3 pEntry = null;
                 if ((itemHandle = GetItemAttributes(DirectoryFullName).handle) != null)
                 {
                     dpRdArgs.dir = new nfs_fh3();
-                    dpRdArgs.dir.data = itemHandle;
+                    dpRdArgs.dir.data = new byte[NFSv3Protocol.NFS3_FHSIZE];
+                    Array.Copy(itemHandle, dpRdArgs.dir.data, NFSv3Protocol.NFS3_FHSIZE);
                     while (true)
                     {
                         if ((pReadDirRes = _ProtocolV3.NFSPROC3_READDIR_3(dpRdArgs)) == null)
@@ -144,6 +146,7 @@ namespace NFSLibrary.Protocols.V3
                             if (pReadDirRes.status == nfsstat3.NFS3_OK)
                             {
                                 pEntry = pReadDirRes.resok.reply.entries;
+                                Array.Copy(pReadDirRes.resok.cookieverf.value, dpRdArgs.cookieverf.value, NFSv3Protocol.NFS3_COOKIEVERFSIZE);
                                 while (pEntry != null)
                                 {
                                     ItemsList.Add(pEntry.name.value);
@@ -172,14 +175,16 @@ namespace NFSLibrary.Protocols.V3
             NFSAttributes attributes = null;
             if (_ProtocolV3 != null && _MountProtocolV3 != null)
             {
-                byte[] currentItem = _RootDirectoryHandle;
+                byte[] currentItem = new byte[NFSv3Protocol.NFS3_FHSIZE]; ;
+                Array.Copy(_RootDirectoryHandle, currentItem, NFSv3Protocol.NFS3_FHSIZE);
                 foreach (string Item in ItemFullName.Split(@"\".ToCharArray()))
                 {
                     LOOKUP3args dpLookUpArgs = new LOOKUP3args();
                     LOOKUP3res pLookUpRes;
                     dpLookUpArgs.what = new diropargs3();
                     dpLookUpArgs.what.dir = new nfs_fh3();
-                    dpLookUpArgs.what.dir.data = currentItem;
+                    dpLookUpArgs.what.dir.data = new byte[NFSv3Protocol.NFS3_FHSIZE];
+                    Array.Copy(currentItem, dpLookUpArgs.what.dir.data, NFSv3Protocol.NFS3_FHSIZE);
                     dpLookUpArgs.what.name = new filename3(Item);
 
                     if ((pLookUpRes = _ProtocolV3.NFSPROC3_LOOKUP_3(dpLookUpArgs)) != null)
@@ -264,7 +269,10 @@ namespace NFSLibrary.Protocols.V3
                 dpRmDirArgs.obj.name = new filename3(DirectoryName);
 
                 if ((pRmDirRes = _ProtocolV3.NFSPROC3_RMDIR_3(dpRmDirArgs)) != null)
-                    throw new ApplicationException("NFSPROC3_RMDIR_3: errorcode " + pRmDirRes.status);
+                {
+                    if (pRmDirRes.status != nfsstat3.NFS3_OK)
+                        throw new ApplicationException("NFSPROC3_RMDIR_3: errorcode " + pRmDirRes.status);
+                }
             }
             else
                 throw new ApplicationException("NFS Client not connected!");
@@ -287,7 +295,10 @@ namespace NFSLibrary.Protocols.V3
                 dpRemoveArgs.obj.name = new filename3(FileName);
 
                 if ((pRemoveRes = _ProtocolV3.NFSPROC3_REMOVE_3(dpRemoveArgs)) != null)
-                    throw new ApplicationException("NFSPROC3_REMOVE_3: errorcode " + pRemoveRes.status);
+                {
+                    if (pRemoveRes.status != nfsstat3.NFS3_OK)
+                        throw new ApplicationException("NFSPROC3_REMOVE_3: errorcode " + pRemoveRes.status);
+                }
             }
             else
                 throw new ApplicationException("NFS Client not connected!");
@@ -320,6 +331,9 @@ namespace NFSLibrary.Protocols.V3
                 dpCreateArgs.how.obj_attributes_gu.uid = new set_uid3();
                 dpCreateArgs.how.obj_attributes_gu.uid.set_it = true;
                 dpCreateArgs.how.obj_attributes_gu.uid.uid = new uid3(new uint32(_UId));
+                dpCreateArgs.how.obj_attributes_gu.size = new set_size3();
+                dpCreateArgs.how.obj_attributes_gu.size.size = new size3(new uint64(0));
+                dpCreateArgs.how.obj_attributes_gu.size.set_it = true;
 
                 dpCreateArgs.how.obj_attributes_un = new sattr3();
                 dpCreateArgs.how.obj_attributes_un.atime = new set_atime();
@@ -335,10 +349,15 @@ namespace NFSLibrary.Protocols.V3
                 dpCreateArgs.how.obj_attributes_un.uid = new set_uid3();
                 dpCreateArgs.how.obj_attributes_un.uid.set_it = true;
                 dpCreateArgs.how.obj_attributes_un.uid.uid = new uid3(new uint32(_UId));
-
+                dpCreateArgs.how.obj_attributes_un.size = new set_size3();
+                dpCreateArgs.how.obj_attributes_un.size.size = new size3(new uint64(0));
+                dpCreateArgs.how.obj_attributes_un.size.set_it = true;
+                dpCreateArgs.how.verf = new createverf3(new byte[NFSv3Protocol.NFS3_CREATEVERFSIZE]);
+                
                 dpCreateArgs.where = new diropargs3();
                 dpCreateArgs.where.dir = new nfs_fh3();
-                dpCreateArgs.where.dir.data = ParentAttributes.handle;
+                dpCreateArgs.where.dir.data = new byte[NFSv3Protocol.NFS3_FHSIZE];
+                Array.Copy(ParentAttributes.handle, dpCreateArgs.where.dir.data, NFSv3Protocol.NFS3_FHSIZE);
                 dpCreateArgs.where.name = new filename3(FileName);
 
                 if ((pCreateRes = _ProtocolV3.NFSPROC3_CREATE_3(dpCreateArgs)) != null)
@@ -430,8 +449,10 @@ namespace NFSLibrary.Protocols.V3
                 WRITE3args dpArgWrite = new WRITE3args();
                 WRITE3res pWriteRes;
                 dpArgWrite.file = new nfs_fh3();
-                dpArgWrite.file.data = _CurrentFileHandle;
+                dpArgWrite.file.data = new byte[NFSv3Protocol.NFS3_FHSIZE];
+                Array.Copy(_CurrentFileHandle, dpArgWrite.file.data, NFSv3Protocol.NFS3_FHSIZE);
                 dpArgWrite.offset = new offset3(new uint64(Offset));
+                dpArgWrite.count = new count3(new uint32((int)Count));
                 dpArgWrite.data = Buffer;
                 if ((pWriteRes = _ProtocolV3.NFSPROC3_WRITE_3(dpArgWrite)) != null)
                 {
@@ -467,7 +488,10 @@ namespace NFSLibrary.Protocols.V3
                 dpArgRename.to.name = new filename3(NewFileName);
 
                 if ((pRenameRes = _ProtocolV3.NFSPROC3_RENAME_3(dpArgRename)) != null)
-                    throw new ApplicationException("NFSPROC3_RENAME_3: errorcode " + pRenameRes.status);
+                {
+                    if (pRenameRes.status != nfsstat3.NFS3_OK)
+                        throw new ApplicationException("NFSPROC3_RENAME_3: errorcode " + pRenameRes.status);
+                }
             }
             else
                 throw new ApplicationException("NFS Client not connected!");

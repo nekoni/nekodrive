@@ -224,7 +224,7 @@ namespace NFSClient
                 {
                     NFSLibrary.NFSClient.NFSVersion ver = NFSLibrary.NFSClient.NFSVersion.v2;
                     if (cboxVer.SelectedItem.ToString() == "V3")
-                        ver = NFSLibrary.NFSClient.NFSVersion.v2;
+                        ver = NFSLibrary.NFSClient.NFSVersion.v3;
 
                     nfsClient = new NFSLibrary.NFSClient(ver);
                     nfsClient.DataEvent += new NFSDataEventHandler(nfsClient_DataEvent);
@@ -335,7 +335,6 @@ namespace NFSClient
                     CurrentItem = lvItem.Text;
                     CurrentSize = ulong.Parse(lvItem.SubItems[1].Text);
                     string SourceName = Path.Combine(LocalFolder, CurrentItem);
-                    nfsClient.CreateFile(nfsClient.Combine(CurrentItem, RemoteFolder));
                     nfsClient.Write(nfsClient.Combine(CurrentItem, RemoteFolder), SourceName);
                 }
             }
