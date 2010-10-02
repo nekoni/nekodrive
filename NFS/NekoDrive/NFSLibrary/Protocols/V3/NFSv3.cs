@@ -35,6 +35,7 @@ namespace NFSLibrary.Protocols.V3
 
         #endregion
 
+        #region Constructur
 
         public void Connect(IPAddress Address)
         {
@@ -57,6 +58,10 @@ namespace NFSLibrary.Protocols.V3
             _ProtocolV3.GetClient().setAuth(authUnix);
             _ProtocolV3.GetClient().setTimeout(Timeout);
         }
+
+        #endregion
+
+        #region Public Methods
 
         public void Disconnect()
         {
@@ -222,6 +227,12 @@ namespace NFSLibrary.Protocols.V3
                 string DirectoryName = Path.GetFileName(DirectoryFullName);
                 NFSAttributes ParentAttributes = GetItemAttributes(ParentDirectory);
 
+                /* Calculate Permission */
+                byte userP = 7; byte groupP = 5; byte otherP = 5;
+                int permission = 0;
+                permission = (((int)userP) << 6) | (((int)groupP) << 3) | ((int)otherP);
+                /*  ---  */
+
                 MKDIR3args dpMkDirArgs = new MKDIR3args();
                 MKDIR3res pMkDirRes;
                 dpMkDirArgs.attributes = new sattr3();
@@ -232,7 +243,8 @@ namespace NFSLibrary.Protocols.V3
                 dpMkDirArgs.attributes.size = new set_size3();
                 dpMkDirArgs.attributes.size.set_it = false;
                 dpMkDirArgs.attributes.mode = new set_mode3();
-                dpMkDirArgs.attributes.mode.set_it = false;
+                dpMkDirArgs.attributes.mode.set_it = true;
+                dpMkDirArgs.attributes.mode.mode = new mode3(new uint32(permission));
                 dpMkDirArgs.attributes.gid = new set_gid3();
                 dpMkDirArgs.attributes.gid.set_it = false;
                 dpMkDirArgs.attributes.uid = new set_uid3();
@@ -315,6 +327,12 @@ namespace NFSLibrary.Protocols.V3
                 CREATE3args dpCreateArgs = new CREATE3args();
                 CREATE3res pCreateRes;
 
+                /* Calculate Permission */
+                byte userP = 7; byte groupP = 7; byte otherP = 7;
+                int permission = 0;
+                permission = (((int)userP) << 6) | (((int)groupP) << 3) | ((int)otherP);
+                /*  ---  */
+
                 dpCreateArgs.how = new createhow3();
                 dpCreateArgs.how.mode = createmode3.UNCHECKED;
                 dpCreateArgs.how.obj_attributes_gu = new sattr3();
@@ -323,7 +341,7 @@ namespace NFSLibrary.Protocols.V3
                 dpCreateArgs.how.obj_attributes_gu.mtime = new set_mtime();
                 dpCreateArgs.how.obj_attributes_gu.mtime.set_it = time_how.DONT_CHANGE;
                 dpCreateArgs.how.obj_attributes_gu.mode = new set_mode3();
-                dpCreateArgs.how.obj_attributes_gu.mode.mode = new mode3(new uint32(0777));
+                dpCreateArgs.how.obj_attributes_gu.mode.mode = new mode3(new uint32(permission));
                 dpCreateArgs.how.obj_attributes_gu.mode.set_it = true;
                 dpCreateArgs.how.obj_attributes_gu.gid = new set_gid3();
                 dpCreateArgs.how.obj_attributes_gu.gid.gid = new gid3(new uint32(_GId));
@@ -341,7 +359,7 @@ namespace NFSLibrary.Protocols.V3
                 dpCreateArgs.how.obj_attributes_un.mtime = new set_mtime();
                 dpCreateArgs.how.obj_attributes_un.mtime.set_it = time_how.DONT_CHANGE;
                 dpCreateArgs.how.obj_attributes_un.mode = new set_mode3();
-                dpCreateArgs.how.obj_attributes_un.mode.mode = new mode3(new uint32(0777));
+                dpCreateArgs.how.obj_attributes_un.mode.mode = new mode3(new uint32(permission));
                 dpCreateArgs.how.obj_attributes_un.mode.set_it = true;
                 dpCreateArgs.how.obj_attributes_un.gid = new set_gid3();
                 dpCreateArgs.how.obj_attributes_un.gid.gid = new gid3(new uint32(_GId));
@@ -510,6 +528,8 @@ namespace NFSLibrary.Protocols.V3
             else
                 throw new ApplicationException("NFS Client not connected!");
         }
+
+        #endregion
     }
 
 }
