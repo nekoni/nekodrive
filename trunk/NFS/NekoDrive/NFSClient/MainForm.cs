@@ -228,7 +228,7 @@ namespace NFSClient
 
                     nfsClient = new NFSLibrary.NFSClient(ver);
                     nfsClient.DataEvent += new NFSDataEventHandler(nfsClient_DataEvent);
-                    nfsClient.Connect(ipAddress, 0, 0, (int) nupTimeOut.Value * 1000);
+                    nfsClient.Connect(ipAddress, 1000, 1000, (int) nupTimeOut.Value * 1000, System.Text.Encoding.UTF8);
                     nfsDevs = nfsClient.GetExportedDevices();
                     cboxRemoteDevices.Items.Clear();
                     foreach (string nfsdev in nfsDevs)
