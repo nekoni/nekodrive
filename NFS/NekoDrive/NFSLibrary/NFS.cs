@@ -116,7 +116,8 @@ namespace NFSLibrary
         /// <param name="Address">The server address</param>
         public void Connect(IPAddress Address)
         {
-            nfsInterface.Connect(Address, 0, 0, 60);
+            nfsInterface.Connect(Address);
+            IsConnected = true;
         }
 
         /// <summary>
@@ -129,6 +130,19 @@ namespace NFSLibrary
         public void Connect(IPAddress Address, Int32 UserId, Int32 GroupId, Int32 CommandTimeout)
         {
             nfsInterface.Connect(Address, UserId, GroupId, CommandTimeout);
+            IsConnected = true;
+        }
+
+        /// <summary>
+        /// Create a connection to a NFS Server
+        /// </summary>
+        /// <param name="Address">The server address</param>
+        /// <param name="UserId">The unix user id</param>
+        /// <param name="GroupId">The unix group id</param>
+        /// <param name="CommandTimeout">The command timeout in seconds</param>
+        public void Connect(IPAddress Address, Int32 UserId, Int32 GroupId, Int32 CommandTimeout, System.Text.Encoding characterEncoding)
+        {
+            nfsInterface.Connect(Address, UserId, GroupId, CommandTimeout, characterEncoding);
             IsConnected = true;
         }
 
@@ -176,7 +190,19 @@ namespace NFSLibrary
         /// <returns>A list of the items name</returns>
         public List<String> GetItemList(String DirectoryFullName)
         {
-            return nfsInterface.GetItemList(DirectoryFullName);
+            System.Collections.Generic.List<String> content = nfsInterface.GetItemList(DirectoryFullName);
+
+            int dotIdx, ddotIdx;
+            
+            dotIdx = content.IndexOf(".");
+            if (dotIdx > -1)
+                content.RemoveAt(dotIdx);
+            
+            ddotIdx = content.IndexOf("..");
+            if (ddotIdx > -1)
+                content.RemoveAt(ddotIdx);
+
+            return content;
         }
 
         /// <summary>
@@ -196,16 +222,43 @@ namespace NFSLibrary
         /// <param name="DirectoryFullName">Directory full name</param>
         public void CreateDirectory(String DirectoryFullName)
         {
+            String ParentPath = System.IO.Path.GetDirectoryName(DirectoryFullName);
+
+            if (!string.IsNullOrEmpty(ParentPath) && 
+                string.Compare(ParentPath, ".") != 0 && 
+                !this.FileExists(ParentPath))
+            { this.CreateDirectory(ParentPath); }
+
             nfsInterface.CreateDirectory(DirectoryFullName);
         }
 
-        
+
         /// <summary>
         /// Delete a directory
         /// </summary>
         /// <param name="DirectoryFullName">Directory full name</param>
         public void DeleteDirectory(String DirectoryFullName)
         {
+            this.DeleteDirectory(DirectoryFullName, false);
+        }
+
+        /// <summary>
+        /// Delete a directory
+        /// </summary>
+        /// <param name="DirectoryFullName">Directory full name</param>
+        public void DeleteDirectory(String DirectoryFullName, bool recursive)
+        {
+            if (recursive)
+            {
+                foreach (string item in this.GetItemList(DirectoryFullName))
+                {
+                    if (this.IsDirectory(string.Format("{0}\\{1}", DirectoryFullName, item)))
+                    { this.DeleteDirectory(string.Format("{0}\\{1}", DirectoryFullName, item), recursive); }
+                    else
+                    { this.DeleteFile(string.Format("{0}\\{1}", DirectoryFullName, item)); }
+                }
+            }
+
             nfsInterface.DeleteDirectory(DirectoryFullName);
         }
 
@@ -282,7 +335,7 @@ namespace NFSLibrary
                 if (!FileExists(SourceFileFullName))
                     throw new FileNotFoundException();
                 NFSAttributes nfsAttributes = GetItemAttributes(SourceFileFullName);
-                
+
                 Int64 TotalLenght = nfsAttributes.size;
                 Byte[] Data = new byte[TotalLenght];
                 int pSize = -1;
@@ -314,7 +367,7 @@ namespace NFSLibrary
                 Byte[] ChunkBuffer = new Byte[ChunkCount];
                 int Size = 0;
                 nfsInterface.Read(SourceFileFullName, Offset + CurrentPosition, ChunkCount, ref ChunkBuffer, out Size);
-                
+
                 if (DataEvent != null)
                     DataEvent(this, new NFSEventArgs(ChunkCount));
 
@@ -365,7 +418,7 @@ namespace NFSLibrary
             {
                 if (!FileExists(DestinationFileFullName))
                     CreateFile(DestinationFileFullName);
-                
+
                 Int64 Offset = (Int64)InputOffset;
                 UInt32 Count = blockSize;
                 Int32 Bytes = 0;
@@ -408,7 +461,7 @@ namespace NFSLibrary
                     if (Size == 0)
                         return (int)CurrentPosition;
                     CurrentPosition += (UInt32)ChunkCount;
-                   
+
                 } while (CurrentPosition != TotalLenght);
             }
             return (int)TotalLenght; ;
@@ -486,8 +539,8 @@ namespace NFSLibrary
         /// <returns>The combined path</returns>
         public string Combine(String FileName, String DirectoryFullName)
         {
-            if (DirectoryFullName == ".")
-                return FileName;
+            /*if (DirectoryFullName == ".")
+                return FileName;*/
             return DirectoryFullName + @"\" + FileName;
         }
 

@@ -11,6 +11,8 @@ namespace NFSLibrary.Protocols
 
         void Connect(IPAddress Address, Int32 UserId, Int32 GroupId, Int32 CommandTimeout);
 
+        void Connect(IPAddress Address, Int32 UserId, Int32 GroupId, Int32 CommandTimeout, System.Text.Encoding characterEncoding);
+
         void Disconnect();
 
         List<String> GetExportedDevices();

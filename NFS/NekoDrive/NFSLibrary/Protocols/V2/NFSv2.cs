@@ -38,29 +38,35 @@ namespace NFSLibrary.Protocols.V2
 
         public void Connect(IPAddress Address)
         {
-            Connect(Address, 0, 0, 60000);
+            Connect(Address, 0, 0, 60000, System.Text.Encoding.ASCII);
         }
 
         public void Connect(IPAddress Address, int UserId, int GroupId, int Timeout)
         {
+            Connect(Address, UserId, GroupId, Timeout, System.Text.Encoding.ASCII);
+        }
+
+        public void Connect(IPAddress Address, int UserId, int GroupId, int Timeout, System.Text.Encoding characterEncoding)
+        {
+            if (characterEncoding == null)
+            { characterEncoding = System.Text.Encoding.ASCII; }
+
             _GId = GroupId;
             _UId = UserId;
-
-            int[] gids = new int[1];
-            gids[0] = GroupId;
 
             _MountProtocolV2 = new NFSv2MountProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP);
             _ProtocolV2 = new NFSv2ProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP);
 
-            string machine = Dns.GetHostName();
+            OncRpcClientAuthUnix authUnix = new OncRpcClientAuthUnix(Address.ToString(), UserId, GroupId);
+            
 
-            OncRpcClientAuthUnix authUnix = new OncRpcClientAuthUnix(machine, UserId, GroupId, gids);
-
-            _MountProtocolV2.GetClient().setAuth(new OncRpcClientAuthNone());
+            _MountProtocolV2.GetClient().setAuth(authUnix);
             _MountProtocolV2.GetClient().setTimeout(Timeout);
+            _MountProtocolV2.GetClient().setCharacterEncoding(characterEncoding.EncodingName);
 
             _ProtocolV2.GetClient().setAuth(authUnix);
             _ProtocolV2.GetClient().setTimeout(Timeout);
+            _ProtocolV2.GetClient().setCharacterEncoding(characterEncoding.EncodingName);
         }
 
         public void Disconnect()
@@ -177,6 +183,9 @@ namespace NFSLibrary.Protocols.V2
             NFSAttributes attributes = null;
             if (_ProtocolV2 != null && _MountProtocolV2 != null)
             {
+                if (String.IsNullOrEmpty(ItemFullName))
+                    ItemFullName = ".";
+
                 nfshandle currentItem = new nfshandle(new Byte[NFSv2Protocol.FHSIZE]);
                 Array.Copy(_RootDirectoryHandle.value, currentItem.value, NFSv2Protocol.FHSIZE);
                 foreach (string Item in ItemFullName.Split(@"\".ToCharArray()))
@@ -231,7 +240,12 @@ namespace NFSLibrary.Protocols.V2
                 dpArgCreate.attributes.mtime = new nfstimeval();
 		        dpArgCreate.attributes.mtime.seconds = -1;
 		        dpArgCreate.attributes.mtime.useconds = -1;
-		        dpArgCreate.attributes.mode = MODE_CHR | 0777;
+                /* Calculate Permission */
+                byte userP = 7; byte groupP = 7; byte otherP = 7;
+                int permission = 0;
+                permission = (((int)userP) << 6) | (((int)groupP) << 3) | ((int)otherP);
+                /*  ---  */
+                dpArgCreate.attributes.mode = permission;
 		        dpArgCreate.attributes.gid = _GId;
 		        dpArgCreate.attributes.uid = _UId;
                 dpArgCreate.where = new diropargs();
@@ -304,7 +318,12 @@ namespace NFSLibrary.Protocols.V2
                 dpArgCreate.attributes.mtime = new nfstimeval();
                 dpArgCreate.attributes.mtime.seconds = -1;
                 dpArgCreate.attributes.mtime.useconds = -1;
-                dpArgCreate.attributes.mode = MODE_REG | 0777;
+                /* Calculate Permission */
+                byte userP = 7; byte groupP = 7; byte otherP = 7;
+                int permission = 0;
+                permission = (((int)userP) << 6) | (((int)groupP) << 3) | ((int)otherP);
+                /*  ---  */
+                dpArgCreate.attributes.mode = permission;
                 dpArgCreate.attributes.gid = _GId;
                 dpArgCreate.attributes.uid = _UId;
                 dpArgCreate.attributes.size = -1;
