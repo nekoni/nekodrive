@@ -46,12 +46,17 @@ namespace NFSLibrary.Protocols.V2
             _GId = GroupId;
             _UId = UserId;
 
+            int[] gids = new int[1];
+            gids[0] = GroupId;
+
             _MountProtocolV2 = new NFSv2MountProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP);
             _ProtocolV2 = new NFSv2ProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP);
 
-            OncRpcClientAuthUnix authUnix = new OncRpcClientAuthUnix(Address.ToString(), UserId, GroupId);
+            string machine = Dns.GetHostName();
 
-            _MountProtocolV2.GetClient().setAuth(authUnix);
+            OncRpcClientAuthUnix authUnix = new OncRpcClientAuthUnix(machine, UserId, GroupId, gids);
+
+            _MountProtocolV2.GetClient().setAuth(new OncRpcClientAuthNone());
             _MountProtocolV2.GetClient().setTimeout(Timeout);
 
             _ProtocolV2.GetClient().setAuth(authUnix);
