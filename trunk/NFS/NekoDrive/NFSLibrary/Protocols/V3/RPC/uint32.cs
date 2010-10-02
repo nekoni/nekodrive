@@ -25,7 +25,7 @@ public class uint32 : XdrAble {
     }
 
     public void xdrDecode(XdrDecodingStream xdr) {
-        value = xdr.xdrDecodeInt();
+        this.value = xdr.xdrDecodeInt();
     }
 
 }

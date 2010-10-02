@@ -39,11 +39,19 @@ namespace NFSLibrary.Protocols.V3
 
         public void Connect(IPAddress Address)
         {
-            Connect(Address, 0, 0, 60000);
+            Connect(Address, 0, 0, 60000, System.Text.Encoding.ASCII);
         }
 
         public void Connect(IPAddress Address, int UserId, int GroupId, int Timeout)
         {
+            Connect(Address, UserId, GroupId, Timeout, System.Text.Encoding.ASCII);
+        }
+
+        public void Connect(IPAddress Address, int UserId, int GroupId, int Timeout, System.Text.Encoding characterEncoding)
+        {
+            if (characterEncoding == null)
+            { characterEncoding = System.Text.Encoding.ASCII; }
+
             _GId = GroupId;
             _UId = UserId;
 
@@ -54,9 +62,11 @@ namespace NFSLibrary.Protocols.V3
 
             _MountProtocolV3.GetClient().setAuth(authUnix);
             _MountProtocolV3.GetClient().setTimeout(Timeout);
+            _MountProtocolV3.GetClient().setCharacterEncoding(characterEncoding.WebName);
 
             _ProtocolV3.GetClient().setAuth(authUnix);
             _ProtocolV3.GetClient().setTimeout(Timeout);
+            _ProtocolV3.GetClient().setCharacterEncoding(characterEncoding.WebName);
         }
 
         #endregion
@@ -103,7 +113,7 @@ namespace NFSLibrary.Protocols.V3
                 {
                     _MountedDevice = DeviceName;
                     _RootDirectoryHandle = new Byte[NFSv3Protocol.NFS3_FHSIZE];
-                    Array.Copy(mnt.mountinfo.fhandle.data, _RootDirectoryHandle, NFSv3Protocol.NFS3_FHSIZE);
+                    Array.Copy(mnt.mountinfo.fhandle.data, _RootDirectoryHandle, mnt.mountinfo.fhandle.data.Length);
                 }
                 else
                     throw new ApplicationException("MOUNTPROC3_MNT_3: errorcode " + mnt.fhs_status);
@@ -180,6 +190,9 @@ namespace NFSLibrary.Protocols.V3
             NFSAttributes attributes = null;
             if (_ProtocolV3 != null && _MountProtocolV3 != null)
             {
+                if (String.IsNullOrEmpty(ItemFullName))
+                    ItemFullName = ".";
+
                 byte[] currentItem = new byte[NFSv3Protocol.NFS3_FHSIZE]; ;
                 Array.Copy(_RootDirectoryHandle, currentItem, NFSv3Protocol.NFS3_FHSIZE);
                 foreach (string Item in ItemFullName.Split(@"\".ToCharArray()))
@@ -196,7 +209,7 @@ namespace NFSLibrary.Protocols.V3
                     {
                         if (pLookUpRes.status == nfsstat3.NFS3_OK)
                         {
-                            Array.Copy(pLookUpRes.resok.obj.data, currentItem, NFSv3Protocol.NFS3_FHSIZE);
+                            Array.Copy(pLookUpRes.resok.obj.data, currentItem, pLookUpRes.resok.obj.data.Length);
                             attributes = new NFSAttributes(pLookUpRes.resok.obj_attributes.attributes.ctime.seconds.value, pLookUpRes.resok.obj_attributes.attributes.atime.seconds.value,
                                 pLookUpRes.resok.obj_attributes.attributes.mtime.seconds.value, pLookUpRes.resok.obj_attributes.attributes.type, pLookUpRes.resok.obj_attributes.attributes.size.value.value, currentItem);
                         }
@@ -227,12 +240,6 @@ namespace NFSLibrary.Protocols.V3
                 string DirectoryName = Path.GetFileName(DirectoryFullName);
                 NFSAttributes ParentAttributes = GetItemAttributes(ParentDirectory);
 
-                /* Calculate Permission */
-                byte userP = 7; byte groupP = 5; byte otherP = 5;
-                int permission = 0;
-                permission = (((int)userP) << 6) | (((int)groupP) << 3) | ((int)otherP);
-                /*  ---  */
-
                 MKDIR3args dpMkDirArgs = new MKDIR3args();
                 MKDIR3res pMkDirRes;
                 dpMkDirArgs.attributes = new sattr3();
@@ -243,12 +250,19 @@ namespace NFSLibrary.Protocols.V3
                 dpMkDirArgs.attributes.size = new set_size3();
                 dpMkDirArgs.attributes.size.set_it = false;
                 dpMkDirArgs.attributes.mode = new set_mode3();
-                dpMkDirArgs.attributes.mode.set_it = true;
+                /* Calculate Permission */
+                byte userP = 7; byte groupP = 7; byte otherP = 7;
+                int permission = 0;
+                permission = (((int)userP) << 6) | (((int)groupP) << 3) | ((int)otherP);
+                /*  ---  */
                 dpMkDirArgs.attributes.mode.mode = new mode3(new uint32(permission));
+                dpMkDirArgs.attributes.mode.set_it = true;
                 dpMkDirArgs.attributes.gid = new set_gid3();
-                dpMkDirArgs.attributes.gid.set_it = false;
+                dpMkDirArgs.attributes.gid.gid = new gid3(new uint32(_GId));
+                dpMkDirArgs.attributes.gid.set_it = true;
                 dpMkDirArgs.attributes.uid = new set_uid3();
-                dpMkDirArgs.attributes.uid.set_it = false;
+                dpMkDirArgs.attributes.uid.uid = new uid3(new uint32(_UId));
+                dpMkDirArgs.attributes.uid.set_it = true;
                 dpMkDirArgs.where = new diropargs3();
                 dpMkDirArgs.where.dir = new nfs_fh3();
                 dpMkDirArgs.where.dir.data = ParentAttributes.handle;
