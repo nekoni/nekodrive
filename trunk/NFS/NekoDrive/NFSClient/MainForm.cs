@@ -497,7 +497,10 @@ namespace NFSClient
             {
                 string NewLabel = e.Label;
                 ListViewItem lvi = listViewRemote.Items[e.Item];
-                nfsClient.Move(RemoteFolder, lvi.Text, RemoteFolder, NewLabel);
+                nfsClient.Move(
+                    nfsClient.Combine(lvi.Text, RemoteFolder),
+                    nfsClient.Combine(NewLabel, RemoteFolder)
+                );
             }
             catch (Exception ex)
             {
