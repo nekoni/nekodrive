@@ -335,21 +335,16 @@ namespace NekoDrive.NFS
             try
             {
                 Debug("MoveFile {0}", filename);
-                string DirectoryOld = MainForm.In.mNFS.GetDirectoryName(filename);
-                string FileNameOld = MainForm.In.mNFS.GetFileName(filename);
-                string FullPathOld = MainForm.In.mNFS.Combine(FileNameOld, DirectoryOld);
 
-                string DirectoryNew = MainForm.In.mNFS.GetDirectoryName(newname);
-                string FileNameNew = MainForm.In.mNFS.GetFileName(newname);
-                string FullPathNew = MainForm.In.mNFS.Combine(FileNameNew, DirectoryNew);
-
-                if (MainForm.In.mNFS.IsDirectory(FullPathNew))
+                if (MainForm.In.mNFS.IsDirectory(newname))
                 {
-                    FileNameNew = FileNameOld;
-                    DirectoryNew = FullPathNew;
+                    newname = MainForm.In.mNFS.Combine(
+                                    MainForm.In.mNFS.GetFileName(filename),
+                                    newname
+                                );
                 }
 
-                MainForm.In.mNFS.Move(DirectoryOld, FileNameOld, DirectoryNew, FileNameNew);
+                MainForm.In.mNFS.Move(filename, newname);
             }
             catch (Exception ex)
             {

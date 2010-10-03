@@ -190,6 +190,8 @@ namespace NFSLibrary
         /// <returns>A list of the items name</returns>
         public List<String> GetItemList(String DirectoryFullName)
         {
+            DirectoryFullName = CorrectPath(DirectoryFullName);
+
             System.Collections.Generic.List<String> content = nfsInterface.GetItemList(DirectoryFullName);
 
             int dotIdx, ddotIdx;
@@ -212,6 +214,8 @@ namespace NFSLibrary
         /// <returns>A NFSAttributes class</returns>
         public NFSAttributes GetItemAttributes(String ItemFullName)
         {
+            ItemFullName = CorrectPath(ItemFullName);
+
             return nfsInterface.GetItemAttributes(ItemFullName);
         }
 
@@ -222,6 +226,8 @@ namespace NFSLibrary
         /// <param name="DirectoryFullName">Directory full name</param>
         public void CreateDirectory(String DirectoryFullName)
         {
+            DirectoryFullName = CorrectPath(DirectoryFullName);
+
             String ParentPath = System.IO.Path.GetDirectoryName(DirectoryFullName);
 
             if (!string.IsNullOrEmpty(ParentPath) && 
@@ -239,6 +245,8 @@ namespace NFSLibrary
         /// <param name="DirectoryFullName">Directory full name</param>
         public void DeleteDirectory(String DirectoryFullName)
         {
+            DirectoryFullName = CorrectPath(DirectoryFullName);
+
             this.DeleteDirectory(DirectoryFullName, false);
         }
 
@@ -248,6 +256,8 @@ namespace NFSLibrary
         /// <param name="DirectoryFullName">Directory full name</param>
         public void DeleteDirectory(String DirectoryFullName, bool recursive)
         {
+            DirectoryFullName = CorrectPath(DirectoryFullName);
+
             if (recursive)
             {
                 foreach (string item in this.GetItemList(DirectoryFullName))
@@ -471,13 +481,26 @@ namespace NFSLibrary
         /// <summary>
         /// Move a file from/to a directory
         /// </summary>
-        /// <param name="OldDirectoryName">The old directory name (e.g. "directory\sub1\sub2" or "." for the root)</param>
-        /// <param name="OldFileName">The old filename</param>
-        /// <param name="NewDirectoryName">The new directory name (e.g. "directory\sub1\sub2" or "." for the root)</param>
-        /// <param name="NewFileName">The new file name</param>
-        public void Move(String OldDirectoryFullName, String OldFileName, String NewDirectoryFullName, String NewFileName)
+        /// <param name="SourceFileFullName">The exact file location for source (e.g. "directory\sub1\sub2\filename" or "." for the root)</param>
+        /// <param name="TargetFileFullName">Target location of moving file (e.g. "directory\sub1\sub2\filename" or "." for the root)</param>
+        public void Move(String SourceFileFullName, String TargetFileFullName)
         {
-            nfsInterface.Move(OldDirectoryFullName, OldFileName, NewDirectoryFullName, NewFileName);
+            if (!String.IsNullOrEmpty(TargetFileFullName))
+            {
+                if (TargetFileFullName.LastIndexOf('\\') + 1 == TargetFileFullName.Length)
+                { 
+                    TargetFileFullName = System.IO.Path.Combine(
+                                            TargetFileFullName, 
+                                            System.IO.Path.GetFileName(SourceFileFullName)); 
+                }
+            }
+
+            nfsInterface.Move(
+                System.IO.Path.GetDirectoryName(SourceFileFullName),
+                System.IO.Path.GetFileName(SourceFileFullName),
+                System.IO.Path.GetDirectoryName(TargetFileFullName),
+                System.IO.Path.GetFileName(TargetFileFullName)
+            );
         }
 
         /// <summary>
@@ -487,6 +510,8 @@ namespace NFSLibrary
         /// <returns>True if is a directory</returns>
         public bool IsDirectory(String DirectoryFullName)
         {
+            DirectoryFullName = CorrectPath(DirectoryFullName);
+
             return nfsInterface.IsDirectory(DirectoryFullName);
         }
 
@@ -497,6 +522,8 @@ namespace NFSLibrary
         /// <returns>True exists</returns>
         public Boolean FileExists(String FileFullName)
         {
+            FileFullName = CorrectPath(FileFullName);
+
             return GetItemAttributes(FileFullName) != null;
         }
 
@@ -539,6 +566,7 @@ namespace NFSLibrary
         /// <returns>The combined path</returns>
         public string Combine(String FileName, String DirectoryFullName)
         {
+            DirectoryFullName = CorrectPath(DirectoryFullName);
             /*if (DirectoryFullName == ".")
                 return FileName;*/
             return DirectoryFullName + @"\" + FileName;
@@ -552,6 +580,17 @@ namespace NFSLibrary
         public void SetFileSize(String FileFullName, UInt64 Size)
         {
             nfsInterface.SetFileSize(FileFullName, Size);
+        }
+
+        private string CorrectPath(String PathEntry)
+        {
+            if (!String.IsNullOrEmpty(PathEntry))
+            {
+                if (PathEntry.LastIndexOf('\\') + 1 == PathEntry.Length)
+                { PathEntry = PathEntry.Substring(0, PathEntry.Length - 1); }
+            }
+
+            return PathEntry;
         }
 
         #endregion
