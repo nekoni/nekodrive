@@ -219,7 +219,6 @@ namespace NFSLibrary
             return nfsInterface.GetItemAttributes(ItemFullName);
         }
 
-
         /// <summary>
         /// Create a new directory
         /// </summary>
@@ -238,15 +237,12 @@ namespace NFSLibrary
             nfsInterface.CreateDirectory(DirectoryFullName);
         }
 
-
         /// <summary>
         /// Delete a directory
         /// </summary>
         /// <param name="DirectoryFullName">Directory full name</param>
         public void DeleteDirectory(String DirectoryFullName)
         {
-            DirectoryFullName = CorrectPath(DirectoryFullName);
-
             this.DeleteDirectory(DirectoryFullName, false);
         }
 
@@ -272,13 +268,14 @@ namespace NFSLibrary
             nfsInterface.DeleteDirectory(DirectoryFullName);
         }
 
-
         /// <summary>
         /// Delete a file 
         /// </summary>
         /// <param name="FileFullName">File full name</param>
         public void DeleteFile(String FileFullName)
         {
+            FileFullName = CorrectPath(FileFullName);
+
             nfsInterface.DeleteFile(FileFullName);
         }
 
@@ -288,6 +285,8 @@ namespace NFSLibrary
         /// <param name="FileFullName">File full name</param>
         public void CreateFile(String FileFullName)
         {
+            FileFullName = CorrectPath(FileFullName);
+
             nfsInterface.CreateFile(FileFullName);
         }
 
@@ -313,7 +312,7 @@ namespace NFSLibrary
         /// </summary>
         /// <param name="SourceFilefullName">The remote file name</param>
         /// <param name="DestinationFileFullName">The destination local directory</param>
-        public void Read(String SourceFilefullName, String DestinationFileFullName)
+        public void Read(String SourceFileFullName, String DestinationFileFullName)
         {
             FileStream fs = null;
             try
@@ -321,7 +320,7 @@ namespace NFSLibrary
                 if (File.Exists(DestinationFileFullName))
                     File.Delete(DestinationFileFullName);
                 fs = new FileStream(DestinationFileFullName, FileMode.CreateNew);
-                Read(SourceFilefullName, fs);
+                Read(SourceFileFullName, fs);
             }
             finally
             {
@@ -366,6 +365,8 @@ namespace NFSLibrary
         /// <returns>The number of copied bytes</returns>
         public Int32 Read(String SourceFileFullName, Int64 Offset, Int64 TotalLenght, ref Byte[] Buffer)
         {
+            SourceFileFullName = CorrectPath(SourceFileFullName);
+
             UInt32 BlockSize = blockSize;
             UInt32 CurrentPosition = 0;
             do
@@ -451,6 +452,8 @@ namespace NFSLibrary
         /// <returns>Returns the total written bytes</returns>
         public Int32 Write(String DestinationFileFullName, Int64 Offset, UInt32 Count, Byte[] Buffer)
         {
+            DestinationFileFullName = CorrectPath(DestinationFileFullName);
+
             UInt64 TotalLenght = Count;
             UInt32 BlockSize = blockSize;
             UInt32 CurrentPosition = 0;
@@ -495,6 +498,9 @@ namespace NFSLibrary
                 }
             }
 
+            SourceFileFullName = CorrectPath(SourceFileFullName);
+            TargetFileFullName = CorrectPath(TargetFileFullName);
+
             nfsInterface.Move(
                 System.IO.Path.GetDirectoryName(SourceFileFullName),
                 System.IO.Path.GetFileName(SourceFileFullName),
@@ -522,11 +528,8 @@ namespace NFSLibrary
         /// <returns>True exists</returns>
         public Boolean FileExists(String FileFullName)
         {
-            FileFullName = CorrectPath(FileFullName);
-
             return GetItemAttributes(FileFullName) != null;
         }
-
 
         /// <summary>
         /// Get the file/directory name from a standard windwos path (eg. "\\test\text.txt" --> "text.txt" or "\\" --> ".")
@@ -548,13 +551,12 @@ namespace NFSLibrary
         /// <returns>The directory name</returns>
         public string GetDirectoryName(String FullDirectoryName)
         {
+            FullDirectoryName = CorrectPath(FullDirectoryName);
+
             String str = Path.GetDirectoryName(FullDirectoryName);
-            if (str == null)
-                return ".";
-            if (str == @"\")
+            if (String.IsNullOrEmpty(str))
                 str = ".";
-            if (str.Length > 1)
-                str = str.Remove(0, 1);
+
             return str;
         }
 
@@ -567,9 +569,8 @@ namespace NFSLibrary
         public string Combine(String FileName, String DirectoryFullName)
         {
             DirectoryFullName = CorrectPath(DirectoryFullName);
-            /*if (DirectoryFullName == ".")
-                return FileName;*/
-            return DirectoryFullName + @"\" + FileName;
+
+            return String.Format("{0}\\{1}", DirectoryFullName, FileName);
         }
 
         /// <summary>
@@ -579,6 +580,8 @@ namespace NFSLibrary
         /// <param name="Size">the size in bytes</param>
         public void SetFileSize(String FileFullName, UInt64 Size)
         {
+            FileFullName = CorrectPath(FileFullName);
+
             nfsInterface.SetFileSize(FileFullName, Size);
         }
 
@@ -586,8 +589,19 @@ namespace NFSLibrary
         {
             if (!String.IsNullOrEmpty(PathEntry))
             {
-                if (PathEntry.LastIndexOf('\\') + 1 == PathEntry.Length)
-                { PathEntry = PathEntry.Substring(0, PathEntry.Length - 1); }
+                String[] PathList = PathEntry.Split('\\');
+                List<string> newPathList = new List<string>();
+                
+                foreach(String item in PathList)
+                {
+                    if (!String.IsNullOrEmpty(item))
+                    { newPathList.Add(item); }
+                }
+
+                PathEntry = String.Join("\\", newPathList.ToArray());
+
+                if (PathEntry.IndexOf('.') != 0)
+                { PathEntry = String.Concat(".\\", PathEntry); }
             }
 
             return PathEntry;
