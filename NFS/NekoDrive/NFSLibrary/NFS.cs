@@ -190,23 +190,35 @@ namespace NFSLibrary
         /// <returns>A list of the items name</returns>
         public List<String> GetItemList(String DirectoryFullName)
         {
+            return GetItemList(DirectoryFullName, false);
+        }
+
+        /// <summary>
+        /// Get the items in a directory
+        /// </summary>
+        /// <param name="DirectoryFullName">Directory name (e.g. "directory\subdirectory" or "." for the root)</param>
+        /// <param name="ExcludeNavigationDots">When posted as true, return list will not contains "." and ".."</param>
+        /// <returns>A list of the items name</returns>
+        public List<String> GetItemList(String DirectoryFullName, Boolean ExcludeNavigationDots)
+        {
             DirectoryFullName = CorrectPath(DirectoryFullName);
 
-            return nfsInterface.GetItemList(DirectoryFullName);
-            //we may need . and .. folder for navigation purpose
-            //System.Collections.Generic.List<String> content = nfsInterface.GetItemList(DirectoryFullName);
+            System.Collections.Generic.List<String> content = nfsInterface.GetItemList(DirectoryFullName);
 
-            //int dotIdx, ddotIdx;
-            
-            //dotIdx = content.IndexOf(".");
-            //if (dotIdx > -1)
-            //    content.RemoveAt(dotIdx);
-            
-            //ddotIdx = content.IndexOf("..");
-            //if (ddotIdx > -1)
-            //    content.RemoveAt(ddotIdx);
+            if (ExcludeNavigationDots)
+            {
+                int dotIdx, ddotIdx;
 
-            //return content;
+                dotIdx = content.IndexOf(".");
+                if (dotIdx > -1)
+                    content.RemoveAt(dotIdx);
+
+                ddotIdx = content.IndexOf("..");
+                if (ddotIdx > -1)
+                    content.RemoveAt(ddotIdx);
+            }
+
+            return content;
         }
 
         /// <summary>
