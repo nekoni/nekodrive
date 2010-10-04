@@ -228,7 +228,10 @@ namespace NFSClient
 
                     nfsClient = new NFSLibrary.NFSClient(ver);
                     nfsClient.DataEvent += new NFSDataEventHandler(nfsClient_DataEvent);
-                    nfsClient.Connect(ipAddress, 1000, 1000, (int) nupTimeOut.Value * 1000, System.Text.Encoding.UTF8);
+                    Encoding encoding = Encoding.ASCII;
+                    if (chkUseUnicode.Checked)
+                        encoding = Encoding.UTF8;
+                    nfsClient.Connect(ipAddress, 1000, 1000, (int) nupTimeOut.Value * 1000, encoding);
                     nfsDevs = nfsClient.GetExportedDevices();
                     cboxRemoteDevices.Items.Clear();
                     foreach (string nfsdev in nfsDevs)
