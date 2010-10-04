@@ -126,7 +126,7 @@ namespace NFSLibrary
         /// <param name="Address">The server address</param>
         /// <param name="UserId">The unix user id</param>
         /// <param name="GroupId">The unix group id</param>
-        /// <param name="CommandTimeout">The command timeout in seconds</param>
+        /// <param name="CommandTimeout">The command timeout in milliseconds</param>
         public void Connect(IPAddress Address, Int32 UserId, Int32 GroupId, Int32 CommandTimeout)
         {
             nfsInterface.Connect(Address, UserId, GroupId, CommandTimeout);
@@ -139,7 +139,7 @@ namespace NFSLibrary
         /// <param name="Address">The server address</param>
         /// <param name="UserId">The unix user id</param>
         /// <param name="GroupId">The unix group id</param>
-        /// <param name="CommandTimeout">The command timeout in seconds</param>
+        /// <param name="CommandTimeout">The command timeout in milliseconds</param>
         public void Connect(IPAddress Address, Int32 UserId, Int32 GroupId, Int32 CommandTimeout, System.Text.Encoding characterEncoding)
         {
             nfsInterface.Connect(Address, UserId, GroupId, CommandTimeout, characterEncoding);
@@ -192,19 +192,21 @@ namespace NFSLibrary
         {
             DirectoryFullName = CorrectPath(DirectoryFullName);
 
-            System.Collections.Generic.List<String> content = nfsInterface.GetItemList(DirectoryFullName);
+            return nfsInterface.GetItemList(DirectoryFullName);
+            //we may need . and .. folder for navigation purpose
+            //System.Collections.Generic.List<String> content = nfsInterface.GetItemList(DirectoryFullName);
 
-            int dotIdx, ddotIdx;
+            //int dotIdx, ddotIdx;
             
-            dotIdx = content.IndexOf(".");
-            if (dotIdx > -1)
-                content.RemoveAt(dotIdx);
+            //dotIdx = content.IndexOf(".");
+            //if (dotIdx > -1)
+            //    content.RemoveAt(dotIdx);
             
-            ddotIdx = content.IndexOf("..");
-            if (ddotIdx > -1)
-                content.RemoveAt(ddotIdx);
+            //ddotIdx = content.IndexOf("..");
+            //if (ddotIdx > -1)
+            //    content.RemoveAt(ddotIdx);
 
-            return content;
+            //return content;
         }
 
         /// <summary>
