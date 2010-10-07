@@ -390,6 +390,7 @@ namespace NFSLibrary.Protocols.V2
                 dpArgSAttr.attributes.mtime.useconds = -1;
                 dpArgSAttr.attributes.size = (int)Size;
                 dpArgSAttr.attributes.uid = -1;
+                dpArgSAttr.file = new nfshandle(Attributes.handle);
 
                 if ((pAttrStat = _ProtocolV2.NFSPROC_SETATTR_2(dpArgSAttr)) != null)
                     if(pAttrStat.status != nfsstat.NFS_OK)
@@ -458,6 +459,9 @@ namespace NFSLibrary.Protocols.V2
             if (_ProtocolV2 != null && _MountProtocolV2 != null)
             {
                 NFSAttributes Attributes = GetItemAttributes(DirectoryFullName);
+                if (Attributes == null)
+                    return false;
+
                 if (Attributes.type != NFSType.NFDIR)
                     return false;
                 else

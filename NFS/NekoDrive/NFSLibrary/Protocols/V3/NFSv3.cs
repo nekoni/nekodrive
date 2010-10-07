@@ -534,6 +534,10 @@ namespace NFSLibrary.Protocols.V3
             if (_ProtocolV3 != null && _MountProtocolV3 != null)
             {
                 NFSAttributes Attributes = GetItemAttributes(DirectoryFullName);
+
+                if (Attributes == null)
+                    return false;
+
                 if (Attributes.type != NFSType.NFDIR)
                     return false;
                 else
