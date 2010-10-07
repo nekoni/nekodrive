@@ -542,7 +542,19 @@ namespace NFSLibrary
         /// <returns>True exists</returns>
         public Boolean FileExists(String FileFullName)
         {
-            return GetItemAttributes(FileFullName) != null;
+            bool Exists = false;
+            try
+            {
+                NFSAttributes attrib = GetItemAttributes(FileFullName);
+                if (attrib == null)
+                    Exists = false;
+                else
+                    Exists = true;
+            }
+            catch
+            {
+            }
+            return Exists;
         }
 
         /// <summary>

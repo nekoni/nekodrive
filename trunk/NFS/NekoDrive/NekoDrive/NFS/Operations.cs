@@ -10,6 +10,19 @@ namespace NekoDrive.NFS
 {
     class Operations: DokanOperations
     {
+        #region Methods
+
+        string CleanFileName(string filename)
+        {
+            int columnIndex = filename.IndexOf(":");
+            if (columnIndex == -1)
+                return filename;
+
+            return filename.Substring(0, columnIndex);
+        }
+
+        #endregion
+
         #region DokanOperations Members
 
         private void Debug(string format, params object[] args)
@@ -24,6 +37,8 @@ namespace NekoDrive.NFS
         public int CreateFile(string filename, System.IO.FileAccess access, System.IO.FileShare share, System.IO.FileMode mode, System.IO.FileOptions options, DokanFileInfo info)
         {
             int ret = DokanNet.DOKAN_SUCCESS;
+
+            filename = CleanFileName(filename);
 
             try
             {
@@ -45,7 +60,7 @@ namespace NekoDrive.NFS
                     case FileMode.CreateNew:
                         {
                             Debug("CreateNew");
-                            if (!MainForm.In.mNFS.FileExists(FullPath))
+                            if (MainForm.In.mNFS.FileExists(FullPath))
                                 ret = -DokanNet.ERROR_ALREADY_EXISTS;
                             else
                                 MainForm.In.mNFS.CreateFile(FullPath);
@@ -108,12 +123,17 @@ namespace NekoDrive.NFS
         {
             int ret = DokanNet.DOKAN_SUCCESS;
 
+            filename = CleanFileName(filename);
+
             Debug("CreateDirectory {0}", filename);
             try
             {
                 string Directory = MainForm.In.mNFS.GetDirectoryName(filename);
                 string FileName = MainForm.In.mNFS.GetFileName(filename);
                 string FullPath = MainForm.In.mNFS.Combine(FileName, Directory);
+
+                if (MainForm.In.mNFS.FileExists(FullPath))
+                    return DokanNet.ERROR_FILE_EXISTS;
 
                 MainForm.In.mNFS.CreateDirectory(FullPath);
             }
@@ -142,6 +162,11 @@ namespace NekoDrive.NFS
         {
             int ret = DokanNet.DOKAN_SUCCESS;
 
+            filename = CleanFileName(filename);
+
+            if (MainForm.In.mNFS.IsDirectory(filename))
+                return DokanNet.DOKAN_SUCCESS;
+
             try
             {
                 Debug("ReadFile {0}", filename);
@@ -168,6 +193,8 @@ namespace NekoDrive.NFS
         public int WriteFile(string filename, byte[] buffer, ref uint writtenBytes, long offset, DokanFileInfo info)
         {
             int ret = DokanNet.DOKAN_SUCCESS;
+
+            filename = CleanFileName(filename);
 
             try
             {
@@ -201,6 +228,8 @@ namespace NekoDrive.NFS
         public int GetFileInformation(string filename, FileInformation fileinfo, DokanFileInfo info)
         {
             int ret = DokanNet.DOKAN_SUCCESS;
+
+            filename = CleanFileName(filename);
 
             try
             {
@@ -236,6 +265,8 @@ namespace NekoDrive.NFS
         {
             int ret = DokanNet.DOKAN_SUCCESS;
 
+            filename = CleanFileName(filename);
+
             try
             {
                 Debug("FindFiles {0}", filename);
@@ -245,7 +276,7 @@ namespace NekoDrive.NFS
 
                 foreach (string strItem in MainForm.In.mNFS.GetItemList(FullPath))
                 {
-                    NFSAttributes nfsAttributes = MainForm.In.mNFS.GetItemAttributes(strItem);
+                    NFSAttributes nfsAttributes = MainForm.In.mNFS.GetItemAttributes(MainForm.In.mNFS.Combine(strItem, FullPath));
                     if (nfsAttributes != null)
                     {
                         FileInformation fi = new FileInformation();
@@ -283,6 +314,9 @@ namespace NekoDrive.NFS
         public int DeleteFile(string filename, DokanFileInfo info)
         {
             int ret = DokanNet.DOKAN_SUCCESS;
+
+            filename = CleanFileName(filename);
+
             try
             {
                 Debug("DeleteFile {0}", filename);
@@ -310,6 +344,8 @@ namespace NekoDrive.NFS
         {
             int ret = DokanNet.DOKAN_SUCCESS;
 
+            filename = CleanFileName(filename);
+
             try
             {
                 Debug("DeleteDirectory {0}", filename);
@@ -331,6 +367,8 @@ namespace NekoDrive.NFS
         public int MoveFile(string filename, string newname, bool replace, DokanFileInfo info)
         {
             int ret = DokanNet.DOKAN_SUCCESS;
+
+            filename = CleanFileName(filename);
 
             try
             {
@@ -359,6 +397,8 @@ namespace NekoDrive.NFS
         {
             int ret = DokanNet.DOKAN_SUCCESS;
 
+            filename = CleanFileName(filename);
+
             try
             {
                 Debug("SetEndOfFile {0}", filename);
@@ -380,6 +420,8 @@ namespace NekoDrive.NFS
         public int SetAllocationSize(string filename, long length, DokanFileInfo info)
         {
             int ret = DokanNet.DOKAN_SUCCESS;
+
+            filename = CleanFileName(filename);
 
             try
             {
