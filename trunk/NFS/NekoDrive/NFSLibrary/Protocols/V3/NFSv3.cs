@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
+using NFSLibrary.Protocols.Commons;
+using NFSLibrary.Protocols.Commons.Exceptions;
+using NFSLibrary.Protocols.Commons.Exceptions.Mount;
+using NFSLibrary.Protocols.V3.RPC;
+using NFSLibrary.Protocols.V3.RPC.Mount;
 using org.acplt.oncrpc;
-using System.IO;
 
 namespace NFSLibrary.Protocols.V3
 {
@@ -11,61 +15,63 @@ namespace NFSLibrary.Protocols.V3
     {
         #region Fields
 
-        NFSv3MountProtocolClient _MountProtocolV3 = null;
-        NFSv3ProtocolClient _ProtocolV3 = null;
-        string _MountedDevice = string.Empty;
-        byte[] _RootDirectoryHandle = null;
-        int _GId = -1;
-        int _UId = -1;
-        string _CurrentFile = string.Empty;
-        byte[] _CurrentFileHandle = null;
+        private NFSHandle _RootDirectoryHandleObject = null;
+        private NFSHandle _CurrentItemHandleObject = null;
+
+        private NFSv3ProtocolClient _ProtocolV3 = null;
+        private NFSv3MountProtocolClient _MountProtocolV3 = null;
+
+        private String _MountedDevice = String.Empty;
+        private String _CurrentItem = String.Empty;
+
+        private int _GroupID = -1;
+        private int _UserID = -1;
 
         #endregion
 
         #region Constants
 
-        const int MODE_FMT = 0170000;
+        /*const int MODE_FMT = 0170000;
         const int MODE_DIR = 0040000;
         const int MODE_CHR = 0020000;
         const int MODE_BLK = 0060000;
         const int MODE_REG = 0100000;
         const int MODE_LNK = 0120000;
         const int MODE_SOCK = 0140000;
-        const int MODE_FIFO = 0010000;
+        const int MODE_FIFO = 0010000;*/
 
         #endregion
 
         #region Constructur
 
-        public void Connect(IPAddress Address)
+        public void Connect(IPAddress Address, int UserID, int GroupID, int ClientTimeout, System.Text.Encoding characterEncoding)
         {
-            Connect(Address, 0, 0, 60000, System.Text.Encoding.ASCII);
-        }
+            if (ClientTimeout == 0)
+            { ClientTimeout = 60000; }
 
-        public void Connect(IPAddress Address, int UserId, int GroupId, int Timeout)
-        {
-            Connect(Address, UserId, GroupId, Timeout, System.Text.Encoding.ASCII);
-        }
-
-        public void Connect(IPAddress Address, int UserId, int GroupId, int Timeout, System.Text.Encoding characterEncoding)
-        {
             if (characterEncoding == null)
             { characterEncoding = System.Text.Encoding.ASCII; }
 
-            _GId = GroupId;
-            _UId = UserId;
+            _RootDirectoryHandleObject = null;
+            _CurrentItemHandleObject = null;
+
+            _MountedDevice = String.Empty;
+            _CurrentItem = String.Empty;
+
+            _GroupID = GroupID;
+            _UserID = UserID;
 
             _MountProtocolV3 = new NFSv3MountProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP);
             _ProtocolV3 = new NFSv3ProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP);
 
-            OncRpcClientAuthUnix authUnix = new OncRpcClientAuthUnix(Address.ToString(), UserId, GroupId);
+            OncRpcClientAuthUnix authUnix = new OncRpcClientAuthUnix(Address.ToString(), UserID, GroupID);
 
             _MountProtocolV3.GetClient().setAuth(authUnix);
-            _MountProtocolV3.GetClient().setTimeout(Timeout);
+            _MountProtocolV3.GetClient().setTimeout(ClientTimeout);
             _MountProtocolV3.GetClient().setCharacterEncoding(characterEncoding.WebName);
 
             _ProtocolV3.GetClient().setAuth(authUnix);
-            _ProtocolV3.GetClient().setTimeout(Timeout);
+            _ProtocolV3.GetClient().setTimeout(ClientTimeout);
             _ProtocolV3.GetClient().setCharacterEncoding(characterEncoding.WebName);
         }
 
@@ -75,6 +81,12 @@ namespace NFSLibrary.Protocols.V3
 
         public void Disconnect()
         {
+            _RootDirectoryHandleObject = null;
+            _CurrentItemHandleObject = null;
+
+            _MountedDevice = String.Empty;
+            _CurrentItem = String.Empty;
+
             if (_MountProtocolV3 != null)
                 _MountProtocolV3.close();
 
@@ -82,469 +94,485 @@ namespace NFSLibrary.Protocols.V3
                 _ProtocolV3.close();
         }
 
-        public List<string> GetExportedDevices()
+        public List<String> GetExportedDevices()
         {
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+
             List<string> nfsDevices = new List<string>();
-            if (_MountProtocolV3 != null)
+
+            Exports exp = _MountProtocolV3.MOUNTPROC3_EXPORT();
+
+            for (; ; )
             {
-                exports3 exp = _MountProtocolV3.MOUNTPROC3_EXPORT_3();
-                bool Exit = false;
-                while (!Exit)
-                {
-                    if (exp.value.ex_next.value == null)
-                        Exit = true;
-                    nfsDevices.Add(exp.value.ex_dir.value);
-                    exp = exp.value.ex_next;
-                }
+                nfsDevices.Add(exp.Value.MountPath.Value);
+                exp = exp.Value.Next;
+
+                if (exp.Value == null) break;
             }
-            else
-                throw new ApplicationException("NFS Client not connected!");
+
             return nfsDevices;
         }
 
-        public void MountDevice(string DeviceName)
+        public void MountDevice(String DeviceName)
         {
-            if (_ProtocolV3 != null && _MountProtocolV3 != null)
+            if (_ProtocolV3 == null)
+            { throw new NFSConnectionException("NFS Client not connected!"); }
+
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+
+            MountStatus mnt =
+                _MountProtocolV3.MOUNTPROC3_MNT(new Name(DeviceName));
+
+            if (mnt.Status == NFSMountStats.MNT_OK)
             {
-                mountres3 mnt = null;
-                //mount
-                mnt = _MountProtocolV3.MOUNTPROC3_MNT_3(new dirpath3(DeviceName));
-                if (mnt.fhs_status == 0)
-                {
-                    _MountedDevice = DeviceName;
-                    _RootDirectoryHandle = new Byte[NFSv3Protocol.NFS3_FHSIZE];
-                    Array.Copy(mnt.mountinfo.fhandle.data, _RootDirectoryHandle, mnt.mountinfo.fhandle.data.Length);
-                }
-                else
-                    throw new ApplicationException("MOUNTPROC3_MNT_3: errorcode " + mnt.fhs_status);
+                _MountedDevice = DeviceName;
+                _RootDirectoryHandleObject = mnt.MountInfo.MountHandle;
             }
             else
-                throw new ApplicationException("NFS Client not connected!");
+            { MountExceptionHelpers.ThrowException(mnt.Status); }
         }
 
         public void UnMountDevice()
         {
             if (_MountedDevice != null)
             {
-                _MountProtocolV3.MOUNTPROC3_UMNT_3(new dirpath3(_MountedDevice));
-                _MountedDevice = string.Empty;
+                _MountProtocolV3.MOUNTPROC3_UMNT(new Name(_MountedDevice));
+
+                _RootDirectoryHandleObject = null;
+                _CurrentItemHandleObject = null;
+
+                _MountedDevice = String.Empty;
+                _CurrentItem = String.Empty;
             }
-            else
-                throw new ApplicationException("NFS Client not connected!");
         }
 
-        public List<string> GetItemList(string DirectoryFullName)
+        public List<String> GetItemList(String DirectoryFullName)
         {
+            if (_ProtocolV3 == null)
+            { throw new NFSConnectionException("NFS Client not connected!"); }
+
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+
             List<string> ItemsList = new List<string>();
-            if (_ProtocolV3 != null && _MountProtocolV3 != null)
+
+            NFSAttributes itemAttributes =
+                GetItemAttributes(DirectoryFullName);
+
+            if (itemAttributes != null)
             {
-                READDIR3args dpRdArgs = new READDIR3args();
-                READDIR3res pReadDirRes = new READDIR3res();
-                dpRdArgs.cookie  = new cookie3(new uint64(0));
-                dpRdArgs.count = new count3(new uint32(4096));
-                dpRdArgs.cookieverf = new cookieverf3(new byte[NFSv3Protocol.NFS3_COOKIEVERFSIZE]);
-                byte[] itemHandle = null;
-                entry3 pEntry = null;
-                if ((itemHandle = GetItemAttributes(DirectoryFullName).handle) != null)
+                ReadFolderArguments dpRdArgs = new ReadFolderArguments();
+
+                dpRdArgs.Count = 4096;
+                dpRdArgs.Cookie = new NFSCookie(0);
+                dpRdArgs.CookieData = new byte[NFSv3Protocol.NFS3_COOKIEVERFSIZE];
+                dpRdArgs.HandleObject = new NFSHandle(itemAttributes.Handle, V3.RPC.NFSv3Protocol.NFS_V3);
+
+                ResultObject<ReadFolderAccessResultOK, ReadFolderAccessResultFAIL> pReadDirRes;
+
+                do
                 {
-                    dpRdArgs.dir = new nfs_fh3();
-                    dpRdArgs.dir.data = new byte[NFSv3Protocol.NFS3_FHSIZE];
-                    Array.Copy(itemHandle, dpRdArgs.dir.data, NFSv3Protocol.NFS3_FHSIZE);
-                    while (true)
+                    pReadDirRes = _ProtocolV3.NFSPROC3_READDIR(dpRdArgs);
+
+                    if (pReadDirRes != null &&
+                        pReadDirRes.Status == NFSStats.NFS_OK)
                     {
-                        if ((pReadDirRes = _ProtocolV3.NFSPROC3_READDIR_3(dpRdArgs)) == null)
+                        Entry pEntry =
+                            pReadDirRes.OK.Reply.Entries;
+
+                        while (pEntry != null)
                         {
-                            throw new ApplicationException("NFSPROC3_READDIR_3: failure");
-                        }
-                        else
-                        {
-                            if (pReadDirRes.status == nfsstat3.NFS3_OK)
-                            {
-                                pEntry = pReadDirRes.resok.reply.entries;
-                                Array.Copy(pReadDirRes.resok.cookieverf.value, dpRdArgs.cookieverf.value, NFSv3Protocol.NFS3_COOKIEVERFSIZE);
-                                while (pEntry != null)
-                                {
-                                    ItemsList.Add(pEntry.name.value);
-                                    dpRdArgs.cookie = pEntry.cookie;
-                                    pEntry = pEntry.nextentry;
-                                }
-                            }
-                            else
-                            {
-                                throw new ApplicationException("NFSPROC3_READDIR_3: errorcode " + pReadDirRes.status);
-                            }
-                            if (pReadDirRes.resok.reply.eof)
-                                break;
+                            ItemsList.Add(pEntry.Name.Value);
+
+                            pEntry = pEntry.NextEntry;
                         }
                     }
-                }
+                    else
+                    {
+                        if (pReadDirRes == null)
+                        { throw new NFSGeneralException("NFSPROC3_READDIR: failure"); }
+
+                        if (pReadDirRes.Status != NFSStats.NFS_OK)
+                        { ExceptionHelpers.ThrowException(pReadDirRes.Status); }
+                    }
+                } while (pReadDirRes != null && !pReadDirRes.OK.Reply.EOF);
             }
             else
-                throw new ApplicationException("NFS Client not connected!");
+            { ExceptionHelpers.ThrowException(NFSStats.NFSERR_NOENT); }
 
             return ItemsList;
         }
 
         public NFSAttributes GetItemAttributes(string ItemFullName)
         {
+            if (_ProtocolV3 == null)
+            { throw new NFSConnectionException("NFS Client not connected!"); }
+
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+
             NFSAttributes attributes = null;
-            if (_ProtocolV3 != null && _MountProtocolV3 != null)
+
+            if (String.IsNullOrEmpty(ItemFullName))
+                ItemFullName = ".";
+
+            NFSHandle currentItem = _RootDirectoryHandleObject;
+            String[] PathTree = ItemFullName.Split(@"\".ToCharArray());
+
+            for (int pC = 0; pC < PathTree.Length; pC++)
             {
-                if (String.IsNullOrEmpty(ItemFullName))
-                    ItemFullName = ".";
+                ItemOperationArguments dpDrArgs = new ItemOperationArguments();
+                dpDrArgs.Directory = currentItem;
+                dpDrArgs.Name = new Name(PathTree[pC]);
 
-                byte[] currentItem = new byte[NFSv3Protocol.NFS3_FHSIZE]; ;
-                Array.Copy(_RootDirectoryHandle, currentItem, NFSv3Protocol.NFS3_FHSIZE);
-                foreach (string Item in ItemFullName.Split(@"\".ToCharArray()))
+                ResultObject<ItemOperationAccessResultOK, ItemOperationAccessResultFAIL> pDirOpRes =
+                    _ProtocolV3.NFSPROC3_LOOKUP(dpDrArgs);
+
+                if (pDirOpRes != null &&
+                    pDirOpRes.Status == NFSStats.NFS_OK)
                 {
-                    LOOKUP3args dpLookUpArgs = new LOOKUP3args();
-                    LOOKUP3res pLookUpRes;
-                    dpLookUpArgs.what = new diropargs3();
-                    dpLookUpArgs.what.dir = new nfs_fh3();
-                    dpLookUpArgs.what.dir.data = new byte[NFSv3Protocol.NFS3_FHSIZE];
-                    Array.Copy(currentItem, dpLookUpArgs.what.dir.data, NFSv3Protocol.NFS3_FHSIZE);
-                    dpLookUpArgs.what.name = new filename3(Item);
+                    currentItem = pDirOpRes.OK.ItemHandle;
 
-                    if ((pLookUpRes = _ProtocolV3.NFSPROC3_LOOKUP_3(dpLookUpArgs)) != null)
+                    if (PathTree.Length - 1 == pC)
                     {
-                        if (pLookUpRes.status == nfsstat3.NFS3_OK)
-                        {
-                            Array.Copy(pLookUpRes.resok.obj.data, currentItem, pLookUpRes.resok.obj.data.Length);
-                            attributes = new NFSAttributes(pLookUpRes.resok.obj_attributes.attributes.ctime.seconds.value, pLookUpRes.resok.obj_attributes.attributes.atime.seconds.value,
-                                pLookUpRes.resok.obj_attributes.attributes.mtime.seconds.value, pLookUpRes.resok.obj_attributes.attributes.type, pLookUpRes.resok.obj_attributes.attributes.size.value.value, currentItem);
-                        }
-                        else
-                        {
-                            if (pLookUpRes.status == nfsstat3.NFS3ERR_NOENT)
-                                return null;
-
-                            throw new ApplicationException("NFSPROC3_LOOKUP_3: errorcode " + pLookUpRes.status);
-                        }
+                        attributes = new NFSAttributes(
+                                        pDirOpRes.OK.ItemAttributes.Attributes.CreateTime.Seconds,
+                                        pDirOpRes.OK.ItemAttributes.Attributes.LastAccessedTime.Seconds,
+                                        pDirOpRes.OK.ItemAttributes.Attributes.ModifiedTime.Seconds,
+                                        pDirOpRes.OK.ItemAttributes.Attributes.Type,
+                                        pDirOpRes.OK.ItemAttributes.Attributes.Mode,
+                                        pDirOpRes.OK.ItemAttributes.Attributes.Size,
+                                        pDirOpRes.OK.ItemHandle.Value);
                     }
                 }
-            }
-            else
-                throw new ApplicationException("NFS Client not connected!");
+                else
+                {
+                    if (pDirOpRes == null || pDirOpRes.Status == NFSStats.NFSERR_NOENT)
+                    { attributes = null; break; }
 
-            if (attributes == null)
-                throw new ApplicationException("GetItemAttributes: failure");
+                    ExceptionHelpers.ThrowException(pDirOpRes.Status);
+                }
+            }
 
             return attributes;
         }
 
-        public void CreateDirectory(string DirectoryFullName)
+        public void CreateDirectory(string DirectoryFullName, NFSPermission Mode)
         {
-            if (_ProtocolV3 != null && _MountProtocolV3 != null)
+            if (_ProtocolV3 == null)
+            { throw new NFSConnectionException("NFS Client not connected!"); }
+
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+
+            if (Mode == null)
+            { Mode = new NFSPermission(7, 7, 7); }
+
+            string ParentDirectory = System.IO.Path.GetDirectoryName(DirectoryFullName);
+            string DirectoryName = System.IO.Path.GetFileName(DirectoryFullName);
+
+            NFSAttributes ParentItemAttributes = GetItemAttributes(ParentDirectory);
+
+            MakeFolderArguments dpArgCreate = new MakeFolderArguments();
+            dpArgCreate.Attributes = new MakeAttributes();
+            dpArgCreate.Attributes.LastAccessedTime = new NFSTimeValue();
+            dpArgCreate.Attributes.ModifiedTime = new NFSTimeValue();
+            dpArgCreate.Attributes.Mode = Mode;
+            dpArgCreate.Attributes.SetMode = true;
+            dpArgCreate.Attributes.UserID = this._UserID;
+            dpArgCreate.Attributes.SetUserID = true;
+            dpArgCreate.Attributes.GroupID = this._GroupID;
+            dpArgCreate.Attributes.SetGroupID = true;
+            dpArgCreate.Where = new ItemOperationArguments();
+            dpArgCreate.Where.Directory = new NFSHandle(ParentItemAttributes.Handle, V3.RPC.NFSv3Protocol.NFS_V3);
+            dpArgCreate.Where.Name = new Name(DirectoryName);
+
+            ResultObject<MakeFolderAccessOK, MakeFolderAccessFAIL> pDirOpRes =
+                _ProtocolV3.NFSPROC3_MKDIR(dpArgCreate);
+
+            if (pDirOpRes == null ||
+                pDirOpRes.Status != NFSStats.NFS_OK)
             {
-                string ParentDirectory = Path.GetDirectoryName(DirectoryFullName);
-                string DirectoryName = Path.GetFileName(DirectoryFullName);
-                NFSAttributes ParentAttributes = GetItemAttributes(ParentDirectory);
+                if (pDirOpRes == null)
+                { throw new NFSGeneralException("NFSPROC3_MKDIR: failure"); }
 
-                MKDIR3args dpMkDirArgs = new MKDIR3args();
-                MKDIR3res pMkDirRes;
-                dpMkDirArgs.attributes = new sattr3();
-                dpMkDirArgs.attributes.atime = new set_atime();
-                dpMkDirArgs.attributes.atime.set_it = time_how.DONT_CHANGE;
-                dpMkDirArgs.attributes.mtime = new set_mtime();
-                dpMkDirArgs.attributes.mtime.set_it = time_how.DONT_CHANGE;
-                dpMkDirArgs.attributes.size = new set_size3();
-                dpMkDirArgs.attributes.size.set_it = false;
-                dpMkDirArgs.attributes.mode = new set_mode3();
-                /* Calculate Permission */
-                byte userP = 7; byte groupP = 7; byte otherP = 7;
-                int permission = 0;
-                permission = (((int)userP) << 6) | (((int)groupP) << 3) | ((int)otherP);
-                /*  ---  */
-                dpMkDirArgs.attributes.mode.mode = new mode3(new uint32(permission));
-                dpMkDirArgs.attributes.mode.set_it = true;
-                dpMkDirArgs.attributes.gid = new set_gid3();
-                dpMkDirArgs.attributes.gid.gid = new gid3(new uint32(_GId));
-                dpMkDirArgs.attributes.gid.set_it = true;
-                dpMkDirArgs.attributes.uid = new set_uid3();
-                dpMkDirArgs.attributes.uid.uid = new uid3(new uint32(_UId));
-                dpMkDirArgs.attributes.uid.set_it = true;
-                dpMkDirArgs.where = new diropargs3();
-                dpMkDirArgs.where.dir = new nfs_fh3();
-                dpMkDirArgs.where.dir.data = ParentAttributes.handle;
-                dpMkDirArgs.where.name = new filename3(DirectoryName);
-
-                if ((pMkDirRes = _ProtocolV3.NFSPROC3_MKDIR_3(dpMkDirArgs)) != null)
-                {
-                    if (pMkDirRes.status != nfsstat3.NFS3_OK)
-                        throw new ApplicationException("NFSPROC3_MKDIR_3: errorcode " + pMkDirRes.status);
-                }
+                ExceptionHelpers.ThrowException(pDirOpRes.Status);
             }
-            else
-                throw new ApplicationException("NFS Client not connected!");
         }
 
         public void DeleteDirectory(string DirectoryFullName)
         {
-            if (_ProtocolV3 != null && _MountProtocolV3 != null)
+            if (_ProtocolV3 == null)
+            { throw new NFSConnectionException("NFS Client not connected!"); }
+
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+
+            string ParentDirectory = System.IO.Path.GetDirectoryName(DirectoryFullName);
+            string DirectoryName = System.IO.Path.GetFileName(DirectoryFullName);
+
+            NFSAttributes ParentItemAttributes = GetItemAttributes(ParentDirectory);
+
+            ItemOperationArguments dpArgDelete = new ItemOperationArguments();
+            dpArgDelete.Directory = new NFSHandle(ParentItemAttributes.Handle, V3.RPC.NFSv3Protocol.NFS_V3);
+            dpArgDelete.Name = new Name(DirectoryName);
+
+            ResultObject<RemoveAccessOK, RemoveAccessFAIL> pRmDirRes =
+                _ProtocolV3.NFSPROC3_RMDIR(dpArgDelete);
+
+            if (pRmDirRes == null || pRmDirRes.Status != NFSStats.NFS_OK)
             {
-                string ParentDirectory = Path.GetDirectoryName(DirectoryFullName);
-                string DirectoryName = Path.GetFileName(DirectoryFullName);
-                NFSAttributes ParentAttributes = GetItemAttributes(ParentDirectory);
+                if (pRmDirRes == null)
+                { throw new NFSGeneralException("NFSPROC3_RMDIR: failure"); }
 
-                RMDIR3args dpRmDirArgs = new RMDIR3args();
-                RMDIR3res pRmDirRes;
-
-                dpRmDirArgs.obj = new diropargs3();
-                dpRmDirArgs.obj.dir = new nfs_fh3();
-                dpRmDirArgs.obj.dir.data = ParentAttributes.handle;
-                dpRmDirArgs.obj.name = new filename3(DirectoryName);
-
-                if ((pRmDirRes = _ProtocolV3.NFSPROC3_RMDIR_3(dpRmDirArgs)) != null)
-                {
-                    if (pRmDirRes.status != nfsstat3.NFS3_OK)
-                        throw new ApplicationException("NFSPROC3_RMDIR_3: errorcode " + pRmDirRes.status);
-                }
+                ExceptionHelpers.ThrowException(pRmDirRes.Status);
             }
-            else
-                throw new ApplicationException("NFS Client not connected!");
         }
 
         public void DeleteFile(string FileFullName)
         {
-            if (_ProtocolV3 != null && _MountProtocolV3 != null)
+            if (_ProtocolV3 == null)
+            { throw new NFSConnectionException("NFS Client not connected!"); }
+
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+
+            string ParentDirectory = System.IO.Path.GetDirectoryName(FileFullName);
+            string FileName = System.IO.Path.GetFileName(FileFullName);
+
+            NFSAttributes ParentItemAttributes = GetItemAttributes(ParentDirectory);
+
+            ItemOperationArguments dpArgDelete = new ItemOperationArguments();
+            dpArgDelete.Directory = new NFSHandle(ParentItemAttributes.Handle, V3.RPC.NFSv3Protocol.NFS_V3);
+            dpArgDelete.Name = new Name(FileName);
+
+            ResultObject<RemoveAccessOK, RemoveAccessFAIL> pRemoveRes =
+                _ProtocolV3.NFSPROC3_REMOVE(dpArgDelete);
+
+            if (pRemoveRes == null || pRemoveRes.Status != NFSStats.NFS_OK)
             {
-                string ParentDirectory = Path.GetDirectoryName(FileFullName);
-                string FileName = Path.GetFileName(FileFullName);
-                NFSAttributes ParentAttributes = GetItemAttributes(ParentDirectory);
+                if (pRemoveRes == null)
+                { throw new NFSGeneralException("NFSPROC3_REMOVE: failure"); }
 
-                REMOVE3args dpRemoveArgs = new REMOVE3args();
-                REMOVE3res pRemoveRes;
-
-                dpRemoveArgs.obj = new diropargs3();
-                dpRemoveArgs.obj.dir = new nfs_fh3();
-                dpRemoveArgs.obj.dir.data = ParentAttributes.handle;
-                dpRemoveArgs.obj.name = new filename3(FileName);
-
-                if ((pRemoveRes = _ProtocolV3.NFSPROC3_REMOVE_3(dpRemoveArgs)) != null)
-                {
-                    if (pRemoveRes.status != nfsstat3.NFS3_OK)
-                        throw new ApplicationException("NFSPROC3_REMOVE_3: errorcode " + pRemoveRes.status);
-                }
+                ExceptionHelpers.ThrowException(pRemoveRes.Status);
             }
-            else
-                throw new ApplicationException("NFS Client not connected!");
         }
 
-        public void CreateFile(string FileFullName)
+        public void CreateFile(string FileFullName, NFSPermission Mode)
         {
-            if (_ProtocolV3 != null && _MountProtocolV3 != null)
+            if (_ProtocolV3 == null)
+            { throw new NFSConnectionException("NFS Client not connected!"); }
+
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+
+            if (Mode == null)
+            { Mode = new NFSPermission(7, 7, 7); }
+
+            string ParentDirectory = System.IO.Path.GetDirectoryName(FileFullName);
+            string FileName = System.IO.Path.GetFileName(FileFullName);
+
+            NFSAttributes ParentItemAttributes = GetItemAttributes(ParentDirectory);
+
+            MakeFileArguments dpArgCreate = new MakeFileArguments();
+            dpArgCreate.How = new MakeFileHow();
+            dpArgCreate.How.Mode = MakeFileHow.MakeFileModes.UNCHECKED;
+            dpArgCreate.How.Attributes = new MakeAttributes();
+            dpArgCreate.How.Attributes.LastAccessedTime = new NFSTimeValue();
+            dpArgCreate.How.Attributes.ModifiedTime = new NFSTimeValue();
+            dpArgCreate.How.Attributes.Mode = Mode;
+            dpArgCreate.How.Attributes.SetMode = true;
+            dpArgCreate.How.Attributes.UserID = this._UserID;
+            dpArgCreate.How.Attributes.SetUserID = true;
+            dpArgCreate.How.Attributes.GroupID = this._GroupID;
+            dpArgCreate.How.Attributes.SetGroupID = true;
+            dpArgCreate.How.Attributes.Size = 0;
+            dpArgCreate.How.Attributes.SetSize = true;
+            dpArgCreate.How.Verification = new byte[NFSv3Protocol.NFS3_CREATEVERFSIZE];
+            dpArgCreate.Where = new ItemOperationArguments();
+            dpArgCreate.Where.Directory = new NFSHandle(ParentItemAttributes.Handle, V3.RPC.NFSv3Protocol.NFS_V3);
+            dpArgCreate.Where.Name = new Name(FileName);
+
+            ResultObject<MakeFileAccessOK, MakeFileAccessFAIL> pCreateRes =
+                _ProtocolV3.NFSPROC3_CREATE(dpArgCreate);
+
+            if (pCreateRes == null ||
+                pCreateRes.Status != NFSStats.NFS_OK)
             {
-                string ParentDirectory = Path.GetDirectoryName(FileFullName);
-                string FileName = Path.GetFileName(FileFullName);
-                NFSAttributes ParentAttributes = GetItemAttributes(ParentDirectory);
+                if (pCreateRes == null)
+                { throw new NFSGeneralException("NFSPROC3_CREATE: failure"); }
 
-                CREATE3args dpCreateArgs = new CREATE3args();
-                CREATE3res pCreateRes;
-
-                /* Calculate Permission */
-                byte userP = 7; byte groupP = 7; byte otherP = 7;
-                int permission = 0;
-                permission = (((int)userP) << 6) | (((int)groupP) << 3) | ((int)otherP);
-                /*  ---  */
-
-                dpCreateArgs.how = new createhow3();
-                dpCreateArgs.how.mode = createmode3.UNCHECKED;
-                dpCreateArgs.how.obj_attributes_gu = new sattr3();
-                dpCreateArgs.how.obj_attributes_gu.atime = new set_atime();
-                dpCreateArgs.how.obj_attributes_gu.atime.set_it = time_how.DONT_CHANGE;
-                dpCreateArgs.how.obj_attributes_gu.mtime = new set_mtime();
-                dpCreateArgs.how.obj_attributes_gu.mtime.set_it = time_how.DONT_CHANGE;
-                dpCreateArgs.how.obj_attributes_gu.mode = new set_mode3();
-                dpCreateArgs.how.obj_attributes_gu.mode.mode = new mode3(new uint32(permission));
-                dpCreateArgs.how.obj_attributes_gu.mode.set_it = true;
-                dpCreateArgs.how.obj_attributes_gu.gid = new set_gid3();
-                dpCreateArgs.how.obj_attributes_gu.gid.gid = new gid3(new uint32(_GId));
-                dpCreateArgs.how.obj_attributes_gu.gid.set_it = true;
-                dpCreateArgs.how.obj_attributes_gu.uid = new set_uid3();
-                dpCreateArgs.how.obj_attributes_gu.uid.set_it = true;
-                dpCreateArgs.how.obj_attributes_gu.uid.uid = new uid3(new uint32(_UId));
-                dpCreateArgs.how.obj_attributes_gu.size = new set_size3();
-                dpCreateArgs.how.obj_attributes_gu.size.size = new size3(new uint64(0));
-                dpCreateArgs.how.obj_attributes_gu.size.set_it = true;
-
-                dpCreateArgs.how.obj_attributes_un = new sattr3();
-                dpCreateArgs.how.obj_attributes_un.atime = new set_atime();
-                dpCreateArgs.how.obj_attributes_un.atime.set_it = time_how.DONT_CHANGE;
-                dpCreateArgs.how.obj_attributes_un.mtime = new set_mtime();
-                dpCreateArgs.how.obj_attributes_un.mtime.set_it = time_how.DONT_CHANGE;
-                dpCreateArgs.how.obj_attributes_un.mode = new set_mode3();
-                dpCreateArgs.how.obj_attributes_un.mode.mode = new mode3(new uint32(permission));
-                dpCreateArgs.how.obj_attributes_un.mode.set_it = true;
-                dpCreateArgs.how.obj_attributes_un.gid = new set_gid3();
-                dpCreateArgs.how.obj_attributes_un.gid.gid = new gid3(new uint32(_GId));
-                dpCreateArgs.how.obj_attributes_un.gid.set_it = true;
-                dpCreateArgs.how.obj_attributes_un.uid = new set_uid3();
-                dpCreateArgs.how.obj_attributes_un.uid.set_it = true;
-                dpCreateArgs.how.obj_attributes_un.uid.uid = new uid3(new uint32(_UId));
-                dpCreateArgs.how.obj_attributes_un.size = new set_size3();
-                dpCreateArgs.how.obj_attributes_un.size.size = new size3(new uint64(0));
-                dpCreateArgs.how.obj_attributes_un.size.set_it = true;
-                dpCreateArgs.how.verf = new createverf3(new byte[NFSv3Protocol.NFS3_CREATEVERFSIZE]);
-                
-                dpCreateArgs.where = new diropargs3();
-                dpCreateArgs.where.dir = new nfs_fh3();
-                dpCreateArgs.where.dir.data = new byte[NFSv3Protocol.NFS3_FHSIZE];
-                Array.Copy(ParentAttributes.handle, dpCreateArgs.where.dir.data, NFSv3Protocol.NFS3_FHSIZE);
-                dpCreateArgs.where.name = new filename3(FileName);
-
-                if ((pCreateRes = _ProtocolV3.NFSPROC3_CREATE_3(dpCreateArgs)) != null)
-                {
-                    if (pCreateRes.status != nfsstat3.NFS3_OK)
-                        throw new ApplicationException("NFSPROC3_CREATE_3: errorcode " + pCreateRes.status);
-                }
+                ExceptionHelpers.ThrowException(pCreateRes.Status);
             }
-            else
-                throw new ApplicationException("NFS Client not connected!");
         }
 
-        public void Read(string FileFullName, long Offset, uint Count, ref byte[] Buffer, out int Size)
+        public int Read(String FileFullName, long Offset, int Count, ref Byte[] Buffer)
         {
-            if (_ProtocolV3 != null && _MountProtocolV3 != null)
-            {
-                if (_CurrentFile != FileFullName)
-                {
-                    NFSAttributes Attributes = GetItemAttributes(FileFullName);
-                    _CurrentFileHandle = Attributes.handle;
-                    _CurrentFile = FileFullName;
-                }
+            if (_ProtocolV3 == null)
+            { throw new NFSConnectionException("NFS Client not connected!"); }
 
-                READ3args dpArgRead = new READ3args();
-                READ3res pReadRes;
-                dpArgRead.file = new nfs_fh3();
-                dpArgRead.file.data = _CurrentFileHandle;
-                dpArgRead.offset = new offset3(new uint64(Offset));
-                dpArgRead.count = new count3(new uint32((int)Count));
-                if ((pReadRes = _ProtocolV3.NFSPROC3_READ_3(dpArgRead)) != null)
-                {
-                    if (pReadRes.status != nfsstat3.NFS3_OK)
-                        throw new ApplicationException("NFSPROC3_READ_3: errorcode " + pReadRes.status);
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
 
-                    Size = pReadRes.resok.data.Length;
-                    Array.Copy(pReadRes.resok.data, Buffer, Size);
-                }
-                else
-                    Size = -1;
-            }
-            else
-                throw new ApplicationException("NFS Client not connected!");
-        }
+            int rCount = 0;
 
-        public void SetFileSize(string FileFullName, ulong Size)
-        {
-            if (_ProtocolV3 != null && _MountProtocolV3 != null)
+            if (_CurrentItem != FileFullName)
             {
                 NFSAttributes Attributes = GetItemAttributes(FileFullName);
+                _CurrentItemHandleObject = new NFSHandle(Attributes.Handle, V3.RPC.NFSv3Protocol.NFS_V3);
+                _CurrentItem = FileFullName;
+            }
 
-                SETATTR3args dpArgSAttr = new SETATTR3args();
-                SETATTR3res pAttrStat;
+            ReadArguments dpArgRead = new ReadArguments();
+            dpArgRead.File = _CurrentItemHandleObject;
+            dpArgRead.Offset = Offset;
+            dpArgRead.Count = Count;
 
-                dpArgSAttr.new_attributes = new sattr3();
-                dpArgSAttr.new_attributes.atime = new set_atime();
-                dpArgSAttr.new_attributes.atime.set_it = time_how.DONT_CHANGE;
-                dpArgSAttr.new_attributes.mtime = new set_mtime();
-                dpArgSAttr.new_attributes.mtime.set_it = time_how.DONT_CHANGE;
-                dpArgSAttr.new_attributes.gid = new set_gid3();
-                dpArgSAttr.new_attributes.gid.set_it = false;
-                dpArgSAttr.new_attributes.uid = new set_uid3();
-                dpArgSAttr.new_attributes.uid.set_it = false;
-                dpArgSAttr.new_attributes.mode = new set_mode3();
-                dpArgSAttr.new_attributes.mode.set_it = false;
-                dpArgSAttr.new_attributes.size = new set_size3();
-                dpArgSAttr.new_attributes.size.set_it = true;
-                dpArgSAttr.new_attributes.size.size = new size3(new uint64((long)Size));
-                dpArgSAttr.guard = new sattrguard3();
-                dpArgSAttr.guard.check = false;
-                if ((pAttrStat = _ProtocolV3.NFSPROC3_SETATTR_3(dpArgSAttr)) != null)
-                    if (pAttrStat.status != nfsstat3.NFS3_OK)
-                        throw new ApplicationException("NFSPROC3_SETATTR_3: errorcode " + pAttrStat.status);
+            ResultObject<ReadAccessOK, ReadAccessFAIL> pReadRes =
+                _ProtocolV3.NFSPROC3_READ(dpArgRead);
+
+            if (pReadRes != null)
+            {
+                if (pReadRes.Status != NFSStats.NFS_OK)
+                { ExceptionHelpers.ThrowException(pReadRes.Status); }
+
+                rCount = pReadRes.OK.Data.Length;
+
+                Array.Copy(pReadRes.OK.Data, Buffer, rCount);
             }
             else
-                throw new ApplicationException("NFS Client not connected!");
+            { throw new NFSGeneralException("NFSPROC3_READ: failure"); }
+
+            return rCount;
         }
 
-        public void Write(string FileFullName, long Offset, uint Count, byte[] Buffer, out int Size)
+        public void SetFileSize(string FileFullName, long Size)
         {
-            if (_ProtocolV3 != null && _MountProtocolV3 != null)
+            if (_ProtocolV3 == null)
+            { throw new NFSConnectionException("NFS Client not connected!"); }
+
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+
+            NFSAttributes Attributes = GetItemAttributes(FileFullName);
+
+            SetAttributeArguments dpArgSAttr = new SetAttributeArguments();
+
+            dpArgSAttr.Handle = new NFSHandle(Attributes.Handle, V3.RPC.NFSv3Protocol.NFS_V3);
+            dpArgSAttr.Attributes = new MakeAttributes();
+            dpArgSAttr.Attributes.LastAccessedTime = new NFSTimeValue();
+            dpArgSAttr.Attributes.ModifiedTime = new NFSTimeValue();
+            dpArgSAttr.Attributes.Mode = Attributes.Mode;
+            dpArgSAttr.Attributes.UserID = -1;
+            dpArgSAttr.Attributes.GroupID = -1;
+            dpArgSAttr.Attributes.Size = Size;
+            dpArgSAttr.GuardCreateTime = new NFSTimeValue();
+            dpArgSAttr.GuardCheck = false;
+
+            ResultObject<SetAttributeAccessOK, SetAttributeAccessFAIL> pAttrStat =
+                _ProtocolV3.NFSPROC3_SETATTR(dpArgSAttr);
+
+            if (pAttrStat == null || pAttrStat.Status != NFSStats.NFS_OK)
             {
-                if (_CurrentFile != FileFullName)
-                {
-                    NFSAttributes Attributes = GetItemAttributes(FileFullName);
-                    _CurrentFileHandle = Attributes.handle;
-                    _CurrentFile = FileFullName;
-                }
+                if (pAttrStat == null)
+                { throw new NFSGeneralException("NFSPROC3_SETATTR: failure"); }
 
-                WRITE3args dpArgWrite = new WRITE3args();
-                WRITE3res pWriteRes;
-                dpArgWrite.file = new nfs_fh3();
-                dpArgWrite.file.data = new byte[NFSv3Protocol.NFS3_FHSIZE];
-                Array.Copy(_CurrentFileHandle, dpArgWrite.file.data, NFSv3Protocol.NFS3_FHSIZE);
-                dpArgWrite.offset = new offset3(new uint64(Offset));
-                dpArgWrite.count = new count3(new uint32((int)Count));
-                dpArgWrite.data = Buffer;
-                if ((pWriteRes = _ProtocolV3.NFSPROC3_WRITE_3(dpArgWrite)) != null)
-                {
-                    if (pWriteRes.status != nfsstat3.NFS3_OK)
-                        throw new ApplicationException("NFSPROC3_WRITE_3: errorcode " + pWriteRes.status);
+                ExceptionHelpers.ThrowException(pAttrStat.Status);
+            }
+        }
 
-                    Size = pWriteRes.resok.count.value.value;
-                }
-                else
-                    Size = -1;
+        public int Write(String FileFullName, long Offset, int Count, Byte[] Buffer)
+        {
+            if (_ProtocolV3 == null)
+            { throw new NFSConnectionException("NFS Client not connected!"); }
+
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+
+            int rCount = 0;
+
+            if (_CurrentItem != FileFullName)
+            {
+                NFSAttributes Attributes = GetItemAttributes(FileFullName);
+                _CurrentItemHandleObject = new NFSHandle(Attributes.Handle, V3.RPC.NFSv3Protocol.NFS_V3);
+                _CurrentItem = FileFullName;
+            }
+
+            if (Count < Buffer.Length)
+            { Array.Resize<byte>(ref Buffer, Count); }
+
+            WriteArguments dpArgWrite = new WriteArguments();
+            dpArgWrite.File = _CurrentItemHandleObject;
+            dpArgWrite.Offset = Offset;
+            dpArgWrite.Count = Count;
+            dpArgWrite.Data = Buffer;
+
+            ResultObject<WriteAccessOK, WriteAccessFAIL> pAttrStat =
+                _ProtocolV3.NFSPROC3_WRITE(dpArgWrite);
+
+            if (pAttrStat != null)
+            {
+                if (pAttrStat.Status != NFSStats.NFS_OK)
+                { ExceptionHelpers.ThrowException(pAttrStat.Status); }
+
+                rCount = pAttrStat.OK.Count;
             }
             else
-                throw new ApplicationException("NFS Client not connected!");
+            { throw new NFSGeneralException("NFSPROC3_WRITE: failure"); }
+
+            return rCount;
         }
 
         public void Move(string OldDirectoryFullName, string OldFileName, string NewDirectoryFullName, string NewFileName)
         {
-            if (_ProtocolV3 != null && _MountProtocolV3 != null)
+            if (_ProtocolV3 == null)
+            { throw new NFSConnectionException("NFS Client not connected!"); }
+
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+
+            NFSAttributes OldDirectory = GetItemAttributes(OldDirectoryFullName);
+            NFSAttributes NewDirectory = GetItemAttributes(NewDirectoryFullName);
+
+            RenameArguments dpArgRename = new RenameArguments();
+            dpArgRename.From = new ItemOperationArguments();
+            dpArgRename.From.Directory = new NFSHandle(OldDirectory.Handle, V3.RPC.NFSv3Protocol.NFS_V3);
+            dpArgRename.From.Name = new Name(OldFileName);
+            dpArgRename.To = new ItemOperationArguments();
+            dpArgRename.To.Directory = new NFSHandle(NewDirectory.Handle, V3.RPC.NFSv3Protocol.NFS_V3);
+            dpArgRename.To.Name = new Name(NewFileName);
+
+            ResultObject<RenameAccessOK, RenameAccessFAIL> pRenameRes =
+                _ProtocolV3.NFSPROC3_RENAME(dpArgRename);
+
+            if (pRenameRes == null || pRenameRes.Status != NFSStats.NFS_OK)
             {
-                RENAME3args dpArgRename = new RENAME3args();
-                RENAME3res pRenameRes;
+                if (pRenameRes == null)
+                { throw new NFSGeneralException("NFSPROC3_WRITE: failure"); }
 
-                NFSAttributes OldDirectory = GetItemAttributes(OldDirectoryFullName);
-                NFSAttributes NewDirectory = GetItemAttributes(NewDirectoryFullName);
-
-                dpArgRename.from = new diropargs3();
-                dpArgRename.from.dir = new nfs_fh3();
-                dpArgRename.from.dir.data = OldDirectory.handle;
-                dpArgRename.from.name = new filename3(OldFileName);
-                dpArgRename.to = new diropargs3();
-                dpArgRename.to.dir = new nfs_fh3();
-                dpArgRename.to.dir.data = NewDirectory.handle;
-                dpArgRename.to.name = new filename3(NewFileName);
-
-                if ((pRenameRes = _ProtocolV3.NFSPROC3_RENAME_3(dpArgRename)) != null)
-                {
-                    if (pRenameRes.status != nfsstat3.NFS3_OK)
-                        throw new ApplicationException("NFSPROC3_RENAME_3: errorcode " + pRenameRes.status);
-                }
+                ExceptionHelpers.ThrowException(pRenameRes.Status);
             }
-            else
-                throw new ApplicationException("NFS Client not connected!");
         }
 
         public bool IsDirectory(string DirectoryFullName)
         {
-            if (_ProtocolV3 != null && _MountProtocolV3 != null)
-            {
-                NFSAttributes Attributes = GetItemAttributes(DirectoryFullName);
+            if (_ProtocolV3 == null)
+            { throw new NFSConnectionException("NFS Client not connected!"); }
 
-                if (Attributes == null)
-                    return false;
+            if (_MountProtocolV3 == null)
+            { throw new NFSMountConnectionException("NFS Device not connected!"); }
 
-                if (Attributes.type != NFSType.NFDIR)
-                    return false;
-                else
-                    return true;
-            }
-            else
-                throw new ApplicationException("NFS Client not connected!");
+            NFSAttributes Attributes = GetItemAttributes(DirectoryFullName);
+
+            return (Attributes != null && Attributes.NFSType == NFSItemTypes.NFDIR);
+        }
+
+        public void CompleteIO()
+        {
+            _CurrentItemHandleObject = null;
+            _CurrentItem = string.Empty;
         }
 
         #endregion

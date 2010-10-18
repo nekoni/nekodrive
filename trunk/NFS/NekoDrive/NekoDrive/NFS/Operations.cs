@@ -175,7 +175,7 @@ namespace NekoDrive.NFS
                 string FullPath = MainForm.In.mNFS.Combine(FileName, Directory);
 
                 Debug("ReadFile {0} {1} {2} {3}", Directory, FileName, offset, buffer.Length);
-                ret = MainForm.In.mNFS.Read(FullPath, offset, (uint)buffer.Length, ref buffer);
+                ret = (int)MainForm.In.mNFS.Read(FullPath, (long)offset, (long)buffer.Length, ref buffer);
                 if (ret != -1)
                 {
                     readBytes = (uint)ret;
@@ -204,12 +204,15 @@ namespace NekoDrive.NFS
                 string FullPath = MainForm.In.mNFS.Combine(FileName, Directory);
             
                 Debug("WriteFile {0} {1} {2} {3}", Directory, FileName, offset, buffer.Length);
-                ret = MainForm.In.mNFS.Write(FullPath, offset, (uint)buffer.Length, buffer);
-                if (ret != -1)
+                MainForm.In.mNFS.Write(FullPath, (long)offset, buffer.Length, buffer);
+                ret = buffer.Length;
+                writtenBytes = (uint)buffer.Length;
+                /*ret = MainForm.In.mNFS.Write(FullPath, (long)offset, buffer.Length, buffer);
+                if (ret != 0)
                 {
                     writtenBytes = (uint)ret;
                     Debug("WriteFile bytes {0}", writtenBytes);
-                }
+                }*/
             }
             catch(Exception ex)
             {
@@ -238,19 +241,19 @@ namespace NekoDrive.NFS
                 string FileName = MainForm.In.mNFS.GetFileName(filename);
                 string FullPath = MainForm.In.mNFS.Combine(FileName, Directory);
 
-                NFSAttributes nfsAttributes = MainForm.In.mNFS.GetItemAttributes(FullPath);
+                NFSLibrary.Protocols.Commons.NFSAttributes nfsAttributes = MainForm.In.mNFS.GetItemAttributes(FullPath);
                 if (nfsAttributes == null)
                     return DokanNet.DOKAN_ERROR;
 
-                if (nfsAttributes.type == NFSType.NFDIR)
+                if (nfsAttributes.NFSType == NFSLibrary.Protocols.Commons.NFSItemTypes.NFDIR)
                     fileinfo.Attributes = System.IO.FileAttributes.Directory;
                 else
                     fileinfo.Attributes = System.IO.FileAttributes.Archive;
 
-                fileinfo.LastAccessTime = nfsAttributes.adateTime;
-                fileinfo.LastWriteTime = nfsAttributes.adateTime;
-                fileinfo.CreationTime = nfsAttributes.cdateTime;
-                fileinfo.Length = (long)nfsAttributes.size;
+                fileinfo.LastAccessTime = nfsAttributes.LastAccessedDateTime;
+                fileinfo.LastWriteTime = nfsAttributes.LastAccessedDateTime;
+                fileinfo.CreationTime = nfsAttributes.CreateDateTime;
+                fileinfo.Length = (long)nfsAttributes.Size;
             }
             catch (Exception ex)
             {
@@ -276,15 +279,15 @@ namespace NekoDrive.NFS
 
                 foreach (string strItem in MainForm.In.mNFS.GetItemList(FullPath))
                 {
-                    NFSAttributes nfsAttributes = MainForm.In.mNFS.GetItemAttributes(MainForm.In.mNFS.Combine(strItem, FullPath));
+                    NFSLibrary.Protocols.Commons.NFSAttributes nfsAttributes = MainForm.In.mNFS.GetItemAttributes(MainForm.In.mNFS.Combine(strItem, FullPath));
                     if (nfsAttributes != null)
                     {
                         FileInformation fi = new FileInformation();
-                        fi.Attributes = nfsAttributes.type == NFSType.NFDIR ? FileAttributes.Directory : FileAttributes.Normal;
-                        fi.CreationTime = nfsAttributes.cdateTime;
-                        fi.LastAccessTime = nfsAttributes.adateTime;
-                        fi.LastWriteTime = nfsAttributes.adateTime;
-                        fi.Length = (long)nfsAttributes.size;
+                        fi.Attributes = nfsAttributes.NFSType == NFSLibrary.Protocols.Commons.NFSItemTypes.NFDIR ? System.IO.FileAttributes.Directory : System.IO.FileAttributes.Normal;
+                        fi.CreationTime = nfsAttributes.CreateDateTime;
+                        fi.LastAccessTime = nfsAttributes.LastAccessedDateTime;
+                        fi.LastWriteTime = nfsAttributes.LastAccessedDateTime;
+                        fi.Length = (long)nfsAttributes.Size;
                         fi.FileName = strItem;
                         files.Add(fi);
                     }
@@ -406,7 +409,7 @@ namespace NekoDrive.NFS
                 string FileName = MainForm.In.mNFS.GetFileName(filename);
                 string FullName = MainForm.In.mNFS.Combine(FileName, Directory);
 
-                MainForm.In.mNFS.SetFileSize(FullName, (UInt64)length);
+                MainForm.In.mNFS.SetFileSize(FullName, length);
             }
             catch (Exception ex)
             {
@@ -430,9 +433,9 @@ namespace NekoDrive.NFS
                 string FileName = MainForm.In.mNFS.GetFileName(filename);
                 string FullName = MainForm.In.mNFS.Combine(FileName, Directory);
 
-                NFSAttributes attr = MainForm.In.mNFS.GetItemAttributes(FullName);
-                if (attr.size < length)
-                    MainForm.In.mNFS.SetFileSize(FullName, (UInt64)length);
+                NFSLibrary.Protocols.Commons.NFSAttributes attr = MainForm.In.mNFS.GetItemAttributes(FullName);
+                if (attr.Size < length)
+                    MainForm.In.mNFS.SetFileSize(FullName, length);
             }
             catch (Exception ex)
             {

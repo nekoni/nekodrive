@@ -133,7 +133,7 @@ namespace NekoDrive
                     ver = NFSClient.NFSVersion.v3;
 
                 mNFS = new NFSClient(ver);
-                mNFS.DataEvent += new NFSDataEventHandler(mNFS_DataEvent);
+                mNFS.DataEvent += new NFSLibrary.NFSClient.NFSDataEventHandler(mNFS_DataEvent);
                 int UserId = int.Parse(tbUserId.Text);
                 int GroupId = int.Parse(tbGroupId.Text);
                 mNFS.Connect(ipAddress, UserId, GroupId, (int)nupTimeOut.Value);
@@ -326,7 +326,7 @@ namespace NekoDrive
             }
         }
 
-        void mNFS_DataEvent(object sender, NFSEventArgs e)
+        void mNFS_DataEvent(object sender, NFSLibrary.NFSClient.NFSEventArgs e)
         {
             //
         }
