@@ -5,7 +5,6 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using System.IO;
 using System.Net;
 using System.Threading;
 using System.Net.NetworkInformation;
@@ -34,10 +33,10 @@ namespace NFSClient
         List<ListViewItem> lvDragItem = new List<ListViewItem>();
         string CurrentList;
         string CurrentItem;
-        ulong CurrentSize;
+        long CurrentSize;
         delegate void ShowProgressDelegate(bool ShowHide);
         ShowProgressDelegate show;
-        delegate void UpdateProgressDelegate(string name, ulong total, int current);
+        delegate void UpdateProgressDelegate(string name, long total, int current);
         UpdateProgressDelegate update;
         Thread downloadThread;
         Thread uploadThread;
@@ -104,7 +103,8 @@ namespace NFSClient
             }
         }
 
-        void UpdateProgress(string name, ulong total, int current)
+        long _lTotal = 0;
+        void UpdateProgress(string name, long total, int current)
         {
             if (pb.InvokeRequired)
             {
@@ -112,13 +112,20 @@ namespace NFSClient
             }
             else
             {
-                lblCurrentFile.Text = CurrentItem;
-                pb.Maximum = (int)total;
-                int Value = pb.Value + current;
-                if (Value < (int) total)
-                    pb.Value += current;
-                else
-                    pb.Value =(int) total;
+                if (current > 0)
+                {
+                    if (_lTotal == 0)
+                    { _lTotal = total; }
+                    _lTotal -= current;
+
+                    lblCurrentFile.Text = CurrentItem;
+                    pb.Maximum = (int)(total / current);
+                    int Value = pb.Value + 1;
+                    if (Value < pb.Maximum)
+                        pb.Value = Value;
+                    else
+                        pb.Value = pb.Maximum;
+                }
             }
         }
 
@@ -128,9 +135,9 @@ namespace NFSClient
                 return;
 
             Environment.CurrentDirectory = tbLocalPath.Text = Dir;
-            DirectoryInfo CurrentDirecotry = new DirectoryInfo(tbLocalPath.Text);
+            System.IO.DirectoryInfo CurrentDirecotry = new System.IO.DirectoryInfo(tbLocalPath.Text);
             listViewLocal.Items.Clear();
-            foreach (FileInfo file in CurrentDirecotry.GetFiles())
+            foreach (System.IO.FileInfo file in CurrentDirecotry.GetFiles())
             {
                 ListViewItem lvi = new ListViewItem(new string[] { file.Name, file.Length.ToString(), file.LastWriteTime.ToString() });
                 lvi.ImageIndex = 0;
@@ -143,19 +150,19 @@ namespace NFSClient
             listViewRemote.Items.Clear();
             foreach (string Item in nfsClient.GetItemList(RemoteFolder))
             {
-                NFSAttributes nfsAttribute = nfsClient.GetItemAttributes(nfsClient.Combine(Item, RemoteFolder));
+                NFSLibrary.Protocols.Commons.NFSAttributes nfsAttribute = nfsClient.GetItemAttributes(nfsClient.Combine(Item, RemoteFolder));
                 if (nfsAttribute != null)
                 {
-                    if (nfsAttribute.type == NFSType.NFDIR)
+                    if (nfsAttribute.NFSType == NFSLibrary.Protocols.Commons.NFSItemTypes.NFDIR)
                     {
-                        ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.size.ToString(), nfsAttribute.cdateTime.ToString() });
+                        ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.Size.ToString(), nfsAttribute.CreateDateTime.ToString() });
                         lvi.ImageIndex = 1;
                         listViewRemote.Items.Add(lvi);
                     }
                     else
-                        if (nfsAttribute.type == NFSType.NFREG)
+                        if (nfsAttribute.NFSType == NFSLibrary.Protocols.Commons.NFSItemTypes.NFREG)
                         {
-                            ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.size.ToString(), nfsAttribute.cdateTime.ToString() });
+                            ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.Size.ToString(), nfsAttribute.CreateDateTime.ToString() });
                             lvi.ImageIndex = 0;
                             listViewRemote.Items.Add(lvi);
                         }
@@ -227,7 +234,7 @@ namespace NFSClient
                         ver = NFSLibrary.NFSClient.NFSVersion.v3;
 
                     nfsClient = new NFSLibrary.NFSClient(ver);
-                    nfsClient.DataEvent += new NFSDataEventHandler(nfsClient_DataEvent);
+                    nfsClient.DataEvent += new NFSLibrary.NFSClient.NFSDataEventHandler(nfsClient_DataEvent);
                     Encoding encoding = Encoding.ASCII;
                     if (chkUseUnicode.Checked)
                         encoding = Encoding.UTF8;
@@ -285,14 +292,14 @@ namespace NFSClient
                 ShowProgress(true);
                 foreach (ListViewItem lvItem in lvDragItem)
                 {
-                    string OutputFile = Path.Combine(LocalFolder, lvItem.Text);
-                    if (File.Exists(OutputFile))
+                    string OutputFile = System.IO.Path.Combine(LocalFolder, lvItem.Text);
+                    if (System.IO.File.Exists(OutputFile))
                     {
                         if (MessageBox.Show("Do you want to overwrite " + OutputFile + "?", "NFSClient", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             try
                             {
-                                File.Delete(OutputFile);
+                                System.IO.File.Delete(OutputFile);
                             }
                             catch (Exception ex)
                             {
@@ -304,7 +311,8 @@ namespace NFSClient
                             continue;
                     }
                     CurrentItem = lvItem.Text;
-                    CurrentSize = ulong.Parse(lvItem.SubItems[1].Text);
+                    CurrentSize = long.Parse(lvItem.SubItems[1].Text);
+                    _lTotal = 0;
                     nfsClient.Read(nfsClient.Combine(CurrentItem, RemoteFolder), OutputFile);
                 }
             }
@@ -336,8 +344,9 @@ namespace NFSClient
                             continue;
                     }
                     CurrentItem = lvItem.Text;
-                    CurrentSize = ulong.Parse(lvItem.SubItems[1].Text);
-                    string SourceName = Path.Combine(LocalFolder, CurrentItem);
+                    CurrentSize = long.Parse(lvItem.SubItems[1].Text);
+                    _lTotal = 0;
+                    string SourceName = System.IO.Path.Combine(LocalFolder, CurrentItem);
                     nfsClient.Write(nfsClient.Combine(CurrentItem, RemoteFolder), SourceName);
                 }
             }
@@ -352,9 +361,9 @@ namespace NFSClient
             }
         }
 
-        void nfsClient_DataEvent(object sender, NFSEventArgs e)
+        void nfsClient_DataEvent(object sender, NFSLibrary.NFSClient.NFSEventArgs e)
         {
-            UpdateProgress(CurrentItem, CurrentSize, (int)e.Bytes);
+            UpdateProgress(CurrentItem, CurrentSize, e.Bytes);
         }
 
         private void listViewLocal_DragEnter(object sender, DragEventArgs e)
@@ -462,7 +471,7 @@ namespace NFSClient
                         foreach (ListViewItem lvi in listViewLocal.SelectedItems)
                         {
                             if (MessageBox.Show("Do you really want to delete " + lvi.Text + " ?", "NFS Client", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                                File.Delete(Path.Combine(this.tbLocalPath.Text, lvi.Text));
+                                System.IO.File.Delete(System.IO.Path.Combine(this.tbLocalPath.Text, lvi.Text));
                         }
                         RefreshLocal(tbLocalPath.Text);
                     }
@@ -484,7 +493,35 @@ namespace NFSClient
                 NewFolder nf = new NewFolder();
                 if (nf.ShowDialog() == DialogResult.OK)
                 {
-                    nfsClient.CreateDirectory(nfsClient.Combine(nf.NewFolderName, RemoteFolder));
+                    byte UserP, GroupP, OtherP;
+
+                    switch(nf.userPSelectedIndex)
+                    {
+                        case 0: UserP = 4; break;
+                        case 1: UserP = 6; break;
+                        case 2: UserP = 7; break;
+                        default: UserP = 7; break;
+                    }
+
+                    switch(nf.groupPSelectedIndex)
+                    {
+                        case 0: GroupP = 4; break;
+                        case 1: GroupP = 6; break;
+                        case 2: GroupP = 7; break;
+                        default: GroupP = 7; break;
+                    }
+
+                    switch(nf.otherPSelectedIndex)
+                    {
+                        case 0: OtherP = 4; break;
+                        case 1: OtherP = 6; break;
+                        case 2: OtherP = 7; break;
+                        default: OtherP = 7; break;
+                    }
+
+                    nfsClient.CreateDirectory( 
+                        nfsClient.Combine(nf.NewFolderName, RemoteFolder),
+                        new NFSLibrary.Protocols.Commons.NFSPermission(UserP, GroupP, OtherP));
                     RefreshRemote();
                 }
             }
@@ -543,7 +580,7 @@ namespace NFSClient
                 string NewLabel = e.Label;
                 ListViewItem lvi = listViewLocal.Items[e.Item];
                 string Folder = tbLocalPath.Text;
-                File.Move(Path.Combine(Folder, lvi.Text), Path.Combine(Folder, NewLabel));
+                System.IO.File.Move(System.IO.Path.Combine(Folder, lvi.Text), System.IO.Path.Combine(Folder, NewLabel));
             }
             catch (Exception ex)
             {
@@ -570,5 +607,28 @@ namespace NFSClient
         }
 
         #endregion
+
+        private void showPermissionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listViewRemote.SelectedItems != null)
+                {
+                    ListViewItem lvi = listViewRemote.SelectedItems[0];
+
+                    String SearchItem = nfsClient.Combine(lvi.Text, RemoteFolder);
+                    NFSLibrary.Protocols.Commons.NFSAttributes itemAttributes =
+                        nfsClient.GetItemAttributes(SearchItem);
+
+                    MessageBox.Show(
+                        String.Format("Mode: {0}{1}{2}", itemAttributes.Mode.UserAccess, itemAttributes.Mode.GroupAccess, itemAttributes.Mode.OtherAccess)
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "NFS Client");
+            }
+        }
     }
 }

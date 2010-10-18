@@ -3,95 +3,121 @@
  * jrpcgen is part of the "Remote Tea.Net" ONC/RPC package for C#
  * See http://remotetea.sourceforge.net for details
  */
+using NFSLibrary.Protocols.Commons;
 using org.acplt.oncrpc;
-
 using System.Net;
-
 using org.acplt.oncrpc.server;
 
 /**
  */
-public abstract class NFSv2MountProtocolServerStub : OncRpcServerStub, OncRpcDispatchable {
+namespace NFSLibrary.Protocols.V2.RPC.Mount
+{
+    public abstract class NFSv2MountProtocolServerStub : OncRpcServerStub, OncRpcDispatchable
+    {
 
-    public NFSv2MountProtocolServerStub() : this(0) {
-    }
+        public NFSv2MountProtocolServerStub()
+            : this(0)
+        { }
 
-    public NFSv2MountProtocolServerStub(int port) : this(null, port) {
-    }
+        public NFSv2MountProtocolServerStub(int port)
+            : this(null, port)
+        { }
 
-    public NFSv2MountProtocolServerStub(IPAddress bindAddr, int port)
-           {
-        info = new OncRpcServerTransportRegistrationInfo [] {
+        public NFSv2MountProtocolServerStub(IPAddress bindAddr, int port)
+        {
+            info = new OncRpcServerTransportRegistrationInfo[] {
             new OncRpcServerTransportRegistrationInfo(NFSv2MountProtocol.MOUNTPROG, 1),
         };
-        transports = new OncRpcServerTransport [] {
+
+            transports = new OncRpcServerTransport[] {
             new OncRpcUdpServerTransport(this, bindAddr, port, info, 32768),
             new OncRpcTcpServerTransport(this, bindAddr, port, info, 32768)
         };
-    }
-
-    public void dispatchOncRpcCall(OncRpcCallInformation call, int program, int version, int procedure)
-            {
-        if ( version == 1 ) {
-            switch ( procedure ) {
-            case 0: {
-                call.retrieveCall(XdrVoid.XDR_VOID);
-                MOUNTPROC_NULL_1();
-                call.reply(XdrVoid.XDR_VOID);
-                break;
-            }
-            case 1: {
-                dirpath args_ = new dirpath();
-                call.retrieveCall(args_);
-                fhstatus result_ = MOUNTPROC_MNT_1(args_);
-                call.reply(result_);
-                break;
-            }
-            case 2: {
-                call.retrieveCall(XdrVoid.XDR_VOID);
-                mountlist result_ = MOUNTPROC_DUMP_1();
-                call.reply(result_);
-                break;
-            }
-            case 3: {
-                dirpath args_ = new dirpath();
-                call.retrieveCall(args_);
-                MOUNTPROC_UMNT_1(args_);
-                call.reply(XdrVoid.XDR_VOID);
-                break;
-            }
-            case 4: {
-                call.retrieveCall(XdrVoid.XDR_VOID);
-                MOUNTPROC_UMNTALL_1();
-                call.reply(XdrVoid.XDR_VOID);
-                break;
-            }
-            case 5: {
-                call.retrieveCall(XdrVoid.XDR_VOID);
-                exports result_ = MOUNTPROC_EXPORT_1();
-                call.reply(result_);
-                break;
-            }
-            default:
-                call.failProcedureUnavailable();
-                break;
-            }
-        } else {
-            call.failProgramUnavailable();
         }
+
+        public void dispatchOncRpcCall(OncRpcCallInformation call, int program, int version, int procedure)
+        {
+            if (version == 1)
+            {
+                switch (procedure)
+                {
+                    case 0:
+                        {
+                            call.retrieveCall(XdrVoid.XDR_VOID);
+                            MOUNTPROC_NULL();
+                            call.reply(XdrVoid.XDR_VOID);
+                            break;
+                        }
+                    case 1:
+                        {
+                            Name args_ = new Name();
+                            call.retrieveCall(args_);
+
+                            MountStatus result_ = MOUNTPROC_MNT(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 2:
+                        {
+                            call.retrieveCall(XdrVoid.XDR_VOID);
+                            MountList result_ = MOUNTPROC_DUMP();
+
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 3:
+                        {
+                            Name args_ = new Name();
+                            call.retrieveCall(args_);
+
+                            MOUNTPROC_UMNT(args_);
+                            call.reply(XdrVoid.XDR_VOID);
+
+                            break;
+                        }
+                    case 4:
+                        {
+                            call.retrieveCall(XdrVoid.XDR_VOID);
+                            MOUNTPROC_UMNTALL();
+
+                            call.reply(XdrVoid.XDR_VOID);
+
+                            break;
+                        }
+                    case 5:
+                        {
+                            call.retrieveCall(XdrVoid.XDR_VOID);
+                            Exports result_ = MOUNTPROC_EXPORT();
+
+                            call.reply(result_);
+
+                            break;
+                        }
+                    default:
+                        {
+                            call.failProcedureUnavailable();
+                            break;
+                        }
+                }
+            }
+            else
+            { call.failProgramUnavailable(); }
+        }
+
+        public abstract void MOUNTPROC_NULL();
+
+        public abstract MountStatus MOUNTPROC_MNT(Name arg1);
+
+        public abstract MountList MOUNTPROC_DUMP();
+
+        public abstract void MOUNTPROC_UMNT(Name arg1);
+
+        public abstract void MOUNTPROC_UMNTALL();
+
+        public abstract Exports MOUNTPROC_EXPORT();
+
     }
-
-    public abstract void MOUNTPROC_NULL_1();
-
-    public abstract fhstatus MOUNTPROC_MNT_1(dirpath arg1);
-
-    public abstract mountlist MOUNTPROC_DUMP_1();
-
-    public abstract void MOUNTPROC_UMNT_1(dirpath arg1);
-
-    public abstract void MOUNTPROC_UMNTALL_1();
-
-    public abstract exports MOUNTPROC_EXPORT_1();
-
+    // End of NFSv2MountProtocolServerStub.cs
 }
-// End of NFSv2MountProtocolServerStub.cs

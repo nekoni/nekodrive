@@ -34,6 +34,7 @@ namespace NFSClient
             this.cboxRemoteDevices = new System.Windows.Forms.ComboBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.gbTargetConnection = new System.Windows.Forms.GroupBox();
+            this.chkUseUnicode = new System.Windows.Forms.CheckBox();
             this.lblTimeOut = new System.Windows.Forms.Label();
             this.nupTimeOut = new System.Windows.Forms.NumericUpDown();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -58,7 +59,8 @@ namespace NFSClient
             this.columnHeader8 = new System.Windows.Forms.ColumnHeader();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnNewFolder = new System.Windows.Forms.Button();
-            this.chkUseUnicode = new System.Windows.Forms.CheckBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gbTargetConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).BeginInit();
             this.pnlMain.SuspendLayout();
@@ -67,6 +69,7 @@ namespace NFSClient
             this.splitContainer1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblRemoteDevices
@@ -117,6 +120,16 @@ namespace NFSClient
             this.gbTargetConnection.TabIndex = 4;
             this.gbTargetConnection.TabStop = false;
             this.gbTargetConnection.Text = "Target Connection";
+            // 
+            // chkUseUnicode
+            // 
+            this.chkUseUnicode.AutoSize = true;
+            this.chkUseUnicode.Location = new System.Drawing.Point(364, 21);
+            this.chkUseUnicode.Name = "chkUseUnicode";
+            this.chkUseUnicode.Size = new System.Drawing.Size(88, 17);
+            this.chkUseUnicode.TabIndex = 10;
+            this.chkUseUnicode.Text = "Use Unicode";
+            this.chkUseUnicode.UseVisualStyleBackColor = true;
             // 
             // lblTimeOut
             // 
@@ -331,6 +344,7 @@ namespace NFSClient
             this.columnHeader6,
             this.columnHeader7,
             this.columnHeader8});
+            this.listViewRemote.ContextMenuStrip = this.contextMenuStrip1;
             this.listViewRemote.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewRemote.FullRowSelect = true;
             this.listViewRemote.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -385,15 +399,19 @@ namespace NFSClient
             this.btnNewFolder.UseVisualStyleBackColor = true;
             this.btnNewFolder.Click += new System.EventHandler(this.btnNewFolder_Click);
             // 
-            // chkUseUnicode
+            // contextMenuStrip1
             // 
-            this.chkUseUnicode.AutoSize = true;
-            this.chkUseUnicode.Location = new System.Drawing.Point(364, 21);
-            this.chkUseUnicode.Name = "chkUseUnicode";
-            this.chkUseUnicode.Size = new System.Drawing.Size(88, 17);
-            this.chkUseUnicode.TabIndex = 10;
-            this.chkUseUnicode.Text = "Use Unicode";
-            this.chkUseUnicode.UseVisualStyleBackColor = true;
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showPermissionsToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 48);
+            // 
+            // showPermissionsToolStripMenuItem
+            // 
+            this.showPermissionsToolStripMenuItem.Name = "showPermissionsToolStripMenuItem";
+            this.showPermissionsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.showPermissionsToolStripMenuItem.Text = "Show Permissions";
+            this.showPermissionsToolStripMenuItem.Click += new System.EventHandler(this.showPermissionsToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -420,6 +438,7 @@ namespace NFSClient
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -455,6 +474,8 @@ namespace NFSClient
         private System.Windows.Forms.Label lblTimeOut;
         private System.Windows.Forms.NumericUpDown nupTimeOut;
         private System.Windows.Forms.CheckBox chkUseUnicode;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem showPermissionsToolStripMenuItem;
     }
 }
 

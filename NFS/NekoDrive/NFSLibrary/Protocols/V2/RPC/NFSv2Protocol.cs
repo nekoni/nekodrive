@@ -6,31 +6,37 @@
 /**
  * A collection of constants used by the "NFSv2Protocol" ONC/RPC program.
  */
-public class NFSv2Protocol {
-    public const int NFSPROC_ROOT_2 = 3;
-    public const int MAXNAMLEN = 255;
-    public const int NFSPROC_READLINK_2 = 5;
-    public const int MAXDATA = 8192;
-    public const int NFSPROC_GETATTR_2 = 1;
-    public const int NFSPROC_LOOKUP_2 = 4;
-    public const int NFS_PROGRAM = 100003;
-    public const int COOKIESIZE = 4;
-    public const int NFSPROC_READ_2 = 6;
-    public const int NFSPROC_MKDIR_2 = 14;
-    public const int NFS_VERSION = 2;
-    public const int NFSPROC_REMOVE_2 = 10;
-    public const int NFSPROC_READDIR_2 = 16;
-    public const int NFSPROC_SYMLINK_2 = 13;
-    public const int MAXPATHLEN = 1024;
-    public const int NFSPROC_RMDIR_2 = 15;
-    public const int NFSPROC_SETATTR_2 = 2;
-    public const int NFSPROC_LINK_2 = 12;
-    public const int NFSPROC_NULL_2 = 0;
-    public const int NFSPROC_STATFS_2 = 17;
-    public const int FHSIZE = 32;
-    public const int NFSPROC_RENAME_2 = 11;
-    public const int NFSPROC_CREATE_2 = 9;
-    public const int NFSPROC_WRITE_2 = 8;
-    public const int NFSPROC_WRITECACHE_2 = 7;
+namespace NFSLibrary.Protocols.V2.RPC
+{
+    public class NFSv2Protocol
+    {
+        public const int NFS_PROGRAM = 100003;
+        public const int NFS_VERSION = 2;
+
+        public const int NFSPROC_NULL = 0;
+        public const int NFSPROC_GETATTR = 1;
+        public const int NFSPROC_SETATTR = 2;
+        public const int NFSPROC_ROOT = 3;
+        public const int NFSPROC_LOOKUP = 4;
+        public const int NFSPROC_READLINK = 5;
+        public const int NFSPROC_READ = 6;
+        public const int NFSPROC_WRITECACHE = 7;
+        public const int NFSPROC_WRITE = 8;
+        public const int NFSPROC_CREATE = 9;
+        public const int NFSPROC_REMOVE = 10;
+        public const int NFSPROC_RENAME = 11;
+        public const int NFSPROC_LINK = 12;
+        public const int NFSPROC_SYMLINK = 13;
+        public const int NFSPROC_MKDIR = 14;
+        public const int NFSPROC_RMDIR = 15;
+        public const int NFSPROC_READDIR = 16;
+        public const int NFSPROC_STATFS = 17;
+
+        public const int COOKIESIZE = 4;
+        public const int MAXPATHLEN = 1024;
+        public const int MAXNAMLEN = 255;
+        public const int MAXDATA = 8192;
+        public const int FHSIZE = 32;
+    }
+    // End of NFSv2Protocol.cs
 }
-// End of NFSv2Protocol.cs

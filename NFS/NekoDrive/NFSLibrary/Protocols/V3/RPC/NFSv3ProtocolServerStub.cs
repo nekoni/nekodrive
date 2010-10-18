@@ -4,241 +4,336 @@
  * See http://remotetea.sourceforge.net for details
  */
 using org.acplt.oncrpc;
-
 using System.Net;
-
 using org.acplt.oncrpc.server;
 
 /**
  */
-public abstract class NFSv3ProtocolServerStub : OncRpcServerStub, OncRpcDispatchable {
+namespace NFSLibrary.Protocols.V3.RPC
+{
+    public abstract class NFSv3ProtocolServerStub : OncRpcServerStub, OncRpcDispatchable
+    {
 
-    public NFSv3ProtocolServerStub() : this(0) {
-    }
+        public NFSv3ProtocolServerStub()
+            : this(0)
+        {
+        }
 
-    public NFSv3ProtocolServerStub(int port) : this(null, port) {
-    }
+        public NFSv3ProtocolServerStub(int port)
+            : this(null, port)
+        {
+        }
 
-    public NFSv3ProtocolServerStub(IPAddress bindAddr, int port)
-           {
-        info = new OncRpcServerTransportRegistrationInfo [] {
+        public NFSv3ProtocolServerStub(IPAddress bindAddr, int port)
+        {
+            info = new OncRpcServerTransportRegistrationInfo[] {
             new OncRpcServerTransportRegistrationInfo(NFSv3Protocol.NFS_PROGRAM, 3),
         };
-        transports = new OncRpcServerTransport [] {
+            transports = new OncRpcServerTransport[] {
             new OncRpcUdpServerTransport(this, bindAddr, port, info, 32768),
             new OncRpcTcpServerTransport(this, bindAddr, port, info, 32768)
         };
-    }
-
-    public void dispatchOncRpcCall(OncRpcCallInformation call, int program, int version, int procedure)
-            {
-        if ( version == 3 ) {
-            switch ( procedure ) {
-            case 0: {
-                call.retrieveCall(XdrVoid.XDR_VOID);
-                NFSPROC3_NULL_3();
-                call.reply(XdrVoid.XDR_VOID);
-                break;
-            }
-            case 1: {
-                GETATTR3args args_ = new GETATTR3args();
-                call.retrieveCall(args_);
-                GETATTR3res result_ = NFSPROC3_GETATTR_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 2: {
-                SETATTR3args args_ = new SETATTR3args();
-                call.retrieveCall(args_);
-                SETATTR3res result_ = NFSPROC3_SETATTR_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 3: {
-                LOOKUP3args args_ = new LOOKUP3args();
-                call.retrieveCall(args_);
-                LOOKUP3res result_ = NFSPROC3_LOOKUP_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 4: {
-                ACCESS3args args_ = new ACCESS3args();
-                call.retrieveCall(args_);
-                ACCESS3res result_ = NFSPROC3_ACCESS_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 5: {
-                READLINK3args args_ = new READLINK3args();
-                call.retrieveCall(args_);
-                READLINK3res result_ = NFSPROC3_READLINK_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 6: {
-                READ3args args_ = new READ3args();
-                call.retrieveCall(args_);
-                READ3res result_ = NFSPROC3_READ_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 7: {
-                WRITE3args args_ = new WRITE3args();
-                call.retrieveCall(args_);
-                WRITE3res result_ = NFSPROC3_WRITE_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 8: {
-                CREATE3args args_ = new CREATE3args();
-                call.retrieveCall(args_);
-                CREATE3res result_ = NFSPROC3_CREATE_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 9: {
-                MKDIR3args args_ = new MKDIR3args();
-                call.retrieveCall(args_);
-                MKDIR3res result_ = NFSPROC3_MKDIR_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 10: {
-                SYMLINK3args args_ = new SYMLINK3args();
-                call.retrieveCall(args_);
-                SYMLINK3res result_ = NFSPROC3_SYMLINK_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 11: {
-                MKNOD3args args_ = new MKNOD3args();
-                call.retrieveCall(args_);
-                MKNOD3res result_ = NFSPROC3_MKNOD_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 12: {
-                REMOVE3args args_ = new REMOVE3args();
-                call.retrieveCall(args_);
-                REMOVE3res result_ = NFSPROC3_REMOVE_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 13: {
-                RMDIR3args args_ = new RMDIR3args();
-                call.retrieveCall(args_);
-                RMDIR3res result_ = NFSPROC3_RMDIR_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 14: {
-                RENAME3args args_ = new RENAME3args();
-                call.retrieveCall(args_);
-                RENAME3res result_ = NFSPROC3_RENAME_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 15: {
-                LINK3args args_ = new LINK3args();
-                call.retrieveCall(args_);
-                LINK3res result_ = NFSPROC3_LINK_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 16: {
-                READDIR3args args_ = new READDIR3args();
-                call.retrieveCall(args_);
-                READDIR3res result_ = NFSPROC3_READDIR_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 17: {
-                READDIRPLUS3args args_ = new READDIRPLUS3args();
-                call.retrieveCall(args_);
-                READDIRPLUS3res result_ = NFSPROC3_READDIRPLUS_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 18: {
-                FSSTAT3args args_ = new FSSTAT3args();
-                call.retrieveCall(args_);
-                FSSTAT3res result_ = NFSPROC3_FSSTAT_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 19: {
-                FSINFO3args args_ = new FSINFO3args();
-                call.retrieveCall(args_);
-                FSINFO3res result_ = NFSPROC3_FSINFO_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 20: {
-                PATHCONF3args args_ = new PATHCONF3args();
-                call.retrieveCall(args_);
-                PATHCONF3res result_ = NFSPROC3_PATHCONF_3(args_);
-                call.reply(result_);
-                break;
-            }
-            case 21: {
-                COMMIT3args args_ = new COMMIT3args();
-                call.retrieveCall(args_);
-                COMMIT3res result_ = NFSPROC3_COMMIT_3(args_);
-                call.reply(result_);
-                break;
-            }
-            default:
-                call.failProcedureUnavailable();
-                break;
-            }
-        } else {
-            call.failProgramUnavailable();
         }
+
+        public void dispatchOncRpcCall(OncRpcCallInformation call, int program, int version, int procedure)
+        {
+            if (version == 3)
+            {
+                switch (procedure)
+                {
+                    case 0:
+                        {
+                            call.retrieveCall(XdrVoid.XDR_VOID);
+                            NFSPROC3_NULL();
+                            call.reply(XdrVoid.XDR_VOID);
+
+                            break;
+                        }
+                    case 1:
+                        {
+                            GetAttributeArguments args_ = new GetAttributeArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<GetAttributeAccessOK, GetAttributeAccessOK> result_ =
+                                NFSPROC3_GETATTR(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 2:
+                        {
+                            SetAttributeArguments args_ = new SetAttributeArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<SetAttributeAccessOK, SetAttributeAccessFAIL> result_ =
+                                NFSPROC3_SETATTR(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 3:
+                        {
+                            ItemOperationArguments args_ = new ItemOperationArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<ItemOperationAccessResultOK, ItemOperationAccessResultFAIL> result_ =
+                                NFSPROC3_LOOKUP(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 4:
+                        {
+                            AccessArguments args_ = new AccessArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<AccessAccessOK, AccessAccessFAIL> result_ =
+                                NFSPROC3_ACCESS(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 5:
+                        {
+                            ReadLinkArguments args_ = new ReadLinkArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<ReadLinkAccessOK, ReadLinkAccessFAIL> result_ =
+                                NFSPROC3_READLINK(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 6:
+                        {
+                            ReadArguments args_ = new ReadArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<ReadAccessOK, ReadAccessFAIL> result_ =
+                                NFSPROC3_READ(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 7:
+                        {
+                            WriteArguments args_ = new WriteArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<WriteAccessOK, WriteAccessFAIL> result_ =
+                                NFSPROC3_WRITE(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 8:
+                        {
+                            MakeFileArguments args_ = new MakeFileArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<MakeFileAccessOK, MakeFileAccessFAIL> result_ =
+                                NFSPROC3_CREATE(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 9:
+                        {
+                            MakeFolderArguments args_ = new MakeFolderArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<MakeFolderAccessOK, MakeFolderAccessFAIL> result_ =
+                                NFSPROC3_MKDIR(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 10:
+                        {
+                            SymlinkArguments args_ = new SymlinkArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<SymlinkAccessOK, SymlinkAccessFAIL> result_ =
+                                NFSPROC3_SYMLINK(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 11:
+                        {
+                            MakeNodeArguments args_ = new MakeNodeArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<MakeNodeAccessOK, MakeNodeAccessFAIL> result_ =
+                                NFSPROC3_MKNOD(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 12:
+                        {
+                            ItemOperationArguments args_ = new ItemOperationArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<RemoveAccessOK, RemoveAccessFAIL> result_ =
+                                NFSPROC3_REMOVE(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 13:
+                        {
+                            ItemOperationArguments args_ = new ItemOperationArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<RemoveAccessOK, RemoveAccessFAIL> result_ =
+                                NFSPROC3_RMDIR(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 14:
+                        {
+                            RenameArguments args_ = new RenameArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<RenameAccessOK, RenameAccessFAIL> result_ =
+                                NFSPROC3_RENAME(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 15:
+                        {
+                            LinkArguments args_ = new LinkArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<LinkAccessOK, LinkAccessFAIL> result_ =
+                                NFSPROC3_LINK(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 16:
+                        {
+                            ReadFolderArguments args_ = new ReadFolderArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<ReadFolderAccessResultOK, ReadFolderAccessResultFAIL> result_ =
+                                NFSPROC3_READDIR(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 17:
+                        {
+                            ExtendedReadFolderArguments args_ = new ExtendedReadFolderArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<ExtendedReadFolderAccessOK, ExtendedReadFolderAccessFAIL> result_ =
+                                NFSPROC3_READDIRPLUS(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 18:
+                        {
+                            FSStatisticsArguments args_ = new FSStatisticsArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<FSStatisticsAccessOK, FSStatisticsAccessFAIL> result_ = NFSPROC3_FSSTAT(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 19:
+                        {
+                            FSInfoArguments args_ = new FSInfoArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<FSInfoAccessOK, FSInfoAccessFAIL> result_ =
+                                NFSPROC3_FSINFO(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 20:
+                        {
+                            PathConfigurationArguments args_ = new PathConfigurationArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<PathConfigurationAccessOK, PathConfigurationAccessFAIL> result_ =
+                                NFSPROC3_PATHCONF(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    case 21:
+                        {
+                            CommitArguments args_ = new CommitArguments();
+                            call.retrieveCall(args_);
+
+                            ResultObject<CommitAccessOK, CommitAccessFAIL> result_ =
+                                NFSPROC3_COMMIT(args_);
+                            call.reply(result_);
+
+                            break;
+                        }
+                    default:
+                        call.failProcedureUnavailable();
+                        break;
+                }
+            }
+            else
+            {
+                call.failProgramUnavailable();
+            }
+        }
+
+        public abstract void NFSPROC3_NULL();
+
+        public abstract ResultObject<GetAttributeAccessOK, GetAttributeAccessOK> NFSPROC3_GETATTR(GetAttributeArguments arg1);
+
+        public abstract ResultObject<SetAttributeAccessOK, SetAttributeAccessFAIL> NFSPROC3_SETATTR(SetAttributeArguments arg1);
+
+        public abstract ResultObject<ItemOperationAccessResultOK, ItemOperationAccessResultFAIL> NFSPROC3_LOOKUP(ItemOperationArguments arg1);
+
+        public abstract ResultObject<AccessAccessOK, AccessAccessFAIL> NFSPROC3_ACCESS(AccessArguments arg1);
+
+        public abstract ResultObject<ReadLinkAccessOK, ReadLinkAccessFAIL> NFSPROC3_READLINK(ReadLinkArguments arg1);
+
+        public abstract ResultObject<ReadAccessOK, ReadAccessFAIL> NFSPROC3_READ(ReadArguments arg1);
+
+        public abstract ResultObject<WriteAccessOK, WriteAccessFAIL> NFSPROC3_WRITE(WriteArguments arg1);
+
+        public abstract ResultObject<MakeFileAccessOK, MakeFileAccessFAIL> NFSPROC3_CREATE(MakeFileArguments arg1);
+
+        public abstract ResultObject<MakeFolderAccessOK, MakeFolderAccessFAIL> NFSPROC3_MKDIR(MakeFolderArguments arg1);
+
+        public abstract ResultObject<SymlinkAccessOK, SymlinkAccessFAIL> NFSPROC3_SYMLINK(SymlinkArguments arg1);
+
+        public abstract ResultObject<MakeNodeAccessOK, MakeNodeAccessFAIL> NFSPROC3_MKNOD(MakeNodeArguments arg1);
+
+        public abstract ResultObject<RemoveAccessOK, RemoveAccessFAIL> NFSPROC3_REMOVE(ItemOperationArguments arg1);
+
+        public abstract ResultObject<RemoveAccessOK, RemoveAccessFAIL> NFSPROC3_RMDIR(ItemOperationArguments arg1);
+
+        public abstract ResultObject<RenameAccessOK, RenameAccessFAIL> NFSPROC3_RENAME(RenameArguments arg1);
+
+        public abstract ResultObject<LinkAccessOK, LinkAccessFAIL> NFSPROC3_LINK(LinkArguments arg1);
+
+        public abstract ResultObject<ReadFolderAccessResultOK, ReadFolderAccessResultFAIL> NFSPROC3_READDIR(ReadFolderArguments arg1);
+
+        public abstract ResultObject<ExtendedReadFolderAccessOK, ExtendedReadFolderAccessFAIL> NFSPROC3_READDIRPLUS(ExtendedReadFolderArguments arg1);
+
+        public abstract ResultObject<FSStatisticsAccessOK, FSStatisticsAccessFAIL> NFSPROC3_FSSTAT(FSStatisticsArguments arg1);
+
+        public abstract ResultObject<FSInfoAccessOK, FSInfoAccessFAIL> NFSPROC3_FSINFO(FSInfoArguments arg1);
+
+        public abstract ResultObject<PathConfigurationAccessOK, PathConfigurationAccessFAIL> NFSPROC3_PATHCONF(PathConfigurationArguments arg1);
+
+        public abstract ResultObject<CommitAccessOK, CommitAccessFAIL> NFSPROC3_COMMIT(CommitArguments arg1);
+
     }
-
-    public abstract void NFSPROC3_NULL_3();
-
-    public abstract GETATTR3res NFSPROC3_GETATTR_3(GETATTR3args arg1);
-
-    public abstract SETATTR3res NFSPROC3_SETATTR_3(SETATTR3args arg1);
-
-    public abstract LOOKUP3res NFSPROC3_LOOKUP_3(LOOKUP3args arg1);
-
-    public abstract ACCESS3res NFSPROC3_ACCESS_3(ACCESS3args arg1);
-
-    public abstract READLINK3res NFSPROC3_READLINK_3(READLINK3args arg1);
-
-    public abstract READ3res NFSPROC3_READ_3(READ3args arg1);
-
-    public abstract WRITE3res NFSPROC3_WRITE_3(WRITE3args arg1);
-
-    public abstract CREATE3res NFSPROC3_CREATE_3(CREATE3args arg1);
-
-    public abstract MKDIR3res NFSPROC3_MKDIR_3(MKDIR3args arg1);
-
-    public abstract SYMLINK3res NFSPROC3_SYMLINK_3(SYMLINK3args arg1);
-
-    public abstract MKNOD3res NFSPROC3_MKNOD_3(MKNOD3args arg1);
-
-    public abstract REMOVE3res NFSPROC3_REMOVE_3(REMOVE3args arg1);
-
-    public abstract RMDIR3res NFSPROC3_RMDIR_3(RMDIR3args arg1);
-
-    public abstract RENAME3res NFSPROC3_RENAME_3(RENAME3args arg1);
-
-    public abstract LINK3res NFSPROC3_LINK_3(LINK3args arg1);
-
-    public abstract READDIR3res NFSPROC3_READDIR_3(READDIR3args arg1);
-
-    public abstract READDIRPLUS3res NFSPROC3_READDIRPLUS_3(READDIRPLUS3args arg1);
-
-    public abstract FSSTAT3res NFSPROC3_FSSTAT_3(FSSTAT3args arg1);
-
-    public abstract FSINFO3res NFSPROC3_FSINFO_3(FSINFO3args arg1);
-
-    public abstract PATHCONF3res NFSPROC3_PATHCONF_3(PATHCONF3args arg1);
-
-    public abstract COMMIT3res NFSPROC3_COMMIT_3(COMMIT3args arg1);
-
+    // End of NFSv3ProtocolServerStub.cs
 }
-// End of NFSv3ProtocolServerStub.cs

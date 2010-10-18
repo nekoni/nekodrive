@@ -6,17 +6,23 @@
 /**
  * A collection of constants used by the "NFSv3MountProtocol" ONC/RPC program.
  */
-public class NFSv3MountProtocol {
-    public const int MOUNTPROC3_UMNTALL_3 = 4;
-    public const int MNTPATHLEN = 1024;
-    public const int MOUNT_PROGRAM = 100005;
-    public const int MOUNT_V3 = 3;
-    public const int MOUNTPROC3_NULL_3 = 0;
-    public const int MOUNTPROC3_UMNT_3 = 3;
-    public const int MOUNTPROC3_DUMP_3 = 2;
-    public const int MOUNTPROC3_MNT_3 = 1;
-    public const int MOUNTPROC3_EXPORT_3 = 5;
-    public const int FHSIZE3 = 64;
-    public const int MNTNAMLEN = 255;
+namespace NFSLibrary.Protocols.V3.RPC.Mount
+{
+    public class NFSv3MountProtocol
+    {
+        public const int MOUNTPROG = 100005;
+        public const int MOUNTVERS = 3;
+
+        public const int MOUNTPROC3_NULL = 0;
+        public const int MOUNTPROC3_MNT = 1;
+        public const int MOUNTPROC3_DUMP = 2;
+        public const int MOUNTPROC3_UMNT = 3;
+        public const int MOUNTPROC3_UMNTALL = 4;
+        public const int MOUNTPROC3_EXPORT = 5;
+
+        public const int MNTPATHLEN = 1024;
+        public const int MNTNAMLEN = 255;
+        public const int FHSIZE = 64;
+    }
+    // End of NFSv3MountProtocol.cs
 }
-// End of NFSv3MountProtocol.cs
