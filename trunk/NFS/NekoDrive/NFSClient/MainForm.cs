@@ -206,19 +206,35 @@ namespace NFSClient
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            if (DialogResult.OK == fbd.ShowDialog())
+            try
             {
-                RefreshLocal(LocalFolder = fbd.SelectedPath);
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
+                if (DialogResult.OK == fbd.ShowDialog())
+                {
+                    RefreshLocal(LocalFolder = fbd.SelectedPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "NFS Client");
+                pnlMain.Enabled = false;
             }
         }
 
         private void cboxRemoteDevices_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int i = cboxRemoteDevices.SelectedIndex;
-            if (i != -1)
+            try
             {
-                MountDevice(i);
+                int i = cboxRemoteDevices.SelectedIndex;
+                if (i != -1)
+                {
+                    MountDevice(i);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "NFS Client");
+                pnlMain.Enabled = false;
             }
         }
 
@@ -606,8 +622,6 @@ namespace NFSClient
             NFSClient.Properties.Settings.Default.Save();
         }
 
-        #endregion
-
         private void showPermissionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -630,5 +644,8 @@ namespace NFSClient
                 MessageBox.Show(ex.ToString(), "NFS Client");
             }
         }
+
+        #endregion
+
     }
 }
