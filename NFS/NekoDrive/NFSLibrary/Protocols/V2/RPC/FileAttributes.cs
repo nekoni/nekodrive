@@ -82,7 +82,7 @@ namespace NFSLibrary.Protocols.V2.RPC
             long bytesInBlock = (long)(this._blocks / 8) * (long)this._blocksize;         
             bytesInBlock -= (int)diff;
 
-            this._size = bytesInBlock;
+            this._size = bytesInBlock >= 0? bytesInBlock : _size;
             /* ---- */
 
             this._fsid = xdr.xdrDecodeInt();
