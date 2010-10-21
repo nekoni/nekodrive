@@ -175,7 +175,7 @@ namespace NFSLibrary.Protocols.V2
                         while (pEntry != null)
                         {
                             ItemsList.Add(pEntry.Name.Value);
-
+                            dpRdArgs.Cookie = pEntry.Cookie;
                             pEntry = pEntry.NextEntry;
                         }
                     }
