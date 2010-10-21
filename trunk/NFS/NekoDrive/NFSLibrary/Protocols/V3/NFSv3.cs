@@ -182,10 +182,11 @@ namespace NFSLibrary.Protocols.V3
                         Entry pEntry =
                             pReadDirRes.OK.Reply.Entries;
 
+                        Array.Copy(pReadDirRes.OK.CookieData, dpRdArgs.CookieData, NFSv3Protocol.NFS3_COOKIEVERFSIZE);
                         while (pEntry != null)
                         {
                             ItemsList.Add(pEntry.Name.Value);
-
+                            dpRdArgs.Cookie = pEntry.Cookie;
                             pEntry = pEntry.NextEntry;
                         }
                     }
