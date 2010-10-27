@@ -65,24 +65,24 @@ namespace NFSLibrary.Protocols.V2.RPC
             this._blocks = xdr.xdrDecodeInt();
 
             /* Calculate File Size (>4GB) */
-            int fileSize = (int)this._size;
+            //int fileSize = (int)this._size;
 
-            double blockForFile = (double)fileSize / (double)this._blocksize;
-            double blocksOnDisk = blockForFile + 0.49;
-            blocksOnDisk = System.Math.Round(blocksOnDisk);
+            //double blockForFile = (double)fileSize / (double)this._blocksize;
+            //double blocksOnDisk = blockForFile + 0.49;
+            //blocksOnDisk = System.Math.Round(blocksOnDisk);
 
-            /* I think it's a bug on blocks value, cause some times blocks value
-             * comes 8 value greater than calculated size. 
-             * Following fixes the related bug(?) */
-            if (blocksOnDisk <= ((this._blocks / 8) - 1))
-            { this._blocks -= 8; }
+            ///* I think it's a bug on blocks value, cause some times blocks value
+            // * comes 8 value greater than calculated size. 
+            // * Following fixes the related bug(?) */
+            //if (blocksOnDisk <= ((this._blocks / 8) - 1))
+            //{ this._blocks -= 8; }
 
-            double diff = (blocksOnDisk - blockForFile) * this._blocksize;
+            //double diff = (blocksOnDisk - blockForFile) * this._blocksize;
 
-            long bytesInBlock = (long)(this._blocks / 8) * (long)this._blocksize;         
-            bytesInBlock -= (int)diff;
+            //long bytesInBlock = (long)(this._blocks / 8) * (long)this._blocksize;         
+            //bytesInBlock -= (int)diff;
 
-            this._size = bytesInBlock >= 0? bytesInBlock : _size;
+            //this._size = bytesInBlock >= 0? bytesInBlock : _size;
             /* ---- */
 
             this._fsid = xdr.xdrDecodeInt();
