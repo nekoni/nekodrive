@@ -320,7 +320,7 @@ namespace NFSLibrary
 
             if (recursive)
             {
-                foreach (String item in GetItemList(DirectoryFullName))
+                foreach (String item in GetItemList(DirectoryFullName, true))
                 {
                     if (IsDirectory(String.Format("{0}\\{1}", DirectoryFullName, item)))
                     { DeleteDirectory(String.Format("{0}\\{1}", DirectoryFullName, item), recursive); }
