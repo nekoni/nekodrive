@@ -413,6 +413,8 @@ namespace NFSLibrary
         {
             if (OutputStream != null)
             {
+                SourceFileFullName = CorrectPath(SourceFileFullName);
+
                 if (!FileExists(SourceFileFullName))
                     throw new System.IO.FileNotFoundException();
                 NFSAttributes nfsAttributes = GetItemAttributes(SourceFileFullName);
@@ -459,6 +461,9 @@ namespace NFSLibrary
              * huge memory consumption. 
              */
             SourceFileFullName = CorrectPath(SourceFileFullName);
+
+            if (!FileExists(SourceFileFullName))
+                throw new System.IO.FileNotFoundException();
 
             long ExactTotalLength = TotalLenght - Offset, CurrentPosition = 0;
 
