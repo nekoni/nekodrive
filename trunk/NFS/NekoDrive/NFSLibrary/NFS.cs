@@ -386,13 +386,13 @@ namespace NFSLibrary
         /// <param name="DestinationFileFullName">The destination local directory</param>
         public void Read(String SourceFileFullName, String DestinationFileFullName)
         {
-            System.IO.FileStream fs = null;
+            System.IO.Stream fs = null;
             try
             {
                 if (System.IO.File.Exists(DestinationFileFullName))
                     System.IO.File.Delete(DestinationFileFullName);
                 fs = new System.IO.FileStream(DestinationFileFullName, System.IO.FileMode.CreateNew);
-                Read(SourceFileFullName, fs);
+                Read(SourceFileFullName, ref fs);
             }
             finally
             {
@@ -409,7 +409,7 @@ namespace NFSLibrary
         /// </summary>
         /// <param name="SourceFileFullName">The remote file name</param>
         /// <param name="OutputStream"></param>
-        public void Read(String SourceFileFullName, System.IO.Stream OutputStream)
+        public void Read(String SourceFileFullName, ref System.IO.Stream OutputStream)
         {
             if (OutputStream != null)
             {
