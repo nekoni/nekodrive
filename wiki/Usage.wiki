@@ -4,7 +4,7 @@ It's extremely simple:
 
  # download and install dokan 0.5.3 http://dokan-dev.net/en/
  # download and install .NET Framework 2.0
- # download and install NekoDrive
+ # download and install Neko Drive
  # on ubuntu server you may have to specify the uid and gid aon the export as the following example:
 
 /folder 192.168.0.14(rw,no_subtree_check,sync,insecure,anonuid=1000,anongid=1000)
