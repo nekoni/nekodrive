@@ -1,5 +1,0 @@
-NFS RPC Files readme
-
-Those files are the implementation ot NFS 2/3 Protocol
-in RPC Language. In order to create the rpc methos
-you need to compile all those files with ONCRPC.
