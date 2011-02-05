@@ -68,7 +68,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".project" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
