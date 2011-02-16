@@ -2,8 +2,8 @@ NekoDrive Usage
 
 It's extremely simple:
 
- # download and install dokan 0.5.3 http://dokan-dev.net/en/
- # download and install .NET Framework 2.0
+ # download and install dokan 0.6.0 http://dokan-dev.net/en/
+ # download and install .NET Framework 4.0
  # download and install Neko Drive
  # on ubuntu server you may have to specify the uid and gid of the export as the following example:
 
