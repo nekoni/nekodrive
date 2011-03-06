@@ -1,7 +1,7 @@
 #labels Featured
 = How to use the NFS c# Library =
 
-NekoDrive uses a Library written in C# .NET 2.0. This library uses RemoteTea.Net ONC/RPC pure c# implementation.
+NekoDrive uses a Library written in C#. This library uses RemoteTea.Net ONC/RPC pure c# implementation.
 
 == Example 1 - Connect to NFS server and get the exported devices ==
 
@@ -22,7 +22,7 @@ namespace Example1
             
             nfs.Connect(IPAddress.Parse("161.55.201.250");
 
-            foreach(string device in nfs.GetExportedDevices("."))
+            foreach(string device in nfs.GetExportedDevices())
                Console.WriteLine(device);
             nfs.Disconnect();
         }
