@@ -27,7 +27,12 @@ namespace NFSLibrary.Protocols.V3.RPC.Mount
          * @throws IOException if an I/O error occurs.
          */
         public NFSv3MountProtocolClient(IPAddress host, int protocol)
-            : base(host, NFSv3MountProtocol.MOUNTPROG, 3, 0, protocol)
+            : base(host, NFSv3MountProtocol.MOUNTPROG, 3, 0, protocol, true)
+        {
+        }
+
+        public NFSv3MountProtocolClient(IPAddress host, int protocol, bool useSecurePort)
+            : base(host, NFSv3MountProtocol.MOUNTPROG, 3, 0, protocol, useSecurePort)
         {
         }
 
@@ -42,7 +47,7 @@ namespace NFSLibrary.Protocols.V3.RPC.Mount
          * @throws IOException if an I/O error occurs.
          */
         public NFSv3MountProtocolClient(IPAddress host, int port, int protocol)
-            : base(host, NFSv3MountProtocol.MOUNTPROG, 3, port, protocol)
+            : base(host, NFSv3MountProtocol.MOUNTPROG, 3, port, protocol, true)
         {
         }
 
@@ -71,7 +76,7 @@ namespace NFSLibrary.Protocols.V3.RPC.Mount
          * @throws IOException if an I/O error occurs.
          */
         public NFSv3MountProtocolClient(IPAddress host, int program, int version, int protocol)
-            : base(host, program, version, 0, protocol)
+            : base(host, program, version, 0, protocol, true)
         {
         }
 
@@ -88,7 +93,12 @@ namespace NFSLibrary.Protocols.V3.RPC.Mount
          * @throws IOException if an I/O error occurs.
          */
         public NFSv3MountProtocolClient(IPAddress host, int program, int version, int port, int protocol)
-            : base(host, program, version, port, protocol)
+            : base(host, program, version, port, protocol, true)
+        {
+        }
+
+        public NFSv3MountProtocolClient(IPAddress host, int program, int version, int port, int protocol, bool useSecurePort)
+            : base(host, program, version, port, protocol, useSecurePort)
         {
         }
 

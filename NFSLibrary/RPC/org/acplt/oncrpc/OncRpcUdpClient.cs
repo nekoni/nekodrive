@@ -26,6 +26,7 @@ using System;
 using System.Net.Sockets;
 using System.Net;
 using System.IO;
+using System.Net.NetworkInformation;
 namespace org.acplt.oncrpc
 {
 	/// <summary>
@@ -63,11 +64,12 @@ namespace org.acplt.oncrpc
 		/// If <code>0</code>, then the <code>OncRpcUdpClient</code> object will
 		/// ask the portmapper at <code>host</code> for the port number.
 		/// </param>
+        /// <param name="useSecurePort">The local binding port will be less than 1024.</param>
 		/// <exception cref="OncRpcException">if an ONC/RPC error occurs.</exception>
 		/// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
 		/// <exception cref="org.acplt.oncrpc.OncRpcException"></exception>
-		public OncRpcUdpClient(IPAddress host, int program, int version, int port
-			) : this(host, program, version, port, 8192)
+		public OncRpcUdpClient(IPAddress host, int program, int version, int port,
+			bool useSecurePort) : this(host, program, version, port, 8192, useSecurePort)
 		{
 		}
 
@@ -100,7 +102,7 @@ namespace org.acplt.oncrpc
 		/// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
 		/// <exception cref="org.acplt.oncrpc.OncRpcException"></exception>
 		public OncRpcUdpClient(IPAddress host, int program, int version, int port
-			, int bufferSize) : base(host, program, version, port, OncRpcProtocols
+			, int bufferSize, bool useSecurePort) : base(host, program, version, port, OncRpcProtocols
 			.ONCRPC_UDP)
 		{
             retransmissionTimeout = base.getTimeout();
@@ -120,6 +122,13 @@ namespace org.acplt.oncrpc
 				bufferSize = 1024;
 			}
 			socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+
+            if (useSecurePort)
+            {
+                var localEp = new IPEndPoint(IPAddress.Any, GetLocalPort());
+                socket.Bind(localEp);
+            }
+
 			if (socket.SendBufferSize < bufferSize)
 			{
 				socket.SendBufferSize = bufferSize;
@@ -145,18 +154,38 @@ namespace org.acplt.oncrpc
 			receivingXdr = new XdrUdpDecodingStream(socket, bufferSize);
 		}
 
-		/// <summary>
-		/// Close the connection to an ONC/RPC server and free all network-related
-		/// resources.
-		/// </summary>
-		/// <remarks>
-		/// Close the connection to an ONC/RPC server and free all network-related
-		/// resources. Well -- at least hope, that the Java VM will sometimes free
-		/// some resources. Sigh.
-		/// </remarks>
-		/// <exception cref="OncRpcException">if an ONC/RPC error occurs.</exception>
-		/// <exception cref="org.acplt.oncrpc.OncRpcException"></exception>
-		public override void close()
+        private int GetLocalPort()
+        {
+            int localPort = 600;
+            for (; localPort < 1023; localPort++)
+            {
+                bool inUse = false;
+                foreach (var udpListener in IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners())
+                {
+                    if (udpListener.Port == localPort)
+                    {
+                        inUse = true;
+                        break;
+                    }
+                }
+                if (!inUse)
+                    break;
+            }
+            return localPort;
+        }
+
+        /// <summary>
+        /// Close the connection to an ONC/RPC server and free all network-related
+        /// resources.
+        /// </summary>
+        /// <remarks>
+        /// Close the connection to an ONC/RPC server and free all network-related
+        /// resources. Well -- at least hope, that the Java VM will sometimes free
+        /// some resources. Sigh.
+        /// </remarks>
+        /// <exception cref="OncRpcException">if an ONC/RPC error occurs.</exception>
+        /// <exception cref="org.acplt.oncrpc.OncRpcException"></exception>
+        public override void close()
 		{
 			if (socket != null)
 			{

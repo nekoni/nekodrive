@@ -162,7 +162,7 @@ namespace NFSLibrary
         /// </summary>
         /// <param name="Address">The server address</param>
         public void Connect(IPAddress Address)
-        { Connect(Address, 0, 0, 60000, System.Text.Encoding.ASCII); }
+        { Connect(Address, 0, 0, 60000, System.Text.Encoding.ASCII, true); }
 
         /// <summary>
         /// Create a connection to a NFS Server
@@ -172,7 +172,7 @@ namespace NFSLibrary
         /// <param name="GroupId">The unix group id</param>
         /// <param name="CommandTimeout">The command timeout in milliseconds</param>
         public void Connect(IPAddress Address, int UserId, int GroupId, int CommandTimeout)
-        { Connect(Address, UserId, GroupId, CommandTimeout, System.Text.Encoding.ASCII); }
+        { Connect(Address, UserId, GroupId, CommandTimeout, System.Text.Encoding.ASCII, true); }
 
         /// <summary>
         /// Create a connection to a NFS Server
@@ -182,9 +182,10 @@ namespace NFSLibrary
         /// <param name="GroupId">The unix group id</param>
         /// <param name="CommandTimeout">The command timeout in milliseconds</param>
         /// <param name="characterEncoding">Connection encoding</param>
-        public void Connect(IPAddress Address, int UserId, int GroupId, int CommandTimeout, System.Text.Encoding characterEncoding)
+        /// <param name="useSecurePort">Uses a local binding port less than 1024</param>
+        public void Connect(IPAddress Address, int UserId, int GroupId, int CommandTimeout, System.Text.Encoding characterEncoding, bool useSecurePort)
         {
-            this._nfsInterface.Connect(Address, UserId, GroupId, CommandTimeout, characterEncoding);
+            this._nfsInterface.Connect(Address, UserId, GroupId, CommandTimeout, characterEncoding, useSecurePort);
             this._IsConnected = true;
         }
 

@@ -27,10 +27,15 @@ namespace NFSLibrary.Protocols.V2.RPC
          * @throws IOException if an I/O error occurs.
          */
         public NFSv2ProtocolClient(IPAddress host, int protocol)
-            : base(host, NFSv2Protocol.NFS_PROGRAM, 2, 0, protocol)
+            : base(host, NFSv2Protocol.NFS_PROGRAM, 2, 0, protocol, true)
         {
         }
 
+        public NFSv2ProtocolClient(IPAddress host, int protocol, bool useSecurePort)
+            : base(host, NFSv2Protocol.NFS_PROGRAM, 2, 0, protocol, useSecurePort)
+        {
+        }
+       
         /**
          * Constructs a <code>NFSv2ProtocolClient</code> client stub proxy object
          * from which the NFS_PROGRAM remote program can be accessed.
@@ -42,7 +47,7 @@ namespace NFSLibrary.Protocols.V2.RPC
          * @throws IOException if an I/O error occurs.
          */
         public NFSv2ProtocolClient(IPAddress host, int port, int protocol)
-            : base(host, NFSv2Protocol.NFS_PROGRAM, 2, port, protocol)
+            : base(host, NFSv2Protocol.NFS_PROGRAM, 2, port, protocol, true)
         {
         }
 
@@ -71,7 +76,7 @@ namespace NFSLibrary.Protocols.V2.RPC
          * @throws IOException if an I/O error occurs.
          */
         public NFSv2ProtocolClient(IPAddress host, int program, int version, int protocol)
-            : base(host, program, version, 0, protocol)
+            : base(host, program, version, 0, protocol, true)
         {
         }
 
@@ -88,7 +93,12 @@ namespace NFSLibrary.Protocols.V2.RPC
          * @throws IOException if an I/O error occurs.
          */
         public NFSv2ProtocolClient(IPAddress host, int program, int version, int port, int protocol)
-            : base(host, program, version, port, protocol)
+            : base(host, program, version, port, protocol, true)
+        {
+        }
+
+        public NFSv2ProtocolClient(IPAddress host, int program, int version, int port, int protocol, bool useSecurePort)
+            : base(host, program, version, port, protocol, useSecurePort)
         {
         }
 

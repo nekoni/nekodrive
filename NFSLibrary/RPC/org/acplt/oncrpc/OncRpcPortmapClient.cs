@@ -226,7 +226,7 @@ namespace org.acplt.oncrpc
 				case org.acplt.oncrpc.OncRpcProtocols.ONCRPC_UDP:
 				{
 					portmapClient = new org.acplt.oncrpc.OncRpcUdpClient(host, PMAP_PROGRAM, PMAP_VERSION
-						, PMAP_PORT);
+						, PMAP_PORT, false);
 					break;
 				}
 

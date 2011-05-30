@@ -26,7 +26,12 @@ namespace NFSLibrary.Protocols.V3.RPC
          * @throws IOException if an I/O error occurs.
          */
         public NFSv3ProtocolClient(IPAddress host, int protocol)
-            : base(host, NFSv3Protocol.NFS_PROGRAM, 3, 0, protocol)
+            : base(host, NFSv3Protocol.NFS_PROGRAM, 3, 0, protocol, true)
+        {
+        }
+
+        public NFSv3ProtocolClient(IPAddress host, int protocol, bool useSecurePort)
+            : base(host, NFSv3Protocol.NFS_PROGRAM, 3, 0, protocol, useSecurePort)
         {
         }
 
@@ -41,7 +46,7 @@ namespace NFSLibrary.Protocols.V3.RPC
          * @throws IOException if an I/O error occurs.
          */
         public NFSv3ProtocolClient(IPAddress host, int port, int protocol)
-            : base(host, NFSv3Protocol.NFS_PROGRAM, 3, port, protocol)
+            : base(host, NFSv3Protocol.NFS_PROGRAM, 3, port, protocol, true)
         {
         }
 
@@ -70,7 +75,7 @@ namespace NFSLibrary.Protocols.V3.RPC
          * @throws IOException if an I/O error occurs.
          */
         public NFSv3ProtocolClient(IPAddress host, int program, int version, int protocol)
-            : base(host, program, version, 0, protocol)
+            : base(host, program, version, 0, protocol, true)
         {
         }
 
@@ -87,9 +92,27 @@ namespace NFSLibrary.Protocols.V3.RPC
          * @throws IOException if an I/O error occurs.
          */
         public NFSv3ProtocolClient(IPAddress host, int program, int version, int port, int protocol)
-            : base(host, program, version, port, protocol)
+            : base(host, program, version, port, protocol, true)
         {
         }
+
+        /**
+        * Constructs a <code>NFSv3ProtocolClient</code> client stub proxy object
+        * from which the NFS_PROGRAM remote program can be accessed.
+        * @param host Internet address of host where to contact the remote program.
+        * @param program Remote program number.
+        * @param version Remote program version number.
+        * @param port Port number at host where the remote program can be reached.
+        * @param protocol {@link org.acplt.oncrpc.OncRpcProtocols Protocol} to be
+        *   used for ONC/RPC calls.
+        * @throws OncRpcException if an ONC/RPC error occurs.
+        * @throws IOException if an I/O error occurs.
+        */
+        public NFSv3ProtocolClient(IPAddress host, int program, int version, int port, int protocol, bool useSecurePort)
+            : base(host, program, version, port, protocol, useSecurePort)
+        {
+        }
+
 
         /**
          * Call remote procedure NFSPROC3_NULL_3.

@@ -113,6 +113,7 @@ namespace NekoDrive
             rbFolder.Enabled = false;
             btnSelectFolder.Enabled = false;
             chkAutoMount.Enabled = false;
+            chkUsePrivilegedPorts.Enabled = false;
 
             if (!DiskOrFolder)
             {
@@ -186,7 +187,7 @@ namespace NekoDrive
                 Encoding encoding = Encoding.ASCII;
                 if (chkUnicode.Checked)
                     encoding = Encoding.UTF8;
-                mNFS.Connect(ipAddress, UserId, GroupId, (int)nupTimeOut.Value, encoding);
+                mNFS.Connect(ipAddress, UserId, GroupId, (int)nupTimeOut.Value, encoding, chkUsePrivilegedPorts.Checked);
                 cboxRemoteDevices.Items.Clear();
                 foreach (string strDev in mNFS.GetExportedDevices())
                     cboxRemoteDevices.Items.Add(strDev);
@@ -201,6 +202,7 @@ namespace NekoDrive
                 nupTimeOut.Enabled = false;
                 chkUnicode.Enabled = false;
                 chkAutoConnect.Enabled = false;
+                chkUsePrivilegedPorts.Enabled = false;
 
                 if (cboxLocalDrive.Items.Count > NekoDrive.Properties.Settings.Default.DriveLetter)
                     cboxLocalDrive.SelectedIndex = NekoDrive.Properties.Settings.Default.DriveLetter;
@@ -241,6 +243,7 @@ namespace NekoDrive
             nupTimeOut.Enabled = true;
             chkUnicode.Enabled = true;
             chkAutoConnect.Enabled = true;
+            chkUsePrivilegedPorts.Enabled = true;
         }
 
         private List<string> GetDriveLetters()
@@ -277,6 +280,8 @@ namespace NekoDrive
             chkAutoConnect.Checked = NekoDrive.Properties.Settings.Default.AutoConnect;
             btnSelectFolder.Text = NekoDrive.Properties.Settings.Default.Folder;
             bool DiskOrFolder = NekoDrive.Properties.Settings.Default.DiskOrFolder;
+            chkUsePrivilegedPorts.Checked = NekoDrive.Properties.Settings.Default.UsePrivilegedPorts;
+            chkUnicode.Checked = NekoDrive.Properties.Settings.Default.Unicode; 
 
             if (DiskOrFolder)
                 rbDisk.Checked = true;
@@ -381,6 +386,7 @@ namespace NekoDrive
                 NekoDrive.Properties.Settings.Default.Unicode = chkUnicode.Checked;
                 NekoDrive.Properties.Settings.Default.Folder = btnSelectFolder.Text;
                 NekoDrive.Properties.Settings.Default.DiskOrFolder = rbDisk.Checked;
+                NekoDrive.Properties.Settings.Default.UsePrivilegedPorts = chkUsePrivilegedPorts.Checked;
 
                 NekoDrive.Properties.Settings.Default.Save();
             }
