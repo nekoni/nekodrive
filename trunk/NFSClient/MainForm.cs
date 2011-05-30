@@ -254,7 +254,7 @@ namespace NFSClient
                     Encoding encoding = Encoding.ASCII;
                     if (chkUseUnicode.Checked)
                         encoding = Encoding.UTF8;
-                    nfsClient.Connect(ipAddress, 1000, 1000, (int) nupTimeOut.Value * 1000, encoding);
+                    nfsClient.Connect(ipAddress, 1000, 1000, (int) nupTimeOut.Value * 1000, encoding, chkUseSecurePort.Checked);
                     nfsDevs = nfsClient.GetExportedDevices();
                     cboxRemoteDevices.Items.Clear();
                     foreach (string nfsdev in nfsDevs)
@@ -611,6 +611,8 @@ namespace NFSClient
             ipAddressControl1.Text = NFSClient.Properties.Settings.Default.ServerAddress;
             nupTimeOut.Value = (Decimal) NFSClient.Properties.Settings.Default.Timeout;
             cboxVer.SelectedIndex = NFSClient.Properties.Settings.Default.DefaultProtocol;
+            chkUseUnicode.Checked = NFSClient.Properties.Settings.Default.UseUnicode;
+            chkUseSecurePort.Checked = NFSClient.Properties.Settings.Default.UseSecurePort;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -619,6 +621,8 @@ namespace NFSClient
             NFSClient.Properties.Settings.Default.ServerAddress = ipAddressControl1.Text;
             NFSClient.Properties.Settings.Default.Timeout = (int)nupTimeOut.Value;
             NFSClient.Properties.Settings.Default.DefaultProtocol = cboxVer.SelectedIndex;
+            NFSClient.Properties.Settings.Default.UseUnicode = chkUseUnicode.Checked;
+            NFSClient.Properties.Settings.Default.UseSecurePort = chkUseSecurePort.Checked;
             NFSClient.Properties.Settings.Default.Save();
         }
 

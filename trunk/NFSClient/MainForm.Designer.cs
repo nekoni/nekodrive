@@ -61,9 +61,11 @@ namespace NFSClient
             this.showPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnNewFolder = new System.Windows.Forms.Button();
+            this.chkUseSecurePort = new System.Windows.Forms.CheckBox();
             this.gbTargetConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).BeginInit();
             this.pnlMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -75,9 +77,10 @@ namespace NFSClient
             // lblRemoteDevices
             // 
             this.lblRemoteDevices.AutoSize = true;
+            this.lblRemoteDevices.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblRemoteDevices.Location = new System.Drawing.Point(3, 13);
             this.lblRemoteDevices.Name = "lblRemoteDevices";
-            this.lblRemoteDevices.Size = new System.Drawing.Size(86, 13);
+            this.lblRemoteDevices.Size = new System.Drawing.Size(100, 13);
             this.lblRemoteDevices.TabIndex = 0;
             this.lblRemoteDevices.Text = "Remote Devices";
             // 
@@ -85,7 +88,7 @@ namespace NFSClient
             // 
             this.cboxRemoteDevices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboxRemoteDevices.FormattingEnabled = true;
-            this.cboxRemoteDevices.Location = new System.Drawing.Point(95, 9);
+            this.cboxRemoteDevices.Location = new System.Drawing.Point(105, 9);
             this.cboxRemoteDevices.Name = "cboxRemoteDevices";
             this.cboxRemoteDevices.Size = new System.Drawing.Size(121, 21);
             this.cboxRemoteDevices.TabIndex = 1;
@@ -105,6 +108,7 @@ namespace NFSClient
             // 
             this.gbTargetConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbTargetConnection.Controls.Add(this.chkUseSecurePort);
             this.gbTargetConnection.Controls.Add(this.chkUseUnicode);
             this.gbTargetConnection.Controls.Add(this.lblTimeOut);
             this.gbTargetConnection.Controls.Add(this.nupTimeOut);
@@ -116,7 +120,7 @@ namespace NFSClient
             this.gbTargetConnection.Controls.Add(this.btnConnect);
             this.gbTargetConnection.Location = new System.Drawing.Point(13, 13);
             this.gbTargetConnection.Name = "gbTargetConnection";
-            this.gbTargetConnection.Size = new System.Drawing.Size(713, 54);
+            this.gbTargetConnection.Size = new System.Drawing.Size(835, 54);
             this.gbTargetConnection.TabIndex = 4;
             this.gbTargetConnection.TabStop = false;
             this.gbTargetConnection.Text = "Target Connection";
@@ -165,7 +169,7 @@ namespace NFSClient
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(456, 22);
+            this.btnCancel.Location = new System.Drawing.Point(578, 22);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(50, 26);
             this.btnCancel.TabIndex = 7;
@@ -177,7 +181,7 @@ namespace NFSClient
             // 
             this.lblCurrentFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCurrentFile.AutoSize = true;
-            this.lblCurrentFile.Location = new System.Drawing.Point(512, 13);
+            this.lblCurrentFile.Location = new System.Drawing.Point(634, 13);
             this.lblCurrentFile.Name = "lblCurrentFile";
             this.lblCurrentFile.Size = new System.Drawing.Size(0, 13);
             this.lblCurrentFile.TabIndex = 6;
@@ -185,7 +189,7 @@ namespace NFSClient
             // pb
             // 
             this.pb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pb.Location = new System.Drawing.Point(512, 32);
+            this.pb.Location = new System.Drawing.Point(634, 32);
             this.pb.Name = "pb";
             this.pb.Size = new System.Drawing.Size(195, 16);
             this.pb.TabIndex = 5;
@@ -222,7 +226,7 @@ namespace NFSClient
             this.pnlMain.Enabled = false;
             this.pnlMain.Location = new System.Drawing.Point(13, 74);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(718, 551);
+            this.pnlMain.Size = new System.Drawing.Size(835, 551);
             this.pnlMain.TabIndex = 5;
             // 
             // splitContainer1
@@ -242,8 +246,8 @@ namespace NFSClient
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listViewRemote);
             this.splitContainer1.Panel2.Controls.Add(this.panel2);
-            this.splitContainer1.Size = new System.Drawing.Size(689, 532);
-            this.splitContainer1.SplitterDistance = 329;
+            this.splitContainer1.Size = new System.Drawing.Size(806, 532);
+            this.splitContainer1.SplitterDistance = 384;
             this.splitContainer1.TabIndex = 6;
             // 
             // listViewLocal
@@ -261,7 +265,7 @@ namespace NFSClient
             this.listViewLocal.Location = new System.Drawing.Point(0, 41);
             this.listViewLocal.Name = "listViewLocal";
             this.listViewLocal.ShowGroups = false;
-            this.listViewLocal.Size = new System.Drawing.Size(329, 491);
+            this.listViewLocal.Size = new System.Drawing.Size(384, 491);
             this.listViewLocal.SmallImageList = this.imageList1;
             this.listViewLocal.TabIndex = 1;
             this.listViewLocal.UseCompatibleStateImageBehavior = false;
@@ -302,13 +306,13 @@ namespace NFSClient
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(329, 41);
+            this.panel1.Size = new System.Drawing.Size(384, 41);
             this.panel1.TabIndex = 0;
             // 
             // btnBrowse
             // 
             this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowse.Location = new System.Drawing.Point(260, 8);
+            this.btnBrowse.Location = new System.Drawing.Point(315, 8);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(56, 23);
             this.btnBrowse.TabIndex = 2;
@@ -323,7 +327,7 @@ namespace NFSClient
             this.tbLocalPath.Enabled = false;
             this.tbLocalPath.Location = new System.Drawing.Point(81, 10);
             this.tbLocalPath.Name = "tbLocalPath";
-            this.tbLocalPath.Size = new System.Drawing.Size(173, 20);
+            this.tbLocalPath.Size = new System.Drawing.Size(228, 20);
             this.tbLocalPath.TabIndex = 1;
             // 
             // label1
@@ -351,7 +355,7 @@ namespace NFSClient
             this.listViewRemote.LabelEdit = true;
             this.listViewRemote.Location = new System.Drawing.Point(0, 41);
             this.listViewRemote.Name = "listViewRemote";
-            this.listViewRemote.Size = new System.Drawing.Size(356, 491);
+            this.listViewRemote.Size = new System.Drawing.Size(418, 491);
             this.listViewRemote.SmallImageList = this.imageList1;
             this.listViewRemote.TabIndex = 2;
             this.listViewRemote.UseCompatibleStateImageBehavior = false;
@@ -383,7 +387,7 @@ namespace NFSClient
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showPermissionsToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 26);
             // 
             // showPermissionsToolStripMenuItem
             // 
@@ -400,12 +404,12 @@ namespace NFSClient
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(356, 41);
+            this.panel2.Size = new System.Drawing.Size(418, 41);
             this.panel2.TabIndex = 0;
             // 
             // btnNewFolder
             // 
-            this.btnNewFolder.Location = new System.Drawing.Point(222, 9);
+            this.btnNewFolder.Location = new System.Drawing.Point(232, 9);
             this.btnNewFolder.Name = "btnNewFolder";
             this.btnNewFolder.Size = new System.Drawing.Size(71, 23);
             this.btnNewFolder.TabIndex = 2;
@@ -413,15 +417,27 @@ namespace NFSClient
             this.btnNewFolder.UseVisualStyleBackColor = true;
             this.btnNewFolder.Click += new System.EventHandler(this.btnNewFolder_Click);
             // 
+            // chkUseSecurePort
+            // 
+            this.chkUseSecurePort.AutoSize = true;
+            this.chkUseSecurePort.Checked = true;
+            this.chkUseSecurePort.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkUseSecurePort.Location = new System.Drawing.Point(458, 21);
+            this.chkUseSecurePort.Name = "chkUseSecurePort";
+            this.chkUseSecurePort.Size = new System.Drawing.Size(121, 17);
+            this.chkUseSecurePort.TabIndex = 10;
+            this.chkUseSecurePort.Text = "Use Privileged Ports";
+            this.chkUseSecurePort.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(751, 648);
+            this.ClientSize = new System.Drawing.Size(868, 648);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.gbTargetConnection);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(759, 631);
+            this.MinimumSize = new System.Drawing.Size(884, 686);
             this.Name = "MainForm";
             this.Text = "Windows NFS Client - NekoDrive Test Component - mirko.gatto@gmail.com";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -433,6 +449,7 @@ namespace NFSClient
             this.pnlMain.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -476,6 +493,7 @@ namespace NFSClient
         private System.Windows.Forms.CheckBox chkUseUnicode;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem showPermissionsToolStripMenuItem;
+        private System.Windows.Forms.CheckBox chkUseSecurePort;
     }
 }
 

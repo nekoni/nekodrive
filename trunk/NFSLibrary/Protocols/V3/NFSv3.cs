@@ -29,22 +29,9 @@ namespace NFSLibrary.Protocols.V3
 
         #endregion
 
-        #region Constants
-
-        /*const int MODE_FMT = 0170000;
-        const int MODE_DIR = 0040000;
-        const int MODE_CHR = 0020000;
-        const int MODE_BLK = 0060000;
-        const int MODE_REG = 0100000;
-        const int MODE_LNK = 0120000;
-        const int MODE_SOCK = 0140000;
-        const int MODE_FIFO = 0010000;*/
-
-        #endregion
-
         #region Constructur
 
-        public void Connect(IPAddress Address, int UserID, int GroupID, int ClientTimeout, System.Text.Encoding characterEncoding)
+        public void Connect(IPAddress Address, int UserID, int GroupID, int ClientTimeout, System.Text.Encoding characterEncoding, bool useSecurePort)
         {
             if (ClientTimeout == 0)
             { ClientTimeout = 60000; }
@@ -61,8 +48,8 @@ namespace NFSLibrary.Protocols.V3
             _GroupID = GroupID;
             _UserID = UserID;
 
-            _MountProtocolV3 = new NFSv3MountProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP);
-            _ProtocolV3 = new NFSv3ProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP);
+            _MountProtocolV3 = new NFSv3MountProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP, useSecurePort);
+            _ProtocolV3 = new NFSv3ProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP, useSecurePort);
 
             OncRpcClientAuthUnix authUnix = new OncRpcClientAuthUnix(Address.ToString(), UserID, GroupID);
 

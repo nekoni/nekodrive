@@ -70,14 +70,15 @@ namespace org.acplt.oncrpc
 		/// ONC/RPC calls. This information is necessary, so port lookups through
 		/// the portmapper can be done.
 		/// </param>
+        /// <param name="useSecurePort">The local binding port will be less than 1024.</param>
 		/// <exception cref="OncRpcException">if an ONC/RPC error occurs.</exception>
 		/// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
 		/// <exception cref="org.acplt.oncrpc.OncRpcException"></exception>
 		public OncRpcClientStub(IPAddress host, int program, int version, int 
-			port, int protocol)
+			port, int protocol, bool useSecurePort)
 		{
 			client = org.acplt.oncrpc.OncRpcClient.newOncRpcClient(host, program, version, port
-				, protocol);
+				, protocol, useSecurePort);
 		}
 
 		/// <summary>

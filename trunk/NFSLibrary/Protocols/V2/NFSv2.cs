@@ -44,7 +44,7 @@ namespace NFSLibrary.Protocols.V2
 
         #region Methods
 
-        public void Connect(IPAddress Address, int UserID, int GroupID, int ClientTimeout, System.Text.Encoding characterEncoding)
+        public void Connect(IPAddress Address, int UserID, int GroupID, int ClientTimeout, System.Text.Encoding characterEncoding, bool useSecurePort)
         {
             if (ClientTimeout == 0)
             { ClientTimeout = 60000; }
@@ -61,10 +61,10 @@ namespace NFSLibrary.Protocols.V2
             _GroupID = GroupID;
             _UserID = UserID;
 
-            _MountProtocolV2 = new NFSv2MountProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP);
-            _ProtocolV2 = new NFSv2ProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP);
+            _MountProtocolV2 = new NFSv2MountProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP, useSecurePort);
+            _ProtocolV2 = new NFSv2ProtocolClient(Address, OncRpcProtocols.ONCRPC_UDP, useSecurePort);
 
-            OncRpcClientAuthUnix authUnix = new OncRpcClientAuthUnix(Address.ToString(), UserID, GroupID);
+            OncRpcClientAuthUnix authUnix = new OncRpcClientAuthUnix(System.Environment.MachineName, UserID, GroupID);
 
             _MountProtocolV2.GetClient().setAuth(authUnix);
             _MountProtocolV2.GetClient().setTimeout(ClientTimeout);
@@ -113,7 +113,9 @@ namespace NFSLibrary.Protocols.V2
         public void MountDevice(String DeviceName)
         {
             if (_ProtocolV2 == null)
-            { throw new NFSConnectionException("NFS Client not connected!"); }
+            { 
+                throw new NFSConnectionException("NFS Client not connected!"); 
+            }
 
             MountStatus mnt =
                 _MountProtocolV2.MOUNTPROC_MNT(new Name(DeviceName));
@@ -124,7 +126,9 @@ namespace NFSLibrary.Protocols.V2
                 _RootDirectoryHandleObject = mnt.Handle;
             }
             else
-            { MountExceptionHelpers.ThrowException(mnt.Status); }
+            { 
+                MountExceptionHelpers.ThrowException(mnt.Status); 
+            }
         }
 
         public void UnMountDevice()
@@ -144,10 +148,14 @@ namespace NFSLibrary.Protocols.V2
         public List<String> GetItemList(String DirectoryFullName)
         {
             if (_ProtocolV2 == null)
-            { throw new NFSConnectionException("NFS Client not connected!"); }
+            { 
+                throw new NFSConnectionException("NFS Client not connected!"); 
+            }
 
             if (_MountProtocolV2 == null)
-            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+            { 
+                throw new NFSMountConnectionException("NFS Device not connected!"); 
+            }
 
             List<string> ItemsList = new List<string>();
 
@@ -184,15 +192,18 @@ namespace NFSLibrary.Protocols.V2
                     else
                     {
                         if (pReadDirRes == null)
-                        { throw new NFSGeneralException("NFSPROC_READDIR: failure"); }
+                        { 
+                            throw new NFSGeneralException("NFSPROC_READDIR: failure"); 
+                        }
 
                         ExceptionHelpers.ThrowException(pReadDirRes.Status);
                     }
                 } while (pReadDirRes != null && !pReadDirRes.OK.EOF);
             }
             else
-            { ExceptionHelpers.ThrowException(NFSStats.NFSERR_NOENT); }
-
+            { 
+                ExceptionHelpers.ThrowException(NFSStats.NFSERR_NOENT); 
+            }
 
             return ItemsList;
         }
@@ -200,10 +211,14 @@ namespace NFSLibrary.Protocols.V2
         public NFSAttributes GetItemAttributes(String ItemFullName, bool ThrowExceptionIfNotFound = true)
         {
             if (_ProtocolV2 == null)
-            { throw new NFSConnectionException("NFS Client not connected!"); }
+            { 
+                throw new NFSConnectionException("NFS Client not connected!"); 
+            }
 
             if (_MountProtocolV2 == null)
-            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+            { 
+                throw new NFSMountConnectionException("NFS Device not connected!"); 
+            }
 
             NFSAttributes attributes = null;
 
@@ -242,7 +257,10 @@ namespace NFSLibrary.Protocols.V2
                 else
                 {
                     if (pDirOpRes == null || pDirOpRes.Status == NFSStats.NFSERR_NOENT)
-                    { attributes = null; break; }
+                    { 
+                        attributes = null; 
+                        break; 
+                    }
 
                     if(ThrowExceptionIfNotFound)
                         ExceptionHelpers.ThrowException(pDirOpRes.Status);
@@ -255,13 +273,19 @@ namespace NFSLibrary.Protocols.V2
         public void CreateDirectory(String DirectoryFullName, NFSPermission Mode)
         {
             if (_ProtocolV2 == null)
-            { throw new NFSConnectionException("NFS Client not connected!"); }
+            { 
+                throw new NFSConnectionException("NFS Client not connected!"); 
+            }
 
             if (_MountProtocolV2 == null)
-            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+            { 
+                throw new NFSMountConnectionException("NFS Device not connected!"); 
+            }
 
             if (Mode == null)
-            { Mode = new NFSPermission(7, 7, 7); }
+            { 
+                Mode = new NFSPermission(7, 7, 7); 
+            }
 
             string ParentDirectory = System.IO.Path.GetDirectoryName(DirectoryFullName);
             string DirectoryName = System.IO.Path.GetFileName(DirectoryFullName);
@@ -286,7 +310,9 @@ namespace NFSLibrary.Protocols.V2
                 pDirOpRes.Status != NFSStats.NFS_OK)
             {
                 if (pDirOpRes == null)
-                { throw new NFSGeneralException("NFSPROC_MKDIR: failure"); }
+                { 
+                    throw new NFSGeneralException("NFSPROC_MKDIR: failure"); 
+                }
 
                 ExceptionHelpers.ThrowException(pDirOpRes.Status);
             }
@@ -295,10 +321,14 @@ namespace NFSLibrary.Protocols.V2
         public void DeleteDirectory(string DirectoryFullName)
         {
             if (_ProtocolV2 == null)
-            { throw new NFSConnectionException("NFS Client not connected!"); }
+            { 
+                throw new NFSConnectionException("NFS Client not connected!"); 
+            }
 
             if (_MountProtocolV2 == null)
-            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+            { 
+                throw new NFSMountConnectionException("NFS Device not connected!"); 
+            }
 
             string ParentDirectory = System.IO.Path.GetDirectoryName(DirectoryFullName);
             string DirectoryName = System.IO.Path.GetFileName(DirectoryFullName);
@@ -312,16 +342,22 @@ namespace NFSLibrary.Protocols.V2
             NFSStats Status = (NFSStats)_ProtocolV2.NFSPROC_RMDIR(dpArgDelete);
 
             if (Status != NFSStats.NFS_OK)
-            { ExceptionHelpers.ThrowException(Status); }
+            { 
+                ExceptionHelpers.ThrowException(Status); 
+            }
         }
 
         public void DeleteFile(string FileFullName)
         {
             if (_ProtocolV2 == null)
-            { throw new NFSConnectionException("NFS Client not connected!"); }
+            { 
+                throw new NFSConnectionException("NFS Client not connected!"); 
+            }
 
             if (_MountProtocolV2 == null)
-            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+            { 
+                throw new NFSMountConnectionException("NFS Device not connected!"); 
+            }
 
             string ParentDirectory = System.IO.Path.GetDirectoryName(FileFullName);
             string FileName = System.IO.Path.GetFileName(FileFullName);
@@ -335,19 +371,27 @@ namespace NFSLibrary.Protocols.V2
             NFSStats Status = (NFSStats)_ProtocolV2.NFSPROC_REMOVE(dpArgDelete);
 
             if (Status != NFSStats.NFS_OK)
-            { ExceptionHelpers.ThrowException(Status); }
+            { 
+                ExceptionHelpers.ThrowException(Status); 
+            }
         }
 
         public void CreateFile(string FileFullName, NFSPermission Mode)
         {
             if (_ProtocolV2 == null)
-            { throw new NFSConnectionException("NFS Client not connected!"); }
+            { 
+                throw new NFSConnectionException("NFS Client not connected!"); 
+            }
 
             if (_MountProtocolV2 == null)
-            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+            { 
+                throw new NFSMountConnectionException("NFS Device not connected!"); 
+            }
 
             if (Mode == null)
-            { Mode = new NFSPermission(7, 7, 7); }
+            { 
+                Mode = new NFSPermission(7, 7, 7); 
+            }
 
             string ParentDirectory = System.IO.Path.GetDirectoryName(FileFullName);
             string FileName = System.IO.Path.GetFileName(FileFullName);
@@ -373,7 +417,9 @@ namespace NFSLibrary.Protocols.V2
                 pDirOpRes.Status != NFSStats.NFS_OK)
             {
                 if (pDirOpRes == null)
-                { throw new NFSGeneralException("NFSPROC_CREATE: failure"); }
+                { 
+                    throw new NFSGeneralException("NFSPROC_CREATE: failure");
+                }
 
                 ExceptionHelpers.ThrowException(pDirOpRes.Status);
             }
@@ -382,10 +428,14 @@ namespace NFSLibrary.Protocols.V2
         public int Read(String FileFullName, long Offset, int Count, ref Byte[] Buffer)
         {
             if (_ProtocolV2 == null)
-            { throw new NFSConnectionException("NFS Client not connected!"); }
+            { 
+                throw new NFSConnectionException("NFS Client not connected!"); 
+            }
 
             if (_MountProtocolV2 == null)
-            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+            { 
+                throw new NFSMountConnectionException("NFS Device not connected!"); 
+            }
 
             int rCount = 0;
 
@@ -414,7 +464,9 @@ namespace NFSLibrary.Protocols.V2
                 Array.Copy(pReadRes.OK.Data, Buffer, rCount);
             }
             else
-            { throw new NFSGeneralException("NFSPROC_READ: failure"); }
+            { 
+                throw new NFSGeneralException("NFSPROC_READ: failure"); 
+            }
 
             return rCount;
         }
@@ -422,10 +474,14 @@ namespace NFSLibrary.Protocols.V2
         public void SetFileSize(string FileFullName, long Size)
         {
             if (_ProtocolV2 == null)
-            { throw new NFSConnectionException("NFS Client not connected!"); }
+            { 
+                throw new NFSConnectionException("NFS Client not connected!"); 
+            }
 
             if (_MountProtocolV2 == null)
-            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+            { 
+                throw new NFSMountConnectionException("NFS Device not connected!"); 
+            }
 
             NFSAttributes Attributes = GetItemAttributes(FileFullName);
 
@@ -449,7 +505,9 @@ namespace NFSLibrary.Protocols.V2
             if (pAttrStat == null || pAttrStat.Status != NFSStats.NFS_OK)
             {
                 if (pAttrStat == null)
-                { throw new NFSGeneralException("NFSPROC_SETATTR: failure"); }
+                { 
+                    throw new NFSGeneralException("NFSPROC_SETATTR: failure"); 
+                }
 
                 ExceptionHelpers.ThrowException(pAttrStat.Status);
             }
@@ -458,10 +516,14 @@ namespace NFSLibrary.Protocols.V2
         public int Write(String FileFullName, long Offset, int Count, Byte[] Buffer)
         {
             if (_ProtocolV2 == null)
-            { throw new NFSConnectionException("NFS Client not connected!"); }
+            { 
+                throw new NFSConnectionException("NFS Client not connected!"); 
+            }
 
             if (_MountProtocolV2 == null)
-            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+            {
+                throw new NFSMountConnectionException("NFS Device not connected!"); 
+            }
 
             int rCount = 0;
 
@@ -473,7 +535,9 @@ namespace NFSLibrary.Protocols.V2
             }
 
             if (Count < Buffer.Length)
-            { Array.Resize<byte>(ref Buffer, Count); }
+            { 
+                Array.Resize<byte>(ref Buffer, Count); 
+            }
 
             WriteArguments dpArgWrite = new WriteArguments();
             dpArgWrite.File = _CurrentItemHandleObject;
@@ -486,12 +550,16 @@ namespace NFSLibrary.Protocols.V2
             if (pAttrStat != null)
             {
                 if (pAttrStat.Status != NFSStats.NFS_OK)
-                { ExceptionHelpers.ThrowException(pAttrStat.Status); }
+                { 
+                    ExceptionHelpers.ThrowException(pAttrStat.Status); 
+                }
 
                 rCount = Count;
             }
             else
-            { throw new NFSGeneralException("NFSPROC_WRITE: failure"); }
+            { 
+                throw new NFSGeneralException("NFSPROC_WRITE: failure"); 
+            }
 
             return rCount;
         }
@@ -499,10 +567,14 @@ namespace NFSLibrary.Protocols.V2
         public void Move(string OldDirectoryFullName, string OldFileName, string NewDirectoryFullName, string NewFileName)
         {
             if (_ProtocolV2 == null)
-            { throw new NFSConnectionException("NFS Client not connected!"); }
+            { 
+                throw new NFSConnectionException("NFS Client not connected!"); 
+            }
 
             if (_MountProtocolV2 == null)
-            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+            { 
+                throw new NFSMountConnectionException("NFS Device not connected!"); 
+            }
 
             NFSAttributes OldDirectory = GetItemAttributes(OldDirectoryFullName);
             NFSAttributes NewDirectory = GetItemAttributes(NewDirectoryFullName);
@@ -519,16 +591,22 @@ namespace NFSLibrary.Protocols.V2
                 (NFSStats)_ProtocolV2.NFSPROC_RENAME(dpArgRename);
 
             if (Status != NFSStats.NFS_OK)
-            { ExceptionHelpers.ThrowException(Status); }
+            { 
+                ExceptionHelpers.ThrowException(Status); 
+            }
         }
 
         public bool IsDirectory(string DirectoryFullName)
         {
             if (_ProtocolV2 == null)
-            { throw new NFSConnectionException("NFS Client not connected!"); }
+            { 
+                throw new NFSConnectionException("NFS Client not connected!"); 
+            }
 
             if (_MountProtocolV2 == null)
-            { throw new NFSMountConnectionException("NFS Device not connected!"); }
+            { 
+                throw new NFSMountConnectionException("NFS Device not connected!"); 
+            }
 
             NFSAttributes Attributes = GetItemAttributes(DirectoryFullName);
 

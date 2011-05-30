@@ -7,7 +7,7 @@ namespace NFSLibrary.Protocols.Commons
 {
     public interface INFS
     {
-        void Connect(IPAddress Address, int UserID, int GroupID, int ClientTimeout, System.Text.Encoding characterEncoding);
+        void Connect(IPAddress Address, int UserID, int GroupID, int ClientTimeout, System.Text.Encoding characterEncoding, bool useSecurePort);
 
         void Disconnect();
 

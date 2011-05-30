@@ -37,6 +37,7 @@
             this.tbUserId = new System.Windows.Forms.TextBox();
             this.lblGroupId = new System.Windows.Forms.Label();
             this.lblUserId = new System.Windows.Forms.Label();
+            this.ipAddressControl1 = new NekoDrive.Controls.IPAddressControl();
             this.lblTimeOut = new System.Windows.Forms.Label();
             this.nupTimeOut = new System.Windows.Forms.NumericUpDown();
             this.lblCurrentFile = new System.Windows.Forms.Label();
@@ -57,7 +58,7 @@
             this.btnMount = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.ipAddressControl1 = new NekoDrive.Controls.IPAddressControl();
+            this.chkUsePrivilegedPorts = new System.Windows.Forms.CheckBox();
             this.gbTargetConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).BeginInit();
             this.gboxMount.SuspendLayout();
@@ -67,6 +68,7 @@
             // 
             this.gbTargetConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbTargetConnection.Controls.Add(this.chkUsePrivilegedPorts);
             this.gbTargetConnection.Controls.Add(this.chkUnicode);
             this.gbTargetConnection.Controls.Add(this.chkAutoConnect);
             this.gbTargetConnection.Controls.Add(this.tbGroupId);
@@ -82,7 +84,7 @@
             this.gbTargetConnection.Controls.Add(this.btnConnect);
             this.gbTargetConnection.Location = new System.Drawing.Point(12, 12);
             this.gbTargetConnection.Name = "gbTargetConnection";
-            this.gbTargetConnection.Size = new System.Drawing.Size(403, 81);
+            this.gbTargetConnection.Size = new System.Drawing.Size(405, 97);
             this.gbTargetConnection.TabIndex = 5;
             this.gbTargetConnection.TabStop = false;
             this.gbTargetConnection.Text = "Target Connection";
@@ -145,6 +147,17 @@
             this.lblUserId.TabIndex = 11;
             this.lblUserId.Text = "UserId";
             // 
+            // ipAddressControl1
+            // 
+            this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
+            this.ipAddressControl1.Location = new System.Drawing.Point(10, 21);
+            this.ipAddressControl1.MinimumSize = new System.Drawing.Size(112, 20);
+            this.ipAddressControl1.Name = "ipAddressControl1";
+            this.ipAddressControl1.ReadOnly = false;
+            this.ipAddressControl1.Size = new System.Drawing.Size(112, 20);
+            this.ipAddressControl1.TabIndex = 10;
+            this.toolTip.SetToolTip(this.ipAddressControl1, "Specify the ip of the NFS Server");
+            // 
             // lblTimeOut
             // 
             this.lblTimeOut.AutoSize = true;
@@ -176,7 +189,7 @@
             // 
             this.lblCurrentFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCurrentFile.AutoSize = true;
-            this.lblCurrentFile.Location = new System.Drawing.Point(202, 13);
+            this.lblCurrentFile.Location = new System.Drawing.Point(204, 13);
             this.lblCurrentFile.Name = "lblCurrentFile";
             this.lblCurrentFile.Size = new System.Drawing.Size(0, 13);
             this.lblCurrentFile.TabIndex = 6;
@@ -231,9 +244,9 @@
             this.gboxMount.Controls.Add(this.cboxRemoteDevices);
             this.gboxMount.Controls.Add(this.btnUnmount);
             this.gboxMount.Controls.Add(this.btnMount);
-            this.gboxMount.Location = new System.Drawing.Point(12, 99);
+            this.gboxMount.Location = new System.Drawing.Point(12, 115);
             this.gboxMount.Name = "gboxMount";
-            this.gboxMount.Size = new System.Drawing.Size(403, 114);
+            this.gboxMount.Size = new System.Drawing.Size(405, 114);
             this.gboxMount.TabIndex = 6;
             this.gboxMount.TabStop = false;
             this.gboxMount.Text = "Mount";
@@ -360,22 +373,21 @@
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
-            // ipAddressControl1
+            // chkUsePrivilegedPorts
             // 
-            this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
-            this.ipAddressControl1.Location = new System.Drawing.Point(10, 21);
-            this.ipAddressControl1.MinimumSize = new System.Drawing.Size(112, 20);
-            this.ipAddressControl1.Name = "ipAddressControl1";
-            this.ipAddressControl1.ReadOnly = false;
-            this.ipAddressControl1.Size = new System.Drawing.Size(112, 20);
-            this.ipAddressControl1.TabIndex = 10;
-            this.toolTip.SetToolTip(this.ipAddressControl1, "Specify the ip of the NFS Server");
+            this.chkUsePrivilegedPorts.AutoSize = true;
+            this.chkUsePrivilegedPorts.Location = new System.Drawing.Point(10, 74);
+            this.chkUsePrivilegedPorts.Name = "chkUsePrivilegedPorts";
+            this.chkUsePrivilegedPorts.Size = new System.Drawing.Size(121, 17);
+            this.chkUsePrivilegedPorts.TabIndex = 13;
+            this.chkUsePrivilegedPorts.Text = "Use Privileged Ports";
+            this.chkUsePrivilegedPorts.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(427, 223);
+            this.ClientSize = new System.Drawing.Size(429, 241);
             this.Controls.Add(this.gboxMount);
             this.Controls.Add(this.gbTargetConnection);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -425,6 +437,7 @@
         private System.Windows.Forms.Button btnSelectFolder;
         private System.Windows.Forms.RadioButton rbFolder;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.CheckBox chkUsePrivilegedPorts;
 
     }
 }

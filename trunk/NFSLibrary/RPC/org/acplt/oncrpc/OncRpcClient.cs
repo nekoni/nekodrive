@@ -333,13 +333,14 @@ namespace org.acplt.oncrpc
 		/// to be used for
 		/// ONC/RPC calls.
 		/// </param>
+        /// <param name="useSecurePort">The local binding port will be less than 1024.</param>
 		/// <exception cref="OncRpcException">if an ONC/RPC error occurs.</exception>
 		/// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
 		/// <exception cref="org.acplt.oncrpc.OncRpcException"></exception>
 		public static OncRpcClient newOncRpcClient(IPAddress 
-			host, int program, int version, int protocol)
+			host, int program, int version, int protocol, bool useSecurePort)
 		{
-			return newOncRpcClient(host, program, version, 0, protocol);
+			return newOncRpcClient(host, program, version, 0, protocol, useSecurePort);
 		}
 
 		/// <summary>
@@ -368,7 +369,7 @@ namespace org.acplt.oncrpc
 		/// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
 		/// <exception cref="org.acplt.oncrpc.OncRpcException"></exception>
 		public static OncRpcClient newOncRpcClient(IPAddress 
-			host, int program, int version, int port, int protocol)
+			host, int program, int version, int port, int protocol, bool useSecurePort)
 		{
 			switch (protocol)
 			{
@@ -379,7 +380,7 @@ namespace org.acplt.oncrpc
 					// how to create the network connection and how to send and receive
 					// data to and from it.
 					//
-					return new OncRpcUdpClient(host, program, version, port);
+					return new OncRpcUdpClient(host, program, version, port, useSecurePort);
 				}
 
 				case OncRpcProtocols.ONCRPC_TCP:
