@@ -148,7 +148,12 @@ namespace NFSClient
         void RefreshRemote()
         {
             listViewRemote.Items.Clear();
-            foreach (string Item in nfsClient.GetItemList(RemoteFolder))
+            List<string> Items = nfsClient.GetItemList(RemoteFolder);
+            Items.Remove(".");
+            Items.Remove("..");
+            Items.Insert(0, "..");
+            List<ListViewItem> ItemsList = new List<ListViewItem>();
+            foreach (string Item in Items)
             {
                 NFSLibrary.Protocols.Commons.NFSAttributes nfsAttribute = nfsClient.GetItemAttributes(nfsClient.Combine(Item, RemoteFolder));
                 if (nfsAttribute != null)
@@ -157,23 +162,47 @@ namespace NFSClient
                     {
                         ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.Size.ToString(), nfsAttribute.CreateDateTime.ToString() });
                         lvi.ImageIndex = 1;
-                        listViewRemote.Items.Add(lvi);
+                        ItemsList.Add(lvi);
                     }
                     else
                         if (nfsAttribute.NFSType == NFSLibrary.Protocols.Commons.NFSItemTypes.NFREG)
                         {
-                            ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.Size.ToString(), nfsAttribute.CreateDateTime.ToString() });
+                            ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.Size.ToString(), nfsAttribute.CreateDateTime.ToString(), nfsAttribute.ModifiedDateTime.ToString(), nfsAttribute.LastAccessedDateTime.ToString() });
                             lvi.ImageIndex = 0;
-                            listViewRemote.Items.Add(lvi);
+                            ItemsList.Add(lvi);
                         }
                 }
                 else
                 {
                     ListViewItem lvi = new ListViewItem(new string[] { Item, "", "" });
                     lvi.ImageIndex = 0;
-                    listViewRemote.Items.Add(lvi);
+                    ItemsList.Add(lvi);
                 }
             }
+
+            List<ListViewItem> OrderedList = new List<ListViewItem>();
+            foreach (ListViewItem lvi in ItemsList)
+            {
+                if (lvi.Text == "..")
+                {
+                    OrderedList.Add(lvi);
+                    break;
+                }
+            }
+
+            foreach (ListViewItem lvi in ItemsList)
+            {
+                if(lvi.ImageIndex == 1 && lvi.Text != "..")
+                    OrderedList.Add(lvi);
+            }
+
+            foreach (ListViewItem lvi in ItemsList)
+            {
+                if (lvi.ImageIndex == 0)
+                    OrderedList.Add(lvi);
+            }
+
+            listViewRemote.Items.AddRange(OrderedList.ToArray());
         }
 
         void MountDevice(int i)
@@ -451,6 +480,9 @@ namespace NFSClient
                         RefreshRemote();
                     }
                 }
+                else if (e.KeyCode == Keys.F5)
+                    RefreshRemote();
+
             }
             catch (Exception ex)
             {

@@ -34,6 +34,7 @@ namespace NFSClient
             this.cboxRemoteDevices = new System.Windows.Forms.ComboBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.gbTargetConnection = new System.Windows.Forms.GroupBox();
+            this.chkUseSecurePort = new System.Windows.Forms.CheckBox();
             this.chkUseUnicode = new System.Windows.Forms.CheckBox();
             this.lblTimeOut = new System.Windows.Forms.Label();
             this.nupTimeOut = new System.Windows.Forms.NumericUpDown();
@@ -61,7 +62,8 @@ namespace NFSClient
             this.showPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnNewFolder = new System.Windows.Forms.Button();
-            this.chkUseSecurePort = new System.Windows.Forms.CheckBox();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.gbTargetConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).BeginInit();
             this.pnlMain.SuspendLayout();
@@ -124,6 +126,18 @@ namespace NFSClient
             this.gbTargetConnection.TabIndex = 4;
             this.gbTargetConnection.TabStop = false;
             this.gbTargetConnection.Text = "Target Connection";
+            // 
+            // chkUseSecurePort
+            // 
+            this.chkUseSecurePort.AutoSize = true;
+            this.chkUseSecurePort.Checked = true;
+            this.chkUseSecurePort.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkUseSecurePort.Location = new System.Drawing.Point(458, 21);
+            this.chkUseSecurePort.Name = "chkUseSecurePort";
+            this.chkUseSecurePort.Size = new System.Drawing.Size(121, 17);
+            this.chkUseSecurePort.TabIndex = 10;
+            this.chkUseSecurePort.Text = "Use Privileged Ports";
+            this.chkUseSecurePort.UseVisualStyleBackColor = true;
             // 
             // chkUseUnicode
             // 
@@ -347,7 +361,9 @@ namespace NFSClient
             this.listViewRemote.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader6,
             this.columnHeader7,
-            this.columnHeader8});
+            this.columnHeader8,
+            this.columnHeader1,
+            this.columnHeader5});
             this.listViewRemote.ContextMenuStrip = this.contextMenuStrip1;
             this.listViewRemote.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewRemote.FullRowSelect = true;
@@ -379,8 +395,8 @@ namespace NFSClient
             // 
             // columnHeader8
             // 
-            this.columnHeader8.Text = "Date";
-            this.columnHeader8.Width = 200;
+            this.columnHeader8.Text = "CDate";
+            this.columnHeader8.Width = 100;
             // 
             // contextMenuStrip1
             // 
@@ -417,17 +433,15 @@ namespace NFSClient
             this.btnNewFolder.UseVisualStyleBackColor = true;
             this.btnNewFolder.Click += new System.EventHandler(this.btnNewFolder_Click);
             // 
-            // chkUseSecurePort
+            // columnHeader1
             // 
-            this.chkUseSecurePort.AutoSize = true;
-            this.chkUseSecurePort.Checked = true;
-            this.chkUseSecurePort.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkUseSecurePort.Location = new System.Drawing.Point(458, 21);
-            this.chkUseSecurePort.Name = "chkUseSecurePort";
-            this.chkUseSecurePort.Size = new System.Drawing.Size(121, 17);
-            this.chkUseSecurePort.TabIndex = 10;
-            this.chkUseSecurePort.Text = "Use Privileged Ports";
-            this.chkUseSecurePort.UseVisualStyleBackColor = true;
+            this.columnHeader1.Text = "MDate";
+            this.columnHeader1.Width = 100;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "ADate";
+            this.columnHeader5.Width = 100;
             // 
             // MainForm
             // 
@@ -494,6 +508,8 @@ namespace NFSClient
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem showPermissionsToolStripMenuItem;
         private System.Windows.Forms.CheckBox chkUseSecurePort;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader5;
     }
 }
 

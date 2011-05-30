@@ -256,7 +256,7 @@ namespace NekoDrive.NFS
                     fileinfo.Attributes = System.IO.FileAttributes.Archive;
 
                 fileinfo.LastAccessTime = nfsAttributes.LastAccessedDateTime;
-                fileinfo.LastWriteTime = nfsAttributes.LastAccessedDateTime;
+                fileinfo.LastWriteTime = nfsAttributes.ModifiedDateTime;
                 fileinfo.CreationTime = nfsAttributes.CreateDateTime;
                 fileinfo.Length = (long)nfsAttributes.Size;
             }
@@ -291,7 +291,7 @@ namespace NekoDrive.NFS
                         fi.Attributes = nfsAttributes.NFSType == NFSLibrary.Protocols.Commons.NFSItemTypes.NFDIR ? System.IO.FileAttributes.Directory : System.IO.FileAttributes.Normal;
                         fi.CreationTime = nfsAttributes.CreateDateTime;
                         fi.LastAccessTime = nfsAttributes.LastAccessedDateTime;
-                        fi.LastWriteTime = nfsAttributes.LastAccessedDateTime;
+                        fi.LastWriteTime = nfsAttributes.ModifiedDateTime;
                         fi.Length = (long)nfsAttributes.Size;
                         fi.FileName = strItem;
                         files.Add(fi);
