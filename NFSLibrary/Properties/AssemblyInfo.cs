@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("NFSLibrary")]
-[assembly: AssemblyCopyright("Copyright © Mirko Gatto 2010")]
+[assembly: AssemblyCopyright("Copyright © Mirko Gatto 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
