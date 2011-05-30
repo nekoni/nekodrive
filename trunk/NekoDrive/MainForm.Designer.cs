@@ -409,7 +409,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(142, 21);
+            this.label4.Location = new System.Drawing.Point(216, 21);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(33, 13);
             this.label4.TabIndex = 15;
@@ -418,7 +418,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(75, 21);
+            this.label3.Location = new System.Drawing.Point(112, 21);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(36, 13);
             this.label3.TabIndex = 14;
@@ -441,9 +441,9 @@
             "Read Only",
             "Read & Write",
             "Read, Write & Execute"});
-            this.cbOther.Location = new System.Drawing.Point(145, 37);
+            this.cbOther.Location = new System.Drawing.Point(219, 37);
             this.cbOther.Name = "cbOther";
-            this.cbOther.Size = new System.Drawing.Size(61, 21);
+            this.cbOther.Size = new System.Drawing.Size(98, 21);
             this.cbOther.TabIndex = 11;
             // 
             // cbGroup
@@ -454,9 +454,9 @@
             "Read Only",
             "Read & Write",
             "Read, Write & Execute"});
-            this.cbGroup.Location = new System.Drawing.Point(78, 37);
+            this.cbGroup.Location = new System.Drawing.Point(115, 37);
             this.cbGroup.Name = "cbGroup";
-            this.cbGroup.Size = new System.Drawing.Size(61, 21);
+            this.cbGroup.Size = new System.Drawing.Size(98, 21);
             this.cbGroup.TabIndex = 10;
             // 
             // cbUser
@@ -469,7 +469,7 @@
             "Read, Write & Execute"});
             this.cbUser.Location = new System.Drawing.Point(11, 37);
             this.cbUser.Name = "cbUser";
-            this.cbUser.Size = new System.Drawing.Size(61, 21);
+            this.cbUser.Size = new System.Drawing.Size(98, 21);
             this.cbUser.TabIndex = 9;
             // 
             // MainForm
