@@ -190,5 +190,41 @@ namespace NekoDrive.Properties {
                 this["UsePrivilegedPorts"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int UserIndex {
+            get {
+                return ((int)(this["UserIndex"]));
+            }
+            set {
+                this["UserIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int GroupIndex {
+            get {
+                return ((int)(this["GroupIndex"]));
+            }
+            set {
+                this["GroupIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int OtherIndex {
+            get {
+                return ((int)(this["OtherIndex"]));
+            }
+            set {
+                this["OtherIndex"] = value;
+            }
+        }
     }
 }

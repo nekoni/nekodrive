@@ -281,7 +281,10 @@ namespace NekoDrive
             btnSelectFolder.Text = NekoDrive.Properties.Settings.Default.Folder;
             bool DiskOrFolder = NekoDrive.Properties.Settings.Default.DiskOrFolder;
             chkUsePrivilegedPorts.Checked = NekoDrive.Properties.Settings.Default.UsePrivilegedPorts;
-            chkUnicode.Checked = NekoDrive.Properties.Settings.Default.Unicode; 
+            chkUnicode.Checked = NekoDrive.Properties.Settings.Default.Unicode;
+            cbUser.SelectedIndex = NekoDrive.Properties.Settings.Default.UserIndex;
+            cbGroup.SelectedIndex = NekoDrive.Properties.Settings.Default.GroupIndex;
+            cbOther.SelectedIndex = NekoDrive.Properties.Settings.Default.OtherIndex;
 
             if (DiskOrFolder)
                 rbDisk.Checked = true;
@@ -387,6 +390,9 @@ namespace NekoDrive
                 NekoDrive.Properties.Settings.Default.Folder = btnSelectFolder.Text;
                 NekoDrive.Properties.Settings.Default.DiskOrFolder = rbDisk.Checked;
                 NekoDrive.Properties.Settings.Default.UsePrivilegedPorts = chkUsePrivilegedPorts.Checked;
+                NekoDrive.Properties.Settings.Default.UserIndex = cbUser.SelectedIndex;
+                NekoDrive.Properties.Settings.Default.GroupIndex = cbGroup.SelectedIndex;
+                NekoDrive.Properties.Settings.Default.OtherIndex = cbOther.SelectedIndex;
 
                 NekoDrive.Properties.Settings.Default.Save();
             }

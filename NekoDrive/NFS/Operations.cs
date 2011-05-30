@@ -138,7 +138,33 @@ namespace NekoDrive.NFS
                 if (MainForm.In.mNFS.FileExists(FullPath))
                     return DokanNet.ERROR_FILE_EXISTS;
 
-                MainForm.In.mNFS.CreateDirectory(FullPath);
+                byte UserP, GroupP, OtherP;
+
+                switch (MainForm.In.cbUser.SelectedIndex)
+                {
+                    case 0: UserP = 4; break;
+                    case 1: UserP = 6; break;
+                    case 2: UserP = 7; break;
+                    default: UserP = 7; break;
+                }
+
+                switch (MainForm.In.cbGroup.SelectedIndex)
+                {
+                    case 0: GroupP = 4; break;
+                    case 1: GroupP = 6; break;
+                    case 2: GroupP = 7; break;
+                    default: GroupP = 7; break;
+                }
+
+                switch (MainForm.In.cbOther.SelectedIndex)
+                {
+                    case 0: OtherP = 4; break;
+                    case 1: OtherP = 6; break;
+                    case 2: OtherP = 7; break;
+                    default: OtherP = 7; break;
+                }
+
+                MainForm.In.mNFS.CreateDirectory(FullPath, new NFSLibrary.Protocols.Commons.NFSPermission(UserP, GroupP, OtherP));
             }
             catch (Exception ex)
             {

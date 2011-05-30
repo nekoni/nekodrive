@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.gbTargetConnection = new System.Windows.Forms.GroupBox();
+            this.chkUsePrivilegedPorts = new System.Windows.Forms.CheckBox();
             this.chkUnicode = new System.Windows.Forms.CheckBox();
             this.chkAutoConnect = new System.Windows.Forms.CheckBox();
             this.tbGroupId = new System.Windows.Forms.TextBox();
@@ -58,10 +59,17 @@
             this.btnMount = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.chkUsePrivilegedPorts = new System.Windows.Forms.CheckBox();
+            this.gbNewFolderSettings = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cbOther = new System.Windows.Forms.ComboBox();
+            this.cbGroup = new System.Windows.Forms.ComboBox();
+            this.cbUser = new System.Windows.Forms.ComboBox();
             this.gbTargetConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).BeginInit();
             this.gboxMount.SuspendLayout();
+            this.gbNewFolderSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbTargetConnection
@@ -84,10 +92,20 @@
             this.gbTargetConnection.Controls.Add(this.btnConnect);
             this.gbTargetConnection.Location = new System.Drawing.Point(12, 12);
             this.gbTargetConnection.Name = "gbTargetConnection";
-            this.gbTargetConnection.Size = new System.Drawing.Size(405, 97);
+            this.gbTargetConnection.Size = new System.Drawing.Size(407, 97);
             this.gbTargetConnection.TabIndex = 5;
             this.gbTargetConnection.TabStop = false;
             this.gbTargetConnection.Text = "Target Connection";
+            // 
+            // chkUsePrivilegedPorts
+            // 
+            this.chkUsePrivilegedPorts.AutoSize = true;
+            this.chkUsePrivilegedPorts.Location = new System.Drawing.Point(10, 74);
+            this.chkUsePrivilegedPorts.Name = "chkUsePrivilegedPorts";
+            this.chkUsePrivilegedPorts.Size = new System.Drawing.Size(121, 17);
+            this.chkUsePrivilegedPorts.TabIndex = 13;
+            this.chkUsePrivilegedPorts.Text = "Use Privileged Ports";
+            this.chkUsePrivilegedPorts.UseVisualStyleBackColor = true;
             // 
             // chkUnicode
             // 
@@ -189,7 +207,7 @@
             // 
             this.lblCurrentFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCurrentFile.AutoSize = true;
-            this.lblCurrentFile.Location = new System.Drawing.Point(204, 13);
+            this.lblCurrentFile.Location = new System.Drawing.Point(206, 13);
             this.lblCurrentFile.Name = "lblCurrentFile";
             this.lblCurrentFile.Size = new System.Drawing.Size(0, 13);
             this.lblCurrentFile.TabIndex = 6;
@@ -246,7 +264,7 @@
             this.gboxMount.Controls.Add(this.btnMount);
             this.gboxMount.Location = new System.Drawing.Point(12, 115);
             this.gboxMount.Name = "gboxMount";
-            this.gboxMount.Size = new System.Drawing.Size(405, 114);
+            this.gboxMount.Size = new System.Drawing.Size(407, 114);
             this.gboxMount.TabIndex = 6;
             this.gboxMount.TabStop = false;
             this.gboxMount.Text = "Mount";
@@ -373,21 +391,93 @@
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
-            // chkUsePrivilegedPorts
+            // gbNewFolderSettings
             // 
-            this.chkUsePrivilegedPorts.AutoSize = true;
-            this.chkUsePrivilegedPorts.Location = new System.Drawing.Point(10, 74);
-            this.chkUsePrivilegedPorts.Name = "chkUsePrivilegedPorts";
-            this.chkUsePrivilegedPorts.Size = new System.Drawing.Size(121, 17);
-            this.chkUsePrivilegedPorts.TabIndex = 13;
-            this.chkUsePrivilegedPorts.Text = "Use Privileged Ports";
-            this.chkUsePrivilegedPorts.UseVisualStyleBackColor = true;
+            this.gbNewFolderSettings.Controls.Add(this.label4);
+            this.gbNewFolderSettings.Controls.Add(this.label3);
+            this.gbNewFolderSettings.Controls.Add(this.label2);
+            this.gbNewFolderSettings.Controls.Add(this.cbOther);
+            this.gbNewFolderSettings.Controls.Add(this.cbGroup);
+            this.gbNewFolderSettings.Controls.Add(this.cbUser);
+            this.gbNewFolderSettings.Location = new System.Drawing.Point(12, 236);
+            this.gbNewFolderSettings.Name = "gbNewFolderSettings";
+            this.gbNewFolderSettings.Size = new System.Drawing.Size(407, 74);
+            this.gbNewFolderSettings.TabIndex = 7;
+            this.gbNewFolderSettings.TabStop = false;
+            this.gbNewFolderSettings.Text = "New Folder Permissions";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(142, 21);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(33, 13);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Other";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(75, 21);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(36, 13);
+            this.label3.TabIndex = 14;
+            this.label3.Text = "Group";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(11, 21);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(29, 13);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "User";
+            // 
+            // cbOther
+            // 
+            this.cbOther.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbOther.FormattingEnabled = true;
+            this.cbOther.Items.AddRange(new object[] {
+            "Read Only",
+            "Read & Write",
+            "Read, Write & Execute"});
+            this.cbOther.Location = new System.Drawing.Point(145, 37);
+            this.cbOther.Name = "cbOther";
+            this.cbOther.Size = new System.Drawing.Size(61, 21);
+            this.cbOther.TabIndex = 11;
+            // 
+            // cbGroup
+            // 
+            this.cbGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbGroup.FormattingEnabled = true;
+            this.cbGroup.Items.AddRange(new object[] {
+            "Read Only",
+            "Read & Write",
+            "Read, Write & Execute"});
+            this.cbGroup.Location = new System.Drawing.Point(78, 37);
+            this.cbGroup.Name = "cbGroup";
+            this.cbGroup.Size = new System.Drawing.Size(61, 21);
+            this.cbGroup.TabIndex = 10;
+            // 
+            // cbUser
+            // 
+            this.cbUser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbUser.FormattingEnabled = true;
+            this.cbUser.Items.AddRange(new object[] {
+            "Read Only",
+            "Read & Write",
+            "Read, Write & Execute"});
+            this.cbUser.Location = new System.Drawing.Point(11, 37);
+            this.cbUser.Name = "cbUser";
+            this.cbUser.Size = new System.Drawing.Size(61, 21);
+            this.cbUser.TabIndex = 9;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(429, 241);
+            this.ClientSize = new System.Drawing.Size(431, 320);
+            this.Controls.Add(this.gbNewFolderSettings);
             this.Controls.Add(this.gboxMount);
             this.Controls.Add(this.gbTargetConnection);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -403,6 +493,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).EndInit();
             this.gboxMount.ResumeLayout(false);
             this.gboxMount.PerformLayout();
+            this.gbNewFolderSettings.ResumeLayout(false);
+            this.gbNewFolderSettings.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -438,6 +530,13 @@
         private System.Windows.Forms.RadioButton rbFolder;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.CheckBox chkUsePrivilegedPorts;
+        private System.Windows.Forms.GroupBox gbNewFolderSettings;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        public System.Windows.Forms.ComboBox cbOther;
+        public System.Windows.Forms.ComboBox cbGroup;
+        public System.Windows.Forms.ComboBox cbUser;
 
     }
 }
