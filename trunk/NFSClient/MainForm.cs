@@ -131,11 +131,11 @@ namespace NFSClient
                     if (KbitSec > 1024)
                     {
                         MbitSec = KbitSec / 1024;
-                        speedText = (MbitSec * 8).ToString("0.00") + " MBit/s";
+                        speedText = (MbitSec).ToString("0.00") + " MB/s";
                     }
                     else
                     {
-                        speedText = (KbitSec * 8).ToString("0.00") + " KBit/s";
+                        speedText = (KbitSec).ToString("0.00") + " KB/s";
                     }
 
                     lblCurrentFile.Text = CurrentItem + " " + speedText;
