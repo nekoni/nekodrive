@@ -149,8 +149,7 @@ namespace NFSClient
         {
             listViewRemote.Items.Clear();
             List<string> Items = nfsClient.GetItemList(RemoteFolder);
-            Items.Remove(".");
-            Items.Remove("..");
+            Items = RemoveDuplicatesAndInvalid(Items);
             Items.Insert(0, "..");
             List<ListViewItem> ItemsList = new List<ListViewItem>();
             foreach (string Item in Items)
@@ -168,6 +167,9 @@ namespace NFSClient
                         if (nfsAttribute.NFSType == NFSLibrary.Protocols.Commons.NFSItemTypes.NFREG)
                         {
                             ListViewItem lvi = new ListViewItem(new string[] { Item, nfsAttribute.Size.ToString(), nfsAttribute.CreateDateTime.ToString(), nfsAttribute.ModifiedDateTime.ToString(), nfsAttribute.LastAccessedDateTime.ToString() });
+                            if (Item == "..")
+                                continue;
+
                             lvi.ImageIndex = 0;
                             ItemsList.Add(lvi);
                         }
@@ -203,6 +205,17 @@ namespace NFSClient
             }
 
             listViewRemote.Items.AddRange(OrderedList.ToArray());
+        }
+
+        private List<string> RemoveDuplicatesAndInvalid(List<string> items)
+        {
+            List<string> outputList = new List<string>();
+            foreach (string item in items)
+            {
+                if (!outputList.Contains(item) && item != ".." && item != "." )
+                    outputList.Add(item);
+            }
+            return outputList;
         }
 
         void MountDevice(int i)
