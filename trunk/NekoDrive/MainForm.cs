@@ -30,7 +30,11 @@ namespace NekoDrive
 
         public NFSClient mNFS = null;
         public DokanNet mDokanNet = null;
+        DokanOperations dokanOperation = null;
         public bool DebugMode = false;
+        public int UserIndex = 0;
+        public int GroupIndex = 0;
+        public int OtherIndex = 0;
 
         public static MainForm In
         {
@@ -90,6 +94,8 @@ namespace NekoDrive
             rbFolder.Enabled = true;
             btnSelectFolder.Enabled = true;
             chkAutoMount.Enabled = true;
+            chkNoCache.Enabled = true;
+            btnClearCache.Enabled = false;
         }
 
         private void MountDrive()
@@ -98,6 +104,8 @@ namespace NekoDrive
                 throw new ApplicationException("NFS object is null!");
 
             string strDev = (string)cboxRemoteDevices.SelectedItem;
+            if (cboxLocalDrive.SelectedItem == null)
+                throw new Exception("You must select a local drive!");
             char cDrive = ((string)cboxLocalDrive.SelectedItem).ToCharArray()[0];
             MountPoint = String.Format(@"{0}:\", cDrive);
             string Folder = btnSelectFolder.Text;
@@ -114,6 +122,8 @@ namespace NekoDrive
             btnSelectFolder.Enabled = false;
             chkAutoMount.Enabled = false;
             chkUsePrivilegedPorts.Enabled = false;
+            chkNoCache.Enabled = false;
+            btnClearCache.Enabled = true;
 
             if (!DiskOrFolder)
             {
@@ -122,6 +132,8 @@ namespace NekoDrive
                 else
                     MountPoint = Folder;
             }
+
+            bool NoCache = chkNoCache.Checked;
 
             ThreadPool.QueueUserWorkItem(new WaitCallback(
                 delegate
@@ -137,9 +149,12 @@ namespace NekoDrive
                         dokanOptions.UseAltStream = true;
                         dokanOptions.VolumeLabel = strDriveLabel;
                         dokanOptions.ThreadCount = 1;
-                        Operations nfsOperations = new Operations();
-                        CacheOperations cacheOperations = new CacheOperations(nfsOperations);
-                        int status = DokanNet.DokanMain(dokanOptions, cacheOperations);
+                        
+                        if (NoCache)
+                            dokanOperation = new Operations();
+                        else
+                            dokanOperation = new CacheOperations(new Operations());
+                        int status = DokanNet.DokanMain(dokanOptions, dokanOperation);
                         switch (status)
                         {
                             case DokanNet.DOKAN_DRIVE_LETTER_ERROR:
@@ -281,6 +296,7 @@ namespace NekoDrive
             btnSelectFolder.Text = NekoDrive.Properties.Settings.Default.Folder;
             bool DiskOrFolder = NekoDrive.Properties.Settings.Default.DiskOrFolder;
             chkUsePrivilegedPorts.Checked = NekoDrive.Properties.Settings.Default.UsePrivilegedPorts;
+            chkNoCache.Checked = NekoDrive.Properties.Settings.Default.NoCache;
             chkUnicode.Checked = NekoDrive.Properties.Settings.Default.Unicode;
             cbUser.SelectedIndex = NekoDrive.Properties.Settings.Default.UserIndex;
             cbGroup.SelectedIndex = NekoDrive.Properties.Settings.Default.GroupIndex;
@@ -390,6 +406,7 @@ namespace NekoDrive
                 NekoDrive.Properties.Settings.Default.Folder = btnSelectFolder.Text;
                 NekoDrive.Properties.Settings.Default.DiskOrFolder = rbDisk.Checked;
                 NekoDrive.Properties.Settings.Default.UsePrivilegedPorts = chkUsePrivilegedPorts.Checked;
+                NekoDrive.Properties.Settings.Default.NoCache = chkNoCache.Checked;
                 NekoDrive.Properties.Settings.Default.UserIndex = cbUser.SelectedIndex;
                 NekoDrive.Properties.Settings.Default.GroupIndex = cbGroup.SelectedIndex;
                 NekoDrive.Properties.Settings.Default.OtherIndex = cbOther.SelectedIndex;
@@ -432,6 +449,33 @@ namespace NekoDrive
             }
         }
 
+        private void cbUser_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UserIndex = cbUser.SelectedIndex;
+        }
+
+        private void cbGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GroupIndex = cbGroup.SelectedIndex;
+        }
+
+        private void cbOther_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            OtherIndex = cbOther.SelectedIndex;
+        }
+
+        private void btnClearCache_Click(object sender, EventArgs e)
+        {
+            if (dokanOperation != null)
+            {
+                if (dokanOperation is CacheOperations)
+                    ((CacheOperations)dokanOperation).CleanCache();
+            }
+        }
         #endregion        
+
+        
+
+        
     }
 }

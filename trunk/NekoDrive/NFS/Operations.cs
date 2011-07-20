@@ -140,7 +140,7 @@ namespace NekoDrive.NFS
 
                 byte UserP, GroupP, OtherP;
 
-                switch (MainForm.In.cbUser.SelectedIndex)
+                switch (MainForm.In.UserIndex)
                 {
                     case 0: UserP = 4; break;
                     case 1: UserP = 6; break;
@@ -148,7 +148,7 @@ namespace NekoDrive.NFS
                     default: UserP = 7; break;
                 }
 
-                switch (MainForm.In.cbGroup.SelectedIndex)
+                switch (MainForm.In.GroupIndex)
                 {
                     case 0: GroupP = 4; break;
                     case 1: GroupP = 6; break;
@@ -156,7 +156,7 @@ namespace NekoDrive.NFS
                     default: GroupP = 7; break;
                 }
 
-                switch (MainForm.In.cbOther.SelectedIndex)
+                switch (MainForm.In.OtherIndex)
                 {
                     case 0: OtherP = 4; break;
                     case 1: OtherP = 6; break;

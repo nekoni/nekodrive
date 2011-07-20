@@ -98,7 +98,6 @@ namespace NekoDrive.NFS
             cache_ = new CacheEntry(null);
         }
 
-
         public int CreateFile(string filename, FileAccess access, FileShare share,
             FileMode mode, FileOptions options, DokanFileInfo info)
         {
@@ -137,7 +136,6 @@ namespace NekoDrive.NFS
             }
             return ret;
         }
-
 
         public int OpenDirectory(string filename, DokanFileInfo info)
         {
@@ -339,6 +337,17 @@ namespace NekoDrive.NFS
             cache_.RemoveAllCache();
 
             return ope_.Unmount(info);
+        }
+
+        public void CleanCache()
+        {
+            try
+            {
+                cache_.RemoveAllCache();
+            }
+            catch
+            {
+            }
         }
     }
 }
