@@ -105,6 +105,7 @@ Global
 		{DAFB2E28-B8A2-417C-B91B-0FC29DDF54D8}.Debug|x86.ActiveCfg = Debug
 		{DAFB2E28-B8A2-417C-B91B-0FC29DDF54D8}.Release|Any CPU.ActiveCfg = Release
 		{DAFB2E28-B8A2-417C-B91B-0FC29DDF54D8}.Release|Mixed Platforms.ActiveCfg = Release
+		{DAFB2E28-B8A2-417C-B91B-0FC29DDF54D8}.Release|Mixed Platforms.Build.0 = Release
 		{DAFB2E28-B8A2-417C-B91B-0FC29DDF54D8}.Release|Win32.ActiveCfg = Release
 		{DAFB2E28-B8A2-417C-B91B-0FC29DDF54D8}.Release|x86.ActiveCfg = Release
 		{DAFB2E28-B8A2-417C-B91B-0FC29DDF54D8}.Release|x86.Build.0 = Release
