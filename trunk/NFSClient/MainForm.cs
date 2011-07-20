@@ -25,7 +25,7 @@ namespace NFSClient
 
         #endregion
 
-        #region Properties
+        #region Fields
 
         NFSLibrary.NFSClient nfsClient;
         List<string> nfsDevs = null;
@@ -42,7 +42,9 @@ namespace NFSClient
         Thread uploadThread;
         string LocalFolder = string.Empty;
         string RemoteFolder = ".";
-
+        long TotalTransferredBytes = 0;
+        int TotalTransferredSpeedChecks = 0;
+        long AvgDwnSpeed = 0;
         #endregion
 
         #region Constructor
@@ -73,6 +75,10 @@ namespace NFSClient
             {
                 if (Show)
                 {
+                    AvgDwnSpeed = 0;
+                    TotalTransferredBytes = 0;
+                    TotalTransferredSpeedChecks = 0;
+                    timer1.Start();
                     pb.Show();
                     lblCurrentFile.Text = CurrentItem;
                     btnCancel.Show();
@@ -85,6 +91,7 @@ namespace NFSClient
                 }
                 else
                 {
+                    timer1.Stop();
                     pb.Hide();
                     lblCurrentFile.Text = CurrentItem = string.Empty;
                     pb.Value = 0;
@@ -118,7 +125,20 @@ namespace NFSClient
                     { _lTotal = total; }
                     _lTotal -= current;
 
-                    lblCurrentFile.Text = CurrentItem;
+                    float KbitSec = AvgDwnSpeed / 1024;
+                    float MbitSec = 0;
+                    string speedText = string.Empty;
+                    if (KbitSec > 1024)
+                    {
+                        MbitSec = KbitSec / 1024;
+                        speedText = (MbitSec * 8).ToString("0.00") + " MBit/s";
+                    }
+                    else
+                    {
+                        speedText = (KbitSec * 8).ToString("0.00") + " KBit/s";
+                    }
+
+                    lblCurrentFile.Text = CurrentItem + " " + speedText;
                     pb.Maximum = (int)(total / current);
                     int Value = pb.Value + 1;
                     if (Value < pb.Maximum)
@@ -374,6 +394,9 @@ namespace NFSClient
                     nfsClient.Read(nfsClient.Combine(CurrentItem, RemoteFolder), OutputFile);
                 }
             }
+            catch (ThreadAbortException)
+            {
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "NFS Client");
@@ -408,6 +431,9 @@ namespace NFSClient
                     nfsClient.Write(nfsClient.Combine(CurrentItem, RemoteFolder), SourceName);
                 }
             }
+            catch (ThreadAbortException)
+            {
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "NFS Client");
@@ -421,6 +447,7 @@ namespace NFSClient
 
         void nfsClient_DataEvent(object sender, NFSLibrary.NFSClient.NFSEventArgs e)
         {
+            TotalTransferredBytes += e.Bytes;            
             UpdateProgress(CurrentItem, CurrentSize, e.Bytes);
         }
 
@@ -694,7 +721,13 @@ namespace NFSClient
             }
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            AvgDwnSpeed = TotalTransferredBytes / ++TotalTransferredSpeedChecks;
+        }
         #endregion
+
+        
 
     }
 }
