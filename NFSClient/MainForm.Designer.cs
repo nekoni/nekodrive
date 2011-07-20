@@ -58,12 +58,13 @@ namespace NFSClient
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnNewFolder = new System.Windows.Forms.Button();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.gbTargetConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).BeginInit();
             this.pnlMain.SuspendLayout();
@@ -398,6 +399,16 @@ namespace NFSClient
             this.columnHeader8.Text = "CDate";
             this.columnHeader8.Width = 100;
             // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "MDate";
+            this.columnHeader1.Width = 100;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "ADate";
+            this.columnHeader5.Width = 100;
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -433,15 +444,10 @@ namespace NFSClient
             this.btnNewFolder.UseVisualStyleBackColor = true;
             this.btnNewFolder.Click += new System.EventHandler(this.btnNewFolder_Click);
             // 
-            // columnHeader1
+            // timer1
             // 
-            this.columnHeader1.Text = "MDate";
-            this.columnHeader1.Width = 100;
-            // 
-            // columnHeader5
-            // 
-            this.columnHeader5.Text = "ADate";
-            this.columnHeader5.Width = 100;
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // MainForm
             // 
@@ -510,6 +516,7 @@ namespace NFSClient
         private System.Windows.Forms.CheckBox chkUseSecurePort;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
