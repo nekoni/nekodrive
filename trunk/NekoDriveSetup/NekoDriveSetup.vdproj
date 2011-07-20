@@ -40,13 +40,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_99048D34BCEE8D26C4477D0564C808E0"
+        "OwnerKey" = "8:_53CF8EEE82300F74F40DA3532F78735C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_53CF8EEE82300F74F40DA3532F78735C"
+        "OwnerKey" = "8:_99048D34BCEE8D26C4477D0564C808E0"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -576,7 +576,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:The installer will guide you through the steps required to install [ProductName] on your computer. NekoDrive 0.7 requires that Dokan 0.6.0 is correctly installed in the system. Please download dokan at http://dokan-dev.net/wp-content/uploads/DokanInstall_0.6.0.exe"
+                            "Value" = "8:The installer will guide you through the steps required to install [ProductName] on your computer. NekoDrive requires that Dokan 0.6.0 is correctly installed in the system. Please download dokan at http://dokan-dev.net/wp-content/uploads/DokanInstall_0.6.0.exe"
                             "DefaultValue" = "8:#1203"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -692,7 +692,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:The installer will guide you through the steps required to install [ProductName] on your computer. NekoDrive 0.7 requires that Dokan 0.6.0 is correctly installed in the system. Please download dokan at http://dokan-dev.net/wp-content/uploads/DokanInstall_0.6.0.exe"
+                            "Value" = "8:The installer will guide you through the steps required to install [ProductName] on your computer. NekoDrive requires that Dokan 0.6.0 is correctly installed in the system. Please download dokan at http://dokan-dev.net/wp-content/uploads/DokanInstall_0.6.0.exe"
                             "DefaultValue" = "8:#1203"
                             "UsePlugInResources" = "11:TRUE"
                             }
