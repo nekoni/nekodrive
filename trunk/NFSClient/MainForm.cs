@@ -207,7 +207,8 @@ namespace NFSClient
             {
                 if (lvi.Text == "..")
                 {
-                    OrderedList.Add(lvi);
+                    if(!OrderedList.Contains(lvi))
+                        OrderedList.Add(lvi);
                     break;
                 }
             }
@@ -215,13 +216,15 @@ namespace NFSClient
             foreach (ListViewItem lvi in ItemsList)
             {
                 if(lvi.ImageIndex == 1 && lvi.Text != "..")
-                    OrderedList.Add(lvi);
+                    if (!OrderedList.Contains(lvi))
+                        OrderedList.Add(lvi);
             }
 
             foreach (ListViewItem lvi in ItemsList)
             {
                 if (lvi.ImageIndex == 0)
-                    OrderedList.Add(lvi);
+                    if (!OrderedList.Contains(lvi))
+                        OrderedList.Add(lvi);
             }
 
             listViewRemote.Items.AddRange(OrderedList.ToArray());
@@ -232,7 +235,8 @@ namespace NFSClient
             List<string> outputList = new List<string>();
             foreach (string item in items)
             {
-                if (!outputList.Contains(item) && item != ".." && item != "." )
+                string cleanItem = item.Trim();
+                if (!outputList.Contains(cleanItem) && cleanItem != ".." && cleanItem != "." && !cleanItem.Contains(".."))
                     outputList.Add(item);
             }
             return outputList;
@@ -393,6 +397,7 @@ namespace NFSClient
                     _lTotal = 0;
                     nfsClient.Read(nfsClient.Combine(CurrentItem, RemoteFolder), OutputFile);
                 }
+                ShowProgress(false);
             }
             catch (ThreadAbortException)
             {
@@ -400,10 +405,6 @@ namespace NFSClient
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "NFS Client");
-                ShowProgress(false);
-            }
-            finally
-            {
                 ShowProgress(false);
             }
         }
@@ -430,6 +431,7 @@ namespace NFSClient
                     string SourceName = System.IO.Path.Combine(LocalFolder, CurrentItem);
                     nfsClient.Write(nfsClient.Combine(CurrentItem, RemoteFolder), SourceName);
                 }
+                ShowProgress(false);
             }
             catch (ThreadAbortException)
             {
@@ -437,10 +439,6 @@ namespace NFSClient
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "NFS Client");
-                ShowProgress(false);
-            }
-            finally
-            {
                 ShowProgress(false);
             }
         }
