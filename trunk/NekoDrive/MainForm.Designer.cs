@@ -38,6 +38,7 @@
             this.tbUserId = new System.Windows.Forms.TextBox();
             this.lblGroupId = new System.Windows.Forms.Label();
             this.lblUserId = new System.Windows.Forms.Label();
+            this.ipAddressControl1 = new NekoDrive.Controls.IPAddressControl();
             this.lblTimeOut = new System.Windows.Forms.Label();
             this.nupTimeOut = new System.Windows.Forms.NumericUpDown();
             this.lblCurrentFile = new System.Windows.Forms.Label();
@@ -45,6 +46,7 @@
             this.btnDisconnect = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
             this.gboxMount = new System.Windows.Forms.GroupBox();
+            this.chkNoCache = new System.Windows.Forms.CheckBox();
             this.btnSelectFolder = new System.Windows.Forms.Button();
             this.rbFolder = new System.Windows.Forms.RadioButton();
             this.rbDisk = new System.Windows.Forms.RadioButton();
@@ -54,6 +56,7 @@
             this.lblRemoteDevices = new System.Windows.Forms.Label();
             this.cboxLocalDrive = new System.Windows.Forms.ComboBox();
             this.cboxRemoteDevices = new System.Windows.Forms.ComboBox();
+            this.btnClearCache = new System.Windows.Forms.Button();
             this.btnUnmount = new System.Windows.Forms.Button();
             this.btnMount = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -65,9 +68,6 @@
             this.cbOther = new System.Windows.Forms.ComboBox();
             this.cbGroup = new System.Windows.Forms.ComboBox();
             this.cbUser = new System.Windows.Forms.ComboBox();
-            this.ipAddressControl1 = new NekoDrive.Controls.IPAddressControl();
-            this.btnClearCache = new System.Windows.Forms.Button();
-            this.chkNoCache = new System.Windows.Forms.CheckBox();
             this.gbTargetConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupTimeOut)).BeginInit();
             this.gboxMount.SuspendLayout();
@@ -76,8 +76,8 @@
             // 
             // gbTargetConnection
             // 
-            this.gbTargetConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbTargetConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gbTargetConnection.Controls.Add(this.chkUsePrivilegedPorts);
             this.gbTargetConnection.Controls.Add(this.chkUnicode);
             this.gbTargetConnection.Controls.Add(this.chkAutoConnect);
@@ -94,7 +94,7 @@
             this.gbTargetConnection.Controls.Add(this.btnConnect);
             this.gbTargetConnection.Location = new System.Drawing.Point(12, 12);
             this.gbTargetConnection.Name = "gbTargetConnection";
-            this.gbTargetConnection.Size = new System.Drawing.Size(441, 97);
+            this.gbTargetConnection.Size = new System.Drawing.Size(527, 97);
             this.gbTargetConnection.TabIndex = 5;
             this.gbTargetConnection.TabStop = false;
             this.gbTargetConnection.Text = "Target Connection";
@@ -167,6 +167,17 @@
             this.lblUserId.TabIndex = 11;
             this.lblUserId.Text = "UserId";
             // 
+            // ipAddressControl1
+            // 
+            this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
+            this.ipAddressControl1.Location = new System.Drawing.Point(10, 21);
+            this.ipAddressControl1.MinimumSize = new System.Drawing.Size(112, 20);
+            this.ipAddressControl1.Name = "ipAddressControl1";
+            this.ipAddressControl1.ReadOnly = false;
+            this.ipAddressControl1.Size = new System.Drawing.Size(112, 20);
+            this.ipAddressControl1.TabIndex = 10;
+            this.toolTip.SetToolTip(this.ipAddressControl1, "Specify the ip of the NFS Server");
+            // 
             // lblTimeOut
             // 
             this.lblTimeOut.AutoSize = true;
@@ -198,7 +209,7 @@
             // 
             this.lblCurrentFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCurrentFile.AutoSize = true;
-            this.lblCurrentFile.Location = new System.Drawing.Point(240, 13);
+            this.lblCurrentFile.Location = new System.Drawing.Point(326, 13);
             this.lblCurrentFile.Name = "lblCurrentFile";
             this.lblCurrentFile.Size = new System.Drawing.Size(0, 13);
             this.lblCurrentFile.TabIndex = 6;
@@ -218,7 +229,7 @@
             // 
             // btnDisconnect
             // 
-            this.btnDisconnect.Location = new System.Drawing.Point(346, 47);
+            this.btnDisconnect.Location = new System.Drawing.Point(448, 48);
             this.btnDisconnect.Name = "btnDisconnect";
             this.btnDisconnect.Size = new System.Drawing.Size(73, 23);
             this.btnDisconnect.TabIndex = 3;
@@ -229,7 +240,7 @@
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(346, 18);
+            this.btnConnect.Location = new System.Drawing.Point(448, 19);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(73, 23);
             this.btnConnect.TabIndex = 3;
@@ -240,8 +251,8 @@
             // 
             // gboxMount
             // 
-            this.gboxMount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gboxMount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gboxMount.Controls.Add(this.chkNoCache);
             this.gboxMount.Controls.Add(this.btnSelectFolder);
             this.gboxMount.Controls.Add(this.rbFolder);
@@ -257,10 +268,20 @@
             this.gboxMount.Controls.Add(this.btnMount);
             this.gboxMount.Location = new System.Drawing.Point(12, 115);
             this.gboxMount.Name = "gboxMount";
-            this.gboxMount.Size = new System.Drawing.Size(441, 114);
+            this.gboxMount.Size = new System.Drawing.Size(527, 114);
             this.gboxMount.TabIndex = 6;
             this.gboxMount.TabStop = false;
             this.gboxMount.Text = "Mount";
+            // 
+            // chkNoCache
+            // 
+            this.chkNoCache.AutoSize = true;
+            this.chkNoCache.Location = new System.Drawing.Point(368, 21);
+            this.chkNoCache.Name = "chkNoCache";
+            this.chkNoCache.Size = new System.Drawing.Size(74, 17);
+            this.chkNoCache.TabIndex = 13;
+            this.chkNoCache.Text = "No Cache";
+            this.chkNoCache.UseVisualStyleBackColor = true;
             // 
             // btnSelectFolder
             // 
@@ -309,7 +330,7 @@
             // chkAutoMount
             // 
             this.chkAutoMount.AutoSize = true;
-            this.chkAutoMount.Location = new System.Drawing.Point(220, 23);
+            this.chkAutoMount.Location = new System.Drawing.Point(314, 20);
             this.chkAutoMount.Name = "chkAutoMount";
             this.chkAutoMount.Size = new System.Drawing.Size(48, 17);
             this.chkAutoMount.TabIndex = 0;
@@ -351,13 +372,23 @@
             this.cboxRemoteDevices.FormattingEnabled = true;
             this.cboxRemoteDevices.Location = new System.Drawing.Point(66, 20);
             this.cboxRemoteDevices.Name = "cboxRemoteDevices";
-            this.cboxRemoteDevices.Size = new System.Drawing.Size(147, 21);
+            this.cboxRemoteDevices.Size = new System.Drawing.Size(234, 21);
             this.cboxRemoteDevices.TabIndex = 3;
             this.toolTip.SetToolTip(this.cboxRemoteDevices, "Select the remote device to mount");
             // 
+            // btnClearCache
+            // 
+            this.btnClearCache.Location = new System.Drawing.Point(448, 78);
+            this.btnClearCache.Name = "btnClearCache";
+            this.btnClearCache.Size = new System.Drawing.Size(73, 23);
+            this.btnClearCache.TabIndex = 3;
+            this.btnClearCache.Text = "Clear Cache";
+            this.btnClearCache.UseVisualStyleBackColor = true;
+            this.btnClearCache.Click += new System.EventHandler(this.btnClearCache_Click);
+            // 
             // btnUnmount
             // 
-            this.btnUnmount.Location = new System.Drawing.Point(346, 50);
+            this.btnUnmount.Location = new System.Drawing.Point(448, 49);
             this.btnUnmount.Name = "btnUnmount";
             this.btnUnmount.Size = new System.Drawing.Size(73, 23);
             this.btnUnmount.TabIndex = 3;
@@ -368,7 +399,7 @@
             // 
             // btnMount
             // 
-            this.btnMount.Location = new System.Drawing.Point(346, 17);
+            this.btnMount.Location = new System.Drawing.Point(448, 16);
             this.btnMount.Name = "btnMount";
             this.btnMount.Size = new System.Drawing.Size(73, 23);
             this.btnMount.TabIndex = 3;
@@ -386,6 +417,8 @@
             // 
             // gbNewFolderSettings
             // 
+            this.gbNewFolderSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gbNewFolderSettings.Controls.Add(this.label4);
             this.gbNewFolderSettings.Controls.Add(this.label3);
             this.gbNewFolderSettings.Controls.Add(this.label2);
@@ -394,7 +427,7 @@
             this.gbNewFolderSettings.Controls.Add(this.cbUser);
             this.gbNewFolderSettings.Location = new System.Drawing.Point(12, 236);
             this.gbNewFolderSettings.Name = "gbNewFolderSettings";
-            this.gbNewFolderSettings.Size = new System.Drawing.Size(441, 74);
+            this.gbNewFolderSettings.Size = new System.Drawing.Size(527, 74);
             this.gbNewFolderSettings.TabIndex = 7;
             this.gbNewFolderSettings.TabStop = false;
             this.gbNewFolderSettings.Text = "New Folder Permissions";
@@ -468,42 +501,11 @@
             this.cbUser.TabIndex = 9;
             this.cbUser.SelectedIndexChanged += new System.EventHandler(this.cbUser_SelectedIndexChanged);
             // 
-            // ipAddressControl1
-            // 
-            this.ipAddressControl1.BackColor = System.Drawing.SystemColors.Window;
-            this.ipAddressControl1.Location = new System.Drawing.Point(10, 21);
-            this.ipAddressControl1.MinimumSize = new System.Drawing.Size(112, 20);
-            this.ipAddressControl1.Name = "ipAddressControl1";
-            this.ipAddressControl1.ReadOnly = false;
-            this.ipAddressControl1.Size = new System.Drawing.Size(112, 20);
-            this.ipAddressControl1.TabIndex = 10;
-            this.toolTip.SetToolTip(this.ipAddressControl1, "Specify the ip of the NFS Server");
-            // 
-            // btnClearCache
-            // 
-            this.btnClearCache.Location = new System.Drawing.Point(346, 79);
-            this.btnClearCache.Name = "btnClearCache";
-            this.btnClearCache.Size = new System.Drawing.Size(73, 23);
-            this.btnClearCache.TabIndex = 3;
-            this.btnClearCache.Text = "Clear Cache";
-            this.btnClearCache.UseVisualStyleBackColor = true;
-            this.btnClearCache.Click += new System.EventHandler(this.btnClearCache_Click);
-            // 
-            // chkNoCache
-            // 
-            this.chkNoCache.AutoSize = true;
-            this.chkNoCache.Location = new System.Drawing.Point(269, 23);
-            this.chkNoCache.Name = "chkNoCache";
-            this.chkNoCache.Size = new System.Drawing.Size(74, 17);
-            this.chkNoCache.TabIndex = 13;
-            this.chkNoCache.Text = "No Cache";
-            this.chkNoCache.UseVisualStyleBackColor = true;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(465, 320);
+            this.ClientSize = new System.Drawing.Size(551, 320);
             this.Controls.Add(this.gbNewFolderSettings);
             this.Controls.Add(this.gboxMount);
             this.Controls.Add(this.gbTargetConnection);
